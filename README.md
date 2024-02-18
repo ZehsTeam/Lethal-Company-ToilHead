@@ -16,6 +16,8 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 | `spawnTurretFacingBackwardWeight` | `Int32` | `1` | The weight chance for the turret to spawn facing backwards. |
 
 ## Bug Reports, Help, or Suggestions
+https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues
+
 | Discord server | Channel | Post |
 | ----------- | ----------- | ----------- |
 | [Lethal Company modding Discord](https://discord.gg/XeyYqRdRGC) | `#mod-releases` | [ToilHead](https://discord.com/channels/1168655651455639582/1207108508298911834) |
