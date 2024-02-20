@@ -128,7 +128,7 @@ public class ToilHeadBase : BaseUnityPlugin
 
     private void DisableBoxCollidersForTurret(GameObject turret)
     {
-        List<BoxCollider> colliders = turret.GetComponentsInChildren<BoxCollider>().ToList();
+        List<Collider> colliders = turret.GetComponentsInChildren<Collider>().ToList();
 
         colliders.ForEach(collider =>
         {
@@ -137,6 +137,6 @@ public class ToilHeadBase : BaseUnityPlugin
             collider.enabled = false;
         });
 
-        mls.LogInfo("Removed the box colliders from the turret on the Coil-Head.");
+        mls.LogInfo("Removed the colliders from the turret on the Coil-Head.");
     }
 }

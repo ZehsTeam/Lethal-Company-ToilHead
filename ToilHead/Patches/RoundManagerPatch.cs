@@ -52,7 +52,6 @@ internal class RoundManagerPatch
         if (turretPrefab == null) return;
 
         Secret.turretPropPrefab = turretPrefab.transform.GetChild(1).gameObject;
-        Secret.turretPropPrefab.name = "TurretProp";
     }
 
     private static GameObject GetHazardPrefab(string name)

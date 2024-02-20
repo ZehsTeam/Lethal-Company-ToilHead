@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead;
 
@@ -68,10 +70,15 @@ internal class Secret
 
         GameObject turret = Object.Instantiate(turretPropPrefab, parent.transform.position, Quaternion.identity);
 
+        turret.name = "TurretProp";
+
         turret.transform.SetParent(parent.transform);
         turret.transform.localPosition = positionOffset;
         turret.transform.localRotation = Quaternion.identity;
         turret.transform.localScale = scale;
         turret.transform.Rotate(rotationOffset, Space.Self);
+
+        List<Collider> colliders = turret.GetComponentsInChildren<Collider>().ToList();
+        colliders.ForEach(collider => collider.enabled = false);
     }
 }
