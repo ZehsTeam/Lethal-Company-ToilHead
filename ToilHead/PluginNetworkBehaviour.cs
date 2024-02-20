@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 
 namespace com.github.zehsteam.ToilHead;
 

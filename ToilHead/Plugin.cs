@@ -61,6 +61,8 @@ public class ToilHeadBase : BaseUnityPlugin
     public void OnNewLevelLoaded(int randomMapSeed)
     {
         EnemyAIPatch.Initialize(randomMapSeed);
+
+        Secret.SpawnAsteroid13Secret();
     }
 
     public void SetToilHeadOnServer(EnemyAI enemyAI)

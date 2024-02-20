@@ -32,7 +32,7 @@ internal class ConfigManager
         }
         set
         {
-            MaxSpawnsCfg.Value = Math.Max(value, 0);
+            MaxSpawnsCfg.Value = value;
         }
     }
 
@@ -72,7 +72,7 @@ internal class ConfigManager
         // Settings
         SpawnChanceCfg = config.Bind(
             new ConfigDefinition("Settings", "spawnChance"),
-            30,
+            60,
             new ConfigDescription("The percent chance for a Coil-Head to turn into a Toil-Head\nMin: 0\nMax: 100")
         );
 
@@ -90,7 +90,7 @@ internal class ConfigManager
 
         SpawnTurretFacingBackwardWeightCfg = config.Bind(
             new ConfigDefinition("Settings", "spawnTurretFacingBackwardWeight"),
-            1,
+            3,
             new ConfigDescription("The weight chance for the turret to spawn facing backwards.")
         );
     }

@@ -42,7 +42,17 @@ internal class RoundManagerPatch
     {
         if (ToilHeadBase.Instance.turretPrefab != null) return;
 
-        ToilHeadBase.Instance.turretPrefab = GetHazardPrefab("TurretContainer");
+        GameObject turretPrefab = GetHazardPrefab("TurretContainer");
+        ToilHeadBase.Instance.turretPrefab = turretPrefab;
+        SetTurretPropPrefab(turretPrefab);
+    }
+
+    private static void SetTurretPropPrefab(GameObject turretPrefab)
+    {
+        if (turretPrefab == null) return;
+
+        Secret.turretPropPrefab = turretPrefab.transform.GetChild(1).gameObject;
+        Secret.turretPropPrefab.name = "TurretProp";
     }
 
     private static GameObject GetHazardPrefab(string name)
