@@ -10,10 +10,10 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 ## Config Settings
 | Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `spawnChance` | `Int32` | `60` | The percent chance for a Coil-Head to turn into a Toil-Head. (Min: 0, Max: 100) |
+| `spawnChance` | `Int32` | `60` | The percent chance for a Coil-Head to turn into a Toil-Head. |
 | `maxSpawns` | `Int32` | `3` | The max amount of Toil-Heads that can spawn. |
-| `spawnTurretFacingForwardWeight` | `Int32` | `1` | The weight chance for the turret to spawn facing forwards. |
-| `spawnTurretFacingBackwardWeight` | `Int32` | `3` | The weight chance for the turret to spawn facing backwards. |
+| `spawnTurretFacingForwardWeight` | `Int32` | `1` | The weight chance for the turret to spawn facing forward. |
+| `spawnTurretFacingBackwardWeight` | `Int32` | `3` | The weight chance for the turret to spawn facing backward. |
 
 ## Bug Reports, Help, or Suggestions
 https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues
@@ -36,6 +36,6 @@ https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues
 
 ## Screenshots
 <div>
-    <img src="https://i.imgur.com/C3aegNI.jpeg" width="412px">
-    <img src="https://i.imgur.com/zQ87xdZ.jpeg" width="412px">
+    <img src="https://i.imgur.com/C3aegNI.jpeg" width="531px">
+    <img src="https://i.imgur.com/zQ87xdZ.jpeg" width="531px">
 </div>
