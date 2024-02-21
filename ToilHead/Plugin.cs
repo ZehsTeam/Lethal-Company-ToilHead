@@ -62,7 +62,7 @@ public class ToilHeadBase : BaseUnityPlugin
     {
         EnemyAIPatch.Initialize(randomMapSeed);
 
-        Secret.SpawnAsteroid13Secret();
+        Secret.SpawnAsteroid13Secrets();
     }
 
     public void SetToilHeadOnServer(EnemyAI enemyAI)
@@ -121,12 +121,12 @@ public class ToilHeadBase : BaseUnityPlugin
             component.SetRotationOffset(new Vector3(-20f, 180f, 0f));
         }
 
-        DisableBoxCollidersForTurret(turret);
+        DisableCollidersForTurret(turret);
 
         mls.LogInfo("Spawned Toil-Head, Good luck :3");
     }
 
-    private void DisableBoxCollidersForTurret(GameObject turret)
+    private void DisableCollidersForTurret(GameObject turret)
     {
         List<Collider> colliders = turret.GetComponentsInChildren<Collider>().ToList();
 

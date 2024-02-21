@@ -8,7 +8,7 @@ internal class Secret
 {
     public static GameObject turretPropPrefab;
 
-    public static void SpawnAsteroid13Secret()
+    public static void SpawnAsteroid13Secrets()
     {
         if (StartOfRound.Instance.currentLevel.name != "57 Asteroid-13") return;
 
