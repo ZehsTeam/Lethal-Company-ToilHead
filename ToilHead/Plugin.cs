@@ -62,8 +62,6 @@ public class ToilHeadBase : BaseUnityPlugin
     {
         EnemyAIPatch.Initialize(randomMapSeed);
 
-        mls.LogInfo($"\n\n\n\n\n\nname: {StartOfRound.Instance.currentLevel.name}\nplanet name: {StartOfRound.Instance.currentLevel.PlanetName}\n\n\n\n\n");
-
         Secret.SpawnAsteroid13Secrets();
     }
 
