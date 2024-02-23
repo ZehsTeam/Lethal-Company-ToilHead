@@ -10,7 +10,9 @@ internal class Secret
 
     public static void SpawnAsteroid13Secrets()
     {
-        if (StartOfRound.Instance.currentLevel.name != "57 Asteroid-13") return;
+        bool correctLevelName = StartOfRound.Instance.currentLevel.name == "Asteroid13Level";
+        bool correctPlanetName = StartOfRound.Instance.currentLevel.PlanetName == "57 Asteroid-13";
+        if (!correctLevelName && !correctPlanetName) return;
 
         // CoilHead model near power
         GameObject coilHeadModel = GameObject.Find("/asteroid(Clone)/coilheadstuck_model");
