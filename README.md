@@ -36,6 +36,6 @@ https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues
 
 ## Screenshots
 <div>
-    <img src="https://i.imgur.com/C3aegNI.jpeg" width="531px">
-    <img src="https://i.imgur.com/zQ87xdZ.jpeg" width="531px">
+    <img src="https://i.imgur.com/C3aegNI.jpeg" width="412px">
+    <img src="https://i.imgur.com/zQ87xdZ.jpeg" width="412px">
 </div>
