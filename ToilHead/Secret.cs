@@ -20,13 +20,34 @@ internal class Secret
         // Big CoilHead in crater
         GameObject coilHeadModel2 = GameObject.Find("/asteroid(Clone)/coilheadrigged");
 
-        // CoilHead followers of the Big CoilHead
+        // CoilHead followers of the Big CoilHead (Row #1)
         GameObject coilHeadModel3 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (5)");
         GameObject coilHeadModel4 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (7)");
         GameObject coilHeadModel5 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (8)");
         GameObject coilHeadModel6 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (9)");
         GameObject coilHeadModel7 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (10)");
         GameObject coilHeadModel8 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (6)");
+        // CoilHead followers of the Big CoilHead (Row #2)
+        GameObject coilHeadModel12 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (29)");
+        GameObject coilHeadModel13 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (24)");
+        GameObject coilHeadModel14 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (25)");
+        GameObject coilHeadModel15 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (26)");
+        GameObject coilHeadModel16 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (27)");
+        GameObject coilHeadModel17 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (28)");
+        // CoilHead followers of the Big CoilHead (Row #3)
+        GameObject coilHeadModel18 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (23)");
+        GameObject coilHeadModel19 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (18)");
+        GameObject coilHeadModel20 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (19)");
+        GameObject coilHeadModel21 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (20)");
+        GameObject coilHeadModel22 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (21)");
+        GameObject coilHeadModel23 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (22)");
+        // CoilHead followers of the Big CoilHead (Row #4)
+        GameObject coilHeadModel24 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (17)");
+        GameObject coilHeadModel25 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (12)");
+        GameObject coilHeadModel26 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (13)");
+        GameObject coilHeadModel27 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (14)");
+        GameObject coilHeadModel28 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (15)");
+        GameObject coilHeadModel29 = GameObject.Find("/asteroid(Clone)/coilheadstuck_model (16)");
 
         // CoilHead near fire exit
         GameObject coilHeadModel9 = GameObject.Find("/asteroid(Clone)/coilheadstuck_2_model (7)");
@@ -46,13 +67,34 @@ internal class Secret
         // Big CoilHead in crater
         SpawnTurretProp(coilHeadModel2, new Vector3(-0.15f, 4.8f, -0.2f), new Vector3(0f, 180f, 0f), scale * 2f);
 
-        // CoilHead followers of the Big CoilHead
-        SpawnTurretProp(coilHeadModel3, new Vector3(-0.05f, 2.4f, -0.25f), new Vector3(15f, 180f, 0f), scale);
-        SpawnTurretProp(coilHeadModel4, new Vector3(-0.05f, 2.4f, -0.25f), new Vector3(15f, 180f, 0f), scale);
-        SpawnTurretProp(coilHeadModel5, new Vector3(-0.05f, 2.4f, -0.25f), new Vector3(15f, 180f, 0f), scale);
-        SpawnTurretProp(coilHeadModel6, new Vector3(-0.05f, 2.4f, -0.25f), new Vector3(15f, 180f, 0f), scale);
-        SpawnTurretProp(coilHeadModel7, new Vector3(-0.05f, 2.4f, -0.25f), new Vector3(15f, 180f, 0f), scale);
-        SpawnTurretProp(coilHeadModel8, new Vector3(-0.05f, 2.4f, -0.25f), new Vector3(15f, 180f, 0f), scale);
+        // CoilHead followers of the Big CoilHead (Row #1)
+        SpawnTurretProp(coilHeadModel3, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel4, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel5, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel6, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel7, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel8, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        // CoilHead followers of the Big CoilHead (Row #2)
+        SpawnTurretProp(coilHeadModel12, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel13, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel14, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel15, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel16, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel17, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        // CoilHead followers of the Big CoilHead (Row #3)
+        SpawnTurretProp(coilHeadModel18, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel19, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel20, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel21, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel22, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel23, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        // CoilHead followers of the Big CoilHead (Row #4)
+        SpawnTurretProp(coilHeadModel24, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel25, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel26, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel27, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel28, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
+        SpawnTurretProp(coilHeadModel29, new Vector3(-0.05f, 2.4f, -0.15f), new Vector3(15f, 180f, 0f), scale);
 
         // CoilHead near fire exit
         SpawnTurretProp(coilHeadModel9, new Vector3(-0.05f, 2.4f, -0.05f), new Vector3(3f, 180f, 0f), scale);
