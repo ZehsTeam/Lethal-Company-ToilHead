@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead.Patches;
@@ -29,9 +28,7 @@ internal class RoundManagerPatch
     [HarmonyPrefix]
     static void GenerateNewLevelClientRpcPatch(int randomSeed)
     {
-        bool isHostOrServer = NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
-
-        if (!isHostOrServer)
+        if (!ToilHeadBase.IsHostOrServer)
         {
             // Call on Client
             ToilHeadBase.Instance.OnNewLevelLoaded(randomSeed);

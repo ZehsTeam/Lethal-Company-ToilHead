@@ -26,13 +26,17 @@ https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues
 ## My Other Mods
 | Name | Description |
 | ----------- | ----------- |
-| [SellMyScrap](https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/) | Adds a few terminal commands to sell your scrap from the ship. |
+| [SellMyScrap](https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/) | Adds a few terminal commands to sell your scrap from the ship. Highly Configurable. SellFromTerminal + |
 | [OnlyPresents](https://thunderstore.io/c/lethal-company/p/Zehs/OnlyPresents/) | Moons will only spawn gift boxes. (Server-side) |
-| [Hitmarker](https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/) | Shows a hitmarker when you successfully hit an enemy. (Client-side) |
+| [Hitmarker](https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/) | Shows a hitmarker when you successfully hit an enemy. With additional features. (Client-side) |
+| [CoilHeadSettings](https://thunderstore.io/c/lethal-company/p/Zehs/CoilHeadSettings/) | This mod lets you configure the CoilHead. |
+| [OctolarPlush](https://thunderstore.io/c/lethal-company/p/Zehs/OctolarPlush/) | Adds an Octolar Plushie. |
 
 <a href="https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/"><img src="https://i.imgur.com/I6W498g.png" width="80px"></a>
 <a href="https://thunderstore.io/c/lethal-company/p/Zehs/OnlyPresents/"><img src="https://i.imgur.com/pesSqHI.png" width="80px"></a>
 <a href="https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/"><img src="https://i.imgur.com/29IA990.png" width="80px"></a>
+<a href="https://thunderstore.io/c/lethal-company/p/Zehs/CoilHeadSettings/"><img src="https://i.imgur.com/QmIID55.png" width="80px"></a>
+<a href="https://thunderstore.io/c/lethal-company/p/Zehs/OctolarPlush/"><img src="https://i.imgur.com/KWWnzSu.png" width="80px"></a>
 
 ## Screenshots
 <div>

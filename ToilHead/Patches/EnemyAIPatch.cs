@@ -20,9 +20,7 @@ internal class EnemyAIPatch
     [HarmonyPostfix]
     static void StartPatch(ref EnemyAI __instance)
     {
-        bool isHostOrServer = NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
-
-        if (isHostOrServer)
+        if (ToilHeadBase.IsHostOrServer)
         {
             CheckEnemy(__instance);
         }

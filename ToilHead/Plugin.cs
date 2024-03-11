@@ -20,7 +20,11 @@ public class ToilHeadBase : BaseUnityPlugin
 
     internal ConfigManager configManager;
 
+    public static bool IsHostOrServer => NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
+
     public GameObject turretPrefab;
+
+    private List<NetworkObject> spawnedTurrets;
 
     void Awake()
     {
@@ -62,7 +66,14 @@ public class ToilHeadBase : BaseUnityPlugin
     {
         EnemyAIPatch.Initialize(randomMapSeed);
 
+        spawnedTurrets = [];
+
         Secret.SpawnAsteroid13Secrets();
+    }
+
+    public void OnShipHasLeft()
+    {
+        DespawnSpawnedTurrets();
     }
 
     public void SetToilHeadOnServer(EnemyAI enemyAI)
@@ -96,6 +107,7 @@ public class ToilHeadBase : BaseUnityPlugin
 
         NetworkObject turretNetworkObject = turret.GetComponent<NetworkObject>();
         turretNetworkObject.Spawn(destroyWithScene: true);
+        spawnedTurrets.Add(turretNetworkObject);
 
         turret.transform.SetParent(parent);
 
@@ -138,5 +150,25 @@ public class ToilHeadBase : BaseUnityPlugin
         });
 
         mls.LogInfo("Removed the colliders from the turret on the Coil-Head.");
+    }
+    
+    private void DespawnSpawnedTurrets()
+    {
+        if (!IsHostOrServer) return;
+
+        int amount = spawnedTurrets.Count;
+
+        spawnedTurrets.ForEach(turret =>
+        {
+            if (!turret.IsSpawned) return;
+
+            turret.Despawn();
+
+            mls.LogInfo("Despawning spawned turret.");
+        });
+
+        spawnedTurrets = [];
+
+        mls.LogInfo($"Despawned {amount} spawned turrets.");
     }
 }

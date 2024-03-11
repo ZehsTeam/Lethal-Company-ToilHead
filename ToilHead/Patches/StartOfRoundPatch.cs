@@ -11,17 +11,21 @@ internal class StartOfRoundPatch
     [HarmonyPostfix]
     static void AwakePatch()
     {
-        bool isHostOrServer = NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
-
-        if (isHostOrServer)
-        {
-            SpawnNetworkHandler();
-        }
+        SpawnNetworkHandler();
     }
 
     private static void SpawnNetworkHandler()
     {
+        if (!ToilHeadBase.IsHostOrServer) return;
+
         var networkHandlerHost = Object.Instantiate(GameNetworkManagerPatch.networkPrefab, Vector3.zero, Quaternion.identity);
         networkHandlerHost.GetComponent<NetworkObject>().Spawn();
+    }
+
+    [HarmonyPatch("ShipHasLeft")]
+    [HarmonyPostfix]
+    static void ShipHasLeftPatch()
+    {
+        ToilHeadBase.Instance.OnShipHasLeft();
     }
 }
