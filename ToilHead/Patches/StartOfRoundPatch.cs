@@ -16,9 +16,9 @@ internal class StartOfRoundPatch
 
     private static void SpawnNetworkHandler()
     {
-        if (!ToilHeadBase.IsHostOrServer) return;
+        if (!Plugin.IsHostOrServer) return;
 
-        var networkHandlerHost = Object.Instantiate(GameNetworkManagerPatch.networkPrefab, Vector3.zero, Quaternion.identity);
+        var networkHandlerHost = Object.Instantiate(Content.networkHandlerPrefab, Vector3.zero, Quaternion.identity);
         networkHandlerHost.GetComponent<NetworkObject>().Spawn();
     }
 
@@ -26,6 +26,6 @@ internal class StartOfRoundPatch
     [HarmonyPostfix]
     static void ShipHasLeftPatch()
     {
-        ToilHeadBase.Instance.OnShipHasLeft();
+        Plugin.Instance.OnShipHasLeft();
     }
 }

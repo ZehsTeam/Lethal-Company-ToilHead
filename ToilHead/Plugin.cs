@@ -1,9 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
+using com.github.zehsteam.ToilHead.MonoBehaviours;
 using com.github.zehsteam.ToilHead.Patches;
 using HarmonyLib;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,34 +10,33 @@ using UnityEngine;
 namespace com.github.zehsteam.ToilHead;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-public class ToilHeadBase : BaseUnityPlugin
+public class Plugin : BaseUnityPlugin
 {
     private readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 
-    internal static ToilHeadBase Instance;
-    internal static ManualLogSource mls;
+    internal static Plugin Instance;
+    internal static ManualLogSource logger;
 
-    internal ConfigManager configManager;
+    internal ConfigManager ConfigManager;
 
     public static bool IsHostOrServer => NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
-
-    public GameObject turretPrefab;
-
-    private List<NetworkObject> spawnedTurrets;
 
     void Awake()
     {
         if (Instance == null) Instance = this;
 
-        mls = BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID);
-        mls.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
+        logger = BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID);
+        logger.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
 
         harmony.PatchAll(typeof(GameNetworkManagerPatch));
         harmony.PatchAll(typeof(StartOfRoundPatch));
         harmony.PatchAll(typeof(RoundManagerPatch));
         harmony.PatchAll(typeof(EnemyAIPatch));
 
-        configManager = new ConfigManager();
+        ConfigManager = new ConfigManager();
+
+        Content.Load();
+        EnemyAIPatch.Reset();
 
         NetcodePatcherAwake();
     }
@@ -62,113 +60,92 @@ public class ToilHeadBase : BaseUnityPlugin
         }
     }
 
-    public void OnNewLevelLoaded(int randomMapSeed)
+    public void OnNewLevelLoaded(int randomSeed)
     {
-        EnemyAIPatch.Initialize(randomMapSeed);
-
-        spawnedTurrets = [];
-
-        Secret.SpawnAsteroid13Secrets();
+        Secret.SpawnSecrets();
     }
 
     public void OnShipHasLeft()
     {
-        DespawnSpawnedTurrets();
+        EnemyAIPatch.DespawnAllTurrets();
+        EnemyAIPatch.Reset();
     }
 
     public void SetToilHeadOnServer(EnemyAI enemyAI)
     {
+        if (!IsHostOrServer) return;
+
         if (enemyAI == null)
         {
-            mls.LogError("Error: enemy could not be found.");
+            logger.LogError("Error: failed to set Toil-Head on server. Enemy could not be found.");
             return;
         }
 
-        if (turretPrefab == null)
+        if (Content.turretPrefab == null)
         {
-            mls.LogError("Error: turret prefab could not be found.");
+            logger.LogError("Error: failed to set Toil-Head on server. Turret prefab could not be found.");
             return;
         }
 
-        NetworkObject enemyAINetworkObject = enemyAI.gameObject.GetComponent<NetworkObject>();
+        float forwardWeight = ConfigManager.SpawnTurretFacingForwardWeight * 100f;
+        float backwardWeight = ConfigManager.SpawnTurretFacingBackwardWeight * 100f;
+        bool turretFacingForward = Random.Range(1f, forwardWeight + backwardWeight) <= forwardWeight;
+        bool hideTurretBody = ConfigManager.HideTurretBody;
 
-        int forwardWeight = configManager.SpawnTurretFacingForwardWeight * 100;
-        int backwardWeight = configManager.SpawnTurretFacingBackwardWeight * 100;
-        bool turretFacingForward = EnemyAIPatch.random.Next(1, forwardWeight + backwardWeight) <= forwardWeight;
+        if (hideTurretBody)
+        {
+            turretFacingForward = true;
+        }
 
-        SpawnTurretOnServer(enemyAI.gameObject.transform);
-        PluginNetworkBehaviour.Instance.SetToilHeadClientRpc((int)enemyAINetworkObject.NetworkObjectId, turretFacingForward);
-        SetToilHeadOnLocalClient(enemyAI.gameObject, turretFacingForward);
+        NetworkObject enemyNetworkObject = enemyAI.gameObject.GetComponent<NetworkObject>();
+        NetworkObject turretNetworkObject = SpawnTurretOnServer(enemyAI.gameObject.transform);
+        EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretNetworkObject);
+
+        PluginNetworkBehaviour.Instance.SetToilHeadClientRpc(NetworkUtils.GetNetworkObjectId(enemyNetworkObject), turretFacingForward, hideTurretBody);
+        SetToilHeadOnLocalClient(enemyAI.gameObject, turretFacingForward, hideTurretBody);
     }
 
-    private GameObject SpawnTurretOnServer(Transform parent)
+    private NetworkObject SpawnTurretOnServer(Transform parent)
     {
-        GameObject turret = Object.Instantiate(turretPrefab, parent.localPosition, Quaternion.identity, parent);
+        if (!IsHostOrServer) return null;
 
-        NetworkObject turretNetworkObject = turret.GetComponent<NetworkObject>();
+        GameObject turretObject = Object.Instantiate(Content.turretPrefab, parent.localPosition, Quaternion.identity, parent);
+
+        NetworkObject turretNetworkObject = turretObject.GetComponent<NetworkObject>();
         turretNetworkObject.Spawn(destroyWithScene: true);
-        spawnedTurrets.Add(turretNetworkObject);
 
-        turret.transform.SetParent(parent);
+        turretObject.transform.SetParent(parent);
 
-        return turret;
+        return turretNetworkObject;
     }
 
-    public void SetToilHeadOnLocalClient(GameObject enemy, bool turretFacingForward)
+    public void SetToilHeadOnLocalClient(GameObject enemyObject, bool turretFacingForward, bool hideTurretBody)
     {
-        GameObject turret = enemy.transform.GetChild(1).gameObject;
-        Transform head = enemy.transform.GetChild(0).Find("Head");
+        Transform head = enemyObject.transform.GetChild(0).Find("Head");
 
-        turret.transform.localPosition = head.localPosition;
+        Transform turretTransform = enemyObject.transform.GetChild(1);
+        GameObject mountObject = turretTransform.transform.GetChild(1).GetChild(0).gameObject;
 
-        ParentToTransformBehaviour component = turret.AddComponent<ParentToTransformBehaviour>();
-        component.SetParent(head);
+        ParentToTransformBehaviour behaviour = head.gameObject.AddComponent<ParentToTransformBehaviour>();
+        behaviour.SetTargetAndParent(turretTransform, head);
+
+        if (hideTurretBody)
+        {
+            mountObject.SetActive(false);
+            behaviour.SetPositionOffset(new Vector3(0f, -0.9f, -0.05f));
+        }
 
         if (turretFacingForward)
         {
-            component.SetRotationOffset(new Vector3(90f, 0f, 0f));
+            behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
         }
         else
         {
-            component.SetRotationOffset(new Vector3(-20f, 180f, 0f));
+            behaviour.SetRotationOffset(new Vector3(-20f, 180f, 0f));
         }
 
-        DisableCollidersForTurret(turret);
+        Utils.DisableColliders(turretTransform.gameObject, keepScanNodeEnabled: true);
 
-        mls.LogInfo("Spawned Toil-Head, Good luck :3");
-    }
-
-    private void DisableCollidersForTurret(GameObject turret)
-    {
-        List<Collider> colliders = turret.GetComponentsInChildren<Collider>().ToList();
-
-        colliders.ForEach(collider =>
-        {
-            if (collider.gameObject.name == "ScanNode") return;
-
-            collider.enabled = false;
-        });
-
-        mls.LogInfo("Removed the colliders from the turret on the Coil-Head.");
-    }
-    
-    private void DespawnSpawnedTurrets()
-    {
-        if (!IsHostOrServer) return;
-
-        int amount = spawnedTurrets.Count;
-
-        spawnedTurrets.ForEach(turret =>
-        {
-            if (!turret.IsSpawned) return;
-
-            turret.Despawn();
-
-            mls.LogInfo("Despawning spawned turret.");
-        });
-
-        spawnedTurrets = [];
-
-        mls.LogInfo($"Despawned {amount} spawned turrets.");
+        logger.LogInfo("Spawned Toil-Head, Good luck :3");
     }
 }
