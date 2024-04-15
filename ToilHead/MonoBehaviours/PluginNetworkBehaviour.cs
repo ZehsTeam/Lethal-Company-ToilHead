@@ -2,7 +2,7 @@
 
 namespace com.github.zehsteam.ToilHead.MonoBehaviours;
 
-internal class PluginNetworkBehaviour : NetworkBehaviour
+public class PluginNetworkBehaviour : NetworkBehaviour
 {
     public static PluginNetworkBehaviour Instance;
 
@@ -12,12 +12,21 @@ internal class PluginNetworkBehaviour : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SetToilHeadClientRpc(int enemyNetworkObjectId, bool turretFacingForward, bool hideTurretBody)
+    public void SendConfigToPlayerClientRpc(SyncedConfigData syncedConfigData, ClientRpcParams clientRpcParams = default)
+    {
+        if (Plugin.IsHostOrServer) return;
+
+        Plugin.logger.LogInfo("Syncing config with host.");
+        Plugin.Instance.ConfigManager.SetHostConfigData(syncedConfigData);
+    }
+
+    [ClientRpc]
+    public void SetToilHeadClientRpc(int enemyNetworkObjectId)
     {
         if (Plugin.IsHostOrServer) return;
 
         NetworkObject enemyNetworkObject = NetworkUtils.GetNetworkObject(enemyNetworkObjectId);
 
-        Plugin.Instance.SetToilHeadOnLocalClient(enemyNetworkObject.gameObject, turretFacingForward, hideTurretBody);
+        Plugin.Instance.SetToilHeadOnLocalClient(enemyNetworkObject.gameObject);
     }
 }

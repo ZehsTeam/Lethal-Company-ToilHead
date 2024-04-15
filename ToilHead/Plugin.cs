@@ -17,7 +17,7 @@ public class Plugin : BaseUnityPlugin
     internal static Plugin Instance;
     internal static ManualLogSource logger;
 
-    internal ConfigManager ConfigManager;
+    internal SyncedConfigManager ConfigManager;
 
     public static bool IsHostOrServer => NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
 
@@ -31,9 +31,10 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(GameNetworkManagerPatch));
         harmony.PatchAll(typeof(StartOfRoundPatch));
         harmony.PatchAll(typeof(RoundManagerPatch));
+        harmony.PatchAll(typeof(TerminalPatch));
         harmony.PatchAll(typeof(EnemyAIPatch));
 
-        ConfigManager = new ConfigManager();
+        ConfigManager = new SyncedConfigManager();
 
         Content.Load();
         EnemyAIPatch.Reset();
@@ -60,9 +61,16 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    public void OnNewLevelLoaded(int randomSeed)
+    public void OnLocalDisconnect()
     {
-        Secret.SpawnSecrets();
+        logger.LogInfo($"Local player disconnected. Removing hostConfigData.");
+        ConfigManager.SetHostConfigData(null);
+    }
+
+    public void OnNewLevelLoaded()
+    {
+        // I will enabled this when Wesley's Asteroid13 moons is working in v50 (This includes LLL working in v50)
+        //Secret.SpawnSecrets();
     }
 
     public void OnShipHasLeft()
@@ -87,29 +95,19 @@ public class Plugin : BaseUnityPlugin
             return;
         }
 
-        float forwardWeight = ConfigManager.SpawnTurretFacingForwardWeight * 100f;
-        float backwardWeight = ConfigManager.SpawnTurretFacingBackwardWeight * 100f;
-        bool turretFacingForward = Random.Range(1f, forwardWeight + backwardWeight) <= forwardWeight;
-        bool hideTurretBody = ConfigManager.HideTurretBody;
-
-        if (hideTurretBody)
-        {
-            turretFacingForward = true;
-        }
-
         NetworkObject enemyNetworkObject = enemyAI.gameObject.GetComponent<NetworkObject>();
         NetworkObject turretNetworkObject = SpawnTurretOnServer(enemyAI.gameObject.transform);
         EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretNetworkObject);
 
-        PluginNetworkBehaviour.Instance.SetToilHeadClientRpc(NetworkUtils.GetNetworkObjectId(enemyNetworkObject), turretFacingForward, hideTurretBody);
-        SetToilHeadOnLocalClient(enemyAI.gameObject, turretFacingForward, hideTurretBody);
+        PluginNetworkBehaviour.Instance.SetToilHeadClientRpc(NetworkUtils.GetNetworkObjectId(enemyNetworkObject));
+        SetToilHeadOnLocalClient(enemyAI.gameObject);
     }
 
     private NetworkObject SpawnTurretOnServer(Transform parent)
     {
         if (!IsHostOrServer) return null;
 
-        GameObject turretObject = Object.Instantiate(Content.turretPrefab, parent.localPosition, Quaternion.identity, parent);
+        GameObject turretObject = Object.Instantiate(Content.turretPrefab, Vector3.zero, Quaternion.identity, parent);
 
         NetworkObject turretNetworkObject = turretObject.GetComponent<NetworkObject>();
         turretNetworkObject.Spawn(destroyWithScene: true);
@@ -119,32 +117,26 @@ public class Plugin : BaseUnityPlugin
         return turretNetworkObject;
     }
 
-    public void SetToilHeadOnLocalClient(GameObject enemyObject, bool turretFacingForward, bool hideTurretBody)
+    public void SetToilHeadOnLocalClient(GameObject enemyObject)
     {
-        Transform head = enemyObject.transform.GetChild(0).Find("Head");
+        Transform enemyHeadTransform = enemyObject.transform.GetChild(0).Find("Head");
+        if (enemyHeadTransform == null) return;
 
-        Transform turretTransform = enemyObject.transform.GetChild(1);
-        GameObject mountObject = turretTransform.transform.GetChild(1).GetChild(0).gameObject;
+        Transform turretTransform = enemyObject.transform.Find("ToilHeadTurretContainer(Clone)");
+        if (turretTransform == null) return;
 
-        ParentToTransformBehaviour behaviour = head.gameObject.AddComponent<ParentToTransformBehaviour>();
-        behaviour.SetTargetAndParent(turretTransform, head);
-
-        if (hideTurretBody)
-        {
-            mountObject.SetActive(false);
-            behaviour.SetPositionOffset(new Vector3(0f, -0.9f, -0.05f));
-        }
-
-        if (turretFacingForward)
-        {
-            behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
-        }
-        else
-        {
-            behaviour.SetRotationOffset(new Vector3(-20f, 180f, 0f));
-        }
+        turretTransform.localPosition = Vector3.zero;
+        turretTransform.localRotation = Quaternion.identity;
 
         Utils.DisableColliders(turretTransform.gameObject, keepScanNodeEnabled: true);
+
+        Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
+        if (syncToHeadTransform == null) return;
+
+        ParentToTransformBehaviour behaviour = enemyHeadTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+        behaviour.SetTargetAndParent(syncToHeadTransform, enemyHeadTransform);
+        behaviour.SetPositionOffset(new Vector3(0f, 0.425f, -0.02f));
+        behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
 
         logger.LogInfo("Spawned Toil-Head, Good luck :3");
     }

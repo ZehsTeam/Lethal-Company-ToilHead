@@ -17,6 +17,7 @@ internal class GameNetworkManagerPatch
     private static void AddNetworkPrefabs()
     {
         AddNetworkPrefab(Content.networkHandlerPrefab);
+        AddNetworkPrefab(Content.turretPrefab);
     }
 
     private static void AddNetworkPrefab(GameObject prefab)

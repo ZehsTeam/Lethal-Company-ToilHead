@@ -86,12 +86,11 @@ internal class Secret
         }
 
         GameObject turretObject = Object.Instantiate(Content.turretPropPrefab, parentObject.transform.position, Quaternion.identity);
-        turretObject.name = "TurretProp";
         turretObject.transform.SetParent(parentObject.transform);
         turretObject.transform.localPosition = positionOffset;
         turretObject.transform.localRotation = Quaternion.identity;
-        turretObject.transform.localScale = scale;
         turretObject.transform.Rotate(rotationOffset, Space.Self);
+        turretObject.transform.localScale = scale;
 
         Utils.DisableColliders(turretObject);
     }

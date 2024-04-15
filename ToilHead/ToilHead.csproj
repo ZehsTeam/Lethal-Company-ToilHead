@@ -8,7 +8,7 @@
 
     <AssemblyName>com.github.zehsteam.$(MSBuildProjectName)</AssemblyName> <!-- PLUGIN_GUID -->
     <Product>$(MSBuildProjectName)</Product>                               <!-- PLUGIN_NAME -->
-    <Version>1.1.0</Version>                                               <!-- PLUGIN_VERSION -->
+    <Version>1.2.0</Version>                                               <!-- PLUGIN_VERSION -->
     <Description>CoilHeads can sometimes spawn with a turret on their head.</Description>
 
     <RootNamespace>com.github.zehsteam.$(MSBuildProjectName)</RootNamespace>
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\Lethal Company Modding\Unity Projects\LethalCompanyAssetBundles\AssetBundles\toilhead_assets" Link="toilhead_assets">
+    <None Include="..\..\..\..\Lethal Company Modding\Unity Projects\LethalCompanyDecompiledv50\AssetBundles\toilhead_assets" Link="toilhead_assets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

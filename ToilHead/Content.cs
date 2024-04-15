@@ -8,7 +8,7 @@ internal class Content
     // NetworkHandler
     public static GameObject networkHandlerPrefab;
 
-    // These get assigned in RoundManagerPatch
+    // Turrets
     public static GameObject turretPrefab;
     public static GameObject turretPropPrefab;
 
@@ -28,6 +28,10 @@ internal class Content
             // NetworkHandler
             networkHandlerPrefab = assetBundle.LoadAsset<GameObject>("NetworkHandler");
             networkHandlerPrefab.AddComponent<PluginNetworkBehaviour>();
+
+            // Turrets
+            turretPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretContainer");
+            turretPropPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretProp");
 
             Plugin.logger.LogInfo("Successfully loaded assets from AssetBundle!");
         }

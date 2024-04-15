@@ -2,7 +2,7 @@
 
 namespace com.github.zehsteam.ToilHead.MonoBehaviours;
 
-internal class ParentToTransformBehaviour : MonoBehaviour
+public class ParentToTransformBehaviour : MonoBehaviour
 {
     private Transform targetTransform;
     private Transform parentTransform;

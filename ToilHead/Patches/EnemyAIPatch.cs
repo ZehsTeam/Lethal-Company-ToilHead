@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
@@ -63,6 +64,28 @@ internal class EnemyAIPatch
         springSpawnCount++;
     }
 
+    [HarmonyPatch("HitEnemyServerRpc")]
+    [HarmonyPostfix]
+    static void HitEnemyServerRpcPatch(ref EnemyAI __instance, int playerWhoHit)
+    {
+        if (playerWhoHit == -1) return;
+
+        if (IsToilHead(__instance))
+        {
+            ToilHeadOnHitEnemyOnServer(__instance);
+        }
+    }
+
+    private static void ToilHeadOnHitEnemyOnServer(EnemyAI enemyAI)
+    {
+        ToilHeadTurretBehaviour behaviour = GetToilHeadTurretBehaviour(enemyAI);
+        if (behaviour == null) return;
+
+        if (!behaviour.turretActive) return;
+
+        behaviour.EnterBerserkModeClientRpc();
+    }
+
     [HarmonyPatch("OnDestroy")]
     [HarmonyPrefix]
     static void OnDestroyPatch(ref EnemyAI __instance)
@@ -86,6 +109,21 @@ internal class EnemyAIPatch
     private static bool IsSpring(EnemyAI enemyAI)
     {
         return enemyAI.enemyType.enemyName == "Spring";
+    }
+
+    private static bool IsToilHead(EnemyAI enemyAI)
+    {
+        if (!IsSpring(enemyAI)) return false;
+
+        return enemyAI.transform.Find("ToilHeadTurretContainer(Clone)") != null;
+    }
+
+    private static ToilHeadTurretBehaviour GetToilHeadTurretBehaviour(EnemyAI enemyAI)
+    {
+        Transform toilHeadTurretTransform = enemyAI.transform.Find("ToilHeadTurretContainer(Clone)");
+        if (toilHeadTurretTransform == null) return null;
+
+        return toilHeadTurretTransform.gameObject.GetComponentInChildren<ToilHeadTurretBehaviour>();
     }
 
     private static void DespawnTurret(NetworkObject enemyNetworkObject)

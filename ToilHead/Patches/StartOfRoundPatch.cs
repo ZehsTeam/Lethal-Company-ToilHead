@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
+using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -22,10 +23,41 @@ internal class StartOfRoundPatch
         networkHandlerHost.GetComponent<NetworkObject>().Spawn();
     }
 
+    [HarmonyPatch("OnClientConnect")]
+    [HarmonyPrefix]
+    static void OnClientConnectPatch(ref ulong clientId)
+    {
+        SendConfigToNewConnectedPlayer(clientId);
+    }
+
+    private static void SendConfigToNewConnectedPlayer(ulong clientId)
+    {
+        if (!Plugin.IsHostOrServer) return;
+
+        ClientRpcParams clientRpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = [clientId]
+            }
+        };
+
+        Plugin.logger.LogInfo($"Sending config to client: {clientId}");
+
+        PluginNetworkBehaviour.Instance.SendConfigToPlayerClientRpc(new SyncedConfigData(Plugin.Instance.ConfigManager), clientRpcParams);
+    }
+
     [HarmonyPatch("ShipHasLeft")]
     [HarmonyPostfix]
     static void ShipHasLeftPatch()
     {
         Plugin.Instance.OnShipHasLeft();
+    }
+
+    [HarmonyPatch("OnLocalDisconnect")]
+    [HarmonyPrefix]
+    static void OnLocalDisconnectPatch()
+    {
+        Plugin.Instance.OnLocalDisconnect();
     }
 }
