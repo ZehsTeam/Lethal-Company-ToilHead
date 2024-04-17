@@ -10,7 +10,7 @@ using UnityEngine;
 namespace com.github.zehsteam.ToilHead;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-public class Plugin : BaseUnityPlugin
+internal class Plugin : BaseUnityPlugin
 {
     private readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 
@@ -21,7 +21,7 @@ public class Plugin : BaseUnityPlugin
 
     public static bool IsHostOrServer => NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null) Instance = this;
 
@@ -79,20 +79,32 @@ public class Plugin : BaseUnityPlugin
         EnemyAIPatch.Reset();
     }
 
-    public void SetToilHeadOnServer(EnemyAI enemyAI)
+    public bool SetToilHeadOnServer(EnemyAI enemyAI)
     {
-        if (!IsHostOrServer) return;
+        if (!IsHostOrServer) return false;
 
         if (enemyAI == null)
         {
-            logger.LogError("Error: failed to set Toil-Head on server. Enemy could not be found.");
-            return;
+            logger.LogError("Error: failed to set Toil-Head on server. EnemyAI could not be found.");
+            return false;
+        }
+
+        if (!Utils.IsSpring(enemyAI))
+        {
+            logger.LogError("Error: failed to set Toil-Head on server. EnemyAI is not a Coil-Head.");
+            return false;
+        }
+
+        if (Utils.IsToilHead(enemyAI))
+        {
+            logger.LogError("Error: failed to set Toil-Head on server. EnemyAI is already a Toil-Head. Skipping.");
+            return false;
         }
 
         if (Content.turretPrefab == null)
         {
             logger.LogError("Error: failed to set Toil-Head on server. Turret prefab could not be found.");
-            return;
+            return false;
         }
 
         NetworkObject enemyNetworkObject = enemyAI.gameObject.GetComponent<NetworkObject>();
@@ -101,6 +113,10 @@ public class Plugin : BaseUnityPlugin
 
         PluginNetworkBehaviour.Instance.SetToilHeadClientRpc(NetworkUtils.GetNetworkObjectId(enemyNetworkObject));
         SetToilHeadOnLocalClient(enemyAI.gameObject);
+
+        EnemyAIPatch.spawnCount++;
+
+        return true;
     }
 
     private NetworkObject SpawnTurretOnServer(Transform parent)

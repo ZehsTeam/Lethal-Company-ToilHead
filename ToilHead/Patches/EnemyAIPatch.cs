@@ -3,28 +3,27 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(EnemyAI))]
-public class EnemyAIPatch
+internal class EnemyAIPatch
 {
-    public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs { get; private set; }
-    public static int springSpawnCount { get; private set; }
+    public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs;
+    public static int spawnCount;
 
-    internal static void Reset()
+    public static void Reset()
     {
         enemyTurretPairs = [];
-        springSpawnCount = 0;
+        spawnCount = 0;
     }
 
-    internal static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
+    public static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
     {
         enemyTurretPairs.Add(enemyNetworkObject, turretNetworkObject);
     }
 
-    internal static void DespawnAllTurrets()
+    public static void DespawnAllTurrets()
     {
         if (!Plugin.IsHostOrServer) return;
 
@@ -46,7 +45,7 @@ public class EnemyAIPatch
     [HarmonyPostfix]
     static void StartPatch(ref EnemyAI __instance)
     {
-        if (IsSpring(__instance))
+        if (Utils.IsSpring(__instance))
         {
             SpringStart(__instance);
         }
@@ -56,12 +55,10 @@ public class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        if (Random.Range(1f, 100f) > Plugin.Instance.ConfigManager.SpawnChance) return;
-        if (springSpawnCount >= Plugin.Instance.ConfigManager.MaxSpawnCount) return;
+        if (!Utils.RandomPercent(Plugin.Instance.ConfigManager.SpawnChance)) return;
+        if (spawnCount >= Plugin.Instance.ConfigManager.MaxSpawnCount) return;
 
         Plugin.Instance.SetToilHeadOnServer(enemyAI);
-
-        springSpawnCount++;
     }
 
     [HarmonyPatch("HitEnemyServerRpc")]
@@ -70,7 +67,7 @@ public class EnemyAIPatch
     {
         if (playerWhoHit == -1) return;
 
-        if (IsToilHead(__instance))
+        if (Utils.IsToilHead(__instance))
         {
             ToilHeadOnHitEnemyOnServer(__instance);
         }
@@ -78,7 +75,7 @@ public class EnemyAIPatch
 
     private static void ToilHeadOnHitEnemyOnServer(EnemyAI enemyAI)
     {
-        ToilHeadTurretBehaviour behaviour = GetToilHeadTurretBehaviour(enemyAI);
+        ToilHeadTurretBehaviour behaviour = Utils.GetToilHeadTurretBehaviour(enemyAI);
         if (behaviour == null) return;
 
         if (!behaviour.turretActive) return;
@@ -90,7 +87,7 @@ public class EnemyAIPatch
     [HarmonyPrefix]
     static void OnDestroyPatch(ref EnemyAI __instance)
     {
-        if (IsSpring(__instance))
+        if (Utils.IsSpring(__instance))
         {
             SpringOnDestroy(__instance);
         }
@@ -104,26 +101,6 @@ public class EnemyAIPatch
         if (enemyNetworkObject == null) return;
 
         DespawnTurret(enemyNetworkObject);
-    }
-
-    private static bool IsSpring(EnemyAI enemyAI)
-    {
-        return enemyAI.enemyType.enemyName == "Spring";
-    }
-
-    private static bool IsToilHead(EnemyAI enemyAI)
-    {
-        if (!IsSpring(enemyAI)) return false;
-
-        return enemyAI.transform.Find("ToilHeadTurretContainer(Clone)") != null;
-    }
-
-    private static ToilHeadTurretBehaviour GetToilHeadTurretBehaviour(EnemyAI enemyAI)
-    {
-        Transform toilHeadTurretTransform = enemyAI.transform.Find("ToilHeadTurretContainer(Clone)");
-        if (toilHeadTurretTransform == null) return null;
-
-        return toilHeadTurretTransform.gameObject.GetComponentInChildren<ToilHeadTurretBehaviour>();
     }
 
     private static void DespawnTurret(NetworkObject enemyNetworkObject)

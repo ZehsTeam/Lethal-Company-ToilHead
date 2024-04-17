@@ -26,7 +26,7 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
     private Image mapRadarBox;
 
     // Custom Variables
-    private RectTransform mapRadarRectTransform;
+    [HideInInspector] public RectTransform mapRadarRectTransform { get; private set; }
 
     private void Start()
     {

@@ -94,6 +94,16 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     private void Start()
     {
+        SetCustomVariables();
+
+        if (Plugin.IsHostOrServer)
+        {
+            SetObjectCodeOnServer();
+        }
+    }
+
+    private void SetCustomVariables()
+    {
         SyncedConfigManager configManager = Plugin.Instance.ConfigManager;
 
         // Turret Settings
@@ -116,11 +126,6 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         berserkRotationSpeed = configManager.TurretBerserkRotationSpeed;
 
         rotationSpeed = detectionRotationSpeed;
-
-        if (Plugin.IsHostOrServer)
-        {
-            SetObjectCodeOnServer();
-        }
     }
 
     private IEnumerator FadeBulletAudio()
