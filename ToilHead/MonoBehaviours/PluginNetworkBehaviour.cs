@@ -6,13 +6,13 @@ public class PluginNetworkBehaviour : NetworkBehaviour
 {
     public static PluginNetworkBehaviour Instance;
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null) Instance = this;
     }
 
     [ClientRpc]
-    public void SendConfigToPlayerClientRpc(SyncedConfigData syncedConfigData, ClientRpcParams clientRpcParams = default)
+    internal void SendConfigToPlayerClientRpc(SyncedConfigData syncedConfigData, ClientRpcParams clientRpcParams = default)
     {
         if (Plugin.IsHostOrServer) return;
 

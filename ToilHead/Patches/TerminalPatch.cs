@@ -17,7 +17,7 @@ internal class TerminalPatch
         {
             if (item.objectCode == word)
             {
-                Debug.Log("Found accessible terminal object with corresponding string, calling function");
+                Plugin.logger.LogInfo("Found accessible terminal object with corresponding string, calling function");
                 ___broadcastedCodeThisFrame = true;
                 item.CallFunctionFromTerminal();
             }

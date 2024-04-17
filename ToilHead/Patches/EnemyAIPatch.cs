@@ -8,23 +8,23 @@ using UnityEngine;
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(EnemyAI))]
-internal class EnemyAIPatch
+public class EnemyAIPatch
 {
-    private static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs = [];
-    private static int springSpawnCount = 0;
+    public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs { get; private set; }
+    public static int springSpawnCount { get; private set; }
 
-    public static void Reset()
+    internal static void Reset()
     {
-        enemyTurretPairs.Clear();
+        enemyTurretPairs = [];
         springSpawnCount = 0;
     }
 
-    public static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
+    internal static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
     {
         enemyTurretPairs.Add(enemyNetworkObject, turretNetworkObject);
     }
 
-    public static void DespawnAllTurrets()
+    internal static void DespawnAllTurrets()
     {
         if (!Plugin.IsHostOrServer) return;
 

@@ -8,29 +8,31 @@ namespace com.github.zehsteam.ToilHead.MonoBehaviours;
 
 public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
 {
-    public string objectCode;
-    public float codeAccessCooldownTimer;
-    private float currentCooldownTimer;
-    private bool inCooldown;
+    [HideInInspector] public string objectCode;
+    [HideInInspector] public float codeAccessCooldownTimer = 7;
+    [HideInInspector] public bool inCooldown { get; private set; }
+    [HideInInspector] public float currentCooldownTimer { get; private set; }
 
     public InteractEvent terminalCodeEvent;
     public InteractEvent terminalCodeCooldownEvent;
 
     [Space(3f)]
-    public MeshRenderer[] codeMaterials;
-    public int rows;
-    public int columns;
+    [HideInInspector] public MeshRenderer[] codeMaterials;
+    [HideInInspector] public int rows;
+    [HideInInspector] public int columns;
 
+    private bool initializedValues;
     private TextMeshProUGUI mapRadarText;
     private Image mapRadarBox;
-    private bool initializedValues;
 
     // Custom Variables
-    private RectTransform rectTransform;
+    private RectTransform mapRadarRectTransform;
 
     private void Start()
     {
         InitializeValues();
+
+        codeAccessCooldownTimer = Plugin.Instance.ConfigManager.TurretCodeAccessCooldownDuration;
     }
 
     public void InitializeValues()
@@ -39,10 +41,10 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
         initializedValues = true;
         
         GameObject gameObject = Object.Instantiate(StartOfRound.Instance.objectCodePrefab, StartOfRound.Instance.mapScreen.mapCameraStationaryUI, worldPositionStays: false);
-        rectTransform = gameObject.GetComponent<RectTransform>();
+        mapRadarRectTransform = gameObject.GetComponent<RectTransform>();
 
-        rectTransform.position = transform.position + Vector3.up * 4.35f;
-        rectTransform.position += rectTransform.up * 1.2f - rectTransform.right * 1.2f;
+        mapRadarRectTransform.position = transform.position + Vector3.up * 4.35f;
+        mapRadarRectTransform.position += mapRadarRectTransform.up * 1.2f - mapRadarRectTransform.right * 1.2f;
 
         mapRadarText = gameObject.GetComponentInChildren<TextMeshProUGUI>();
         mapRadarText.text = objectCode;
@@ -51,10 +53,10 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
 
     private void Update()
     {
-        if (rectTransform == null) return;
+        if (mapRadarRectTransform == null) return;
 
-        rectTransform.position = transform.position + Vector3.up * 4.35f;
-        rectTransform.position += rectTransform.up * 1.2f - rectTransform.right * 1.2f;
+        mapRadarRectTransform.position = transform.position + Vector3.up * 4.35f;
+        mapRadarRectTransform.position += mapRadarRectTransform.up * 1.2f - mapRadarRectTransform.right * 1.2f;
     }
 
     public void CallFunctionFromTerminal()
@@ -69,14 +71,14 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
                 StartCoroutine(countCodeAccessCooldown());
             }
 
-            Debug.Log("calling terminal function for code : " + objectCode + "; object name: " + gameObject.name);
+            Plugin.logger.LogInfo("calling terminal function for code : " + objectCode + "; object name: " + gameObject.name);
         }
     }
 
     public void TerminalCodeCooldownReached()
     {
         terminalCodeCooldownEvent.Invoke(null);
-        Debug.Log("cooldown reached for object with code : " + objectCode + "; object name: " + gameObject.name);
+        Plugin.logger.LogInfo("cooldown reached for object with code : " + objectCode + "; object name: " + gameObject.name);
     }
 
     private IEnumerator countCodeAccessCooldown()
@@ -129,7 +131,7 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
     {
         if (codeIndex > RoundManager.Instance.possibleCodesForBigDoors.Length)
         {
-            Debug.LogError("Attempted setting code to an index higher than the amount of possible codes in TerminalAccessibleObject");
+            Plugin.logger.LogError("Attempted setting code to an index higher than the amount of possible codes in FollowTerminalAccessibleObjectBehaviour");
             return;
         }
         objectCode = RoundManager.Instance.possibleCodesForBigDoors[codeIndex];

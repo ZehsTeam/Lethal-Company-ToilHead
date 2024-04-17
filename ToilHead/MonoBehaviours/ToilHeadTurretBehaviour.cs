@@ -7,14 +7,15 @@ namespace com.github.zehsteam.ToilHead.MonoBehaviours;
 
 public class ToilHeadTurretBehaviour : NetworkBehaviour
 {
-    [Header("Effects")]
+    [Header("Audio Sources")]
+    [Space(3f)]
     public AudioSource mainAudio;
-
-    [Header("Effects")]
-    public AudioSource bulletCollisionAudio;
-
-    [Header("Effects")]
     public AudioSource farAudio;
+    public AudioSource bulletCollisionAudio;
+    public AudioSource berserkAudio;
+
+    [Header("Audio Clips")]
+    [Space(3f)]
     public AudioClip firingSFX;
     public AudioClip chargingSFX;
     public AudioClip detectPlayerSFX;
@@ -22,29 +23,38 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     public AudioClip bulletsHitWallSFX;
     public AudioClip turretActivate;
     public AudioClip turretDeactivate;
+
+    [Header("Other")]
+    [Space(3f)]
     public ParticleSystem bulletParticles;
     public Animator turretAnimator;
+    [HideInInspector] public bool turretActive = true;
+    [HideInInspector] public TurretMode turretMode = TurretMode.Detection;
+    [HideInInspector] public PlayerControllerB targetPlayerWithRotation;
+    [HideInInspector] public float targetRotation;
+    [HideInInspector] public float rotationSpeed = 28f;
+    [HideInInspector] public float rotationRange = 75f;
 
-    [Header("Variables")]
-    public bool turretActive = true;
-
-    [Space(5f)]
-    public TurretMode turretMode;
+    [Header("Transforms")]
+    [Space(3f)]
     public Transform turretRod;
-    public float targetRotation;
-    public float rotationSpeed = 28f;
     public Transform turnTowardsObjectCompass;
     public Transform forwardFacingPos;
     public Transform aimPoint;
+    public Transform aimTurretCenterPoint;
     public Transform centerPoint;
-    public PlayerControllerB targetPlayerWithRotation;
-    public Transform targetTransform;
-    public float rotationRange = 75f;
-    public float currentRotation;
-    public bool rotatingOnInterval = true;
     public Transform tempTransform;
-    public AudioSource berserkAudio;
+    [HideInInspector] public Transform targetTransform;
 
+    [Header("Line Of Sight")]
+    public float LOSRange = 30f;
+    public float LOSDistance = 30f;
+    public int LOSVerticalRays = 1;
+    public int LOSHorizontalRays = 7;
+    public float LOSXRotationOffsetStart = 0f;
+    public float LOSXRotationOffsetAmountPerRay = 0f;
+
+    #region Private Variables
     private TurretMode turretModeLastFrame;
     private bool targetingDeadPlayer;
     private bool rotatingRight;
@@ -60,36 +70,57 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     private bool rotatingClockwise;
     private float berserkTimer;
     private bool enteringBerserkMode;
+    #endregion
 
-    // Custom Variables
-    [HideInInspector] public bool rotateWhenSearching = true;
+    #region Custom Variables
+    // Turret Settings
+    [HideInInspector] public float lostLOSDuration = 1f;
+
+    // Turret Detection Settings
+    [HideInInspector] public bool detectionRotation = false;
     [HideInInspector] public float detectionRotationSpeed = 28f;
+
+    // Turret Charging Settings
+    [HideInInspector] public float chargingDuration = 2f;
     [HideInInspector] public float chargingRotationSpeed = 95f;
-    
+
+    // Turret Firing Settings
+    [HideInInspector] public float firingRotationSpeed = 95f;
+
+    // Turret Berserk Settings
+    [HideInInspector] public float berserkDuration = 9f;
+    [HideInInspector] public float berserkRotationSpeed = 77f;
+    #endregion
+
     private void Start()
     {
         SyncedConfigManager configManager = Plugin.Instance.ConfigManager;
 
-        rotateWhenSearching = configManager.TurretRotationWhenSearching;
-        detectionRotationSpeed = configManager.TurretDetectionRotationSpeed;
-        chargingRotationSpeed = configManager.TurretChargingRotationSpeed;
-        rotationSpeed = detectionRotationSpeed;
+        // Turret Settings
+        lostLOSDuration = configManager.TurretLostLOSDuration;
         rotationRange = Mathf.Abs(configManager.TurretRotationRange);
 
-        SetCodeAccessCooldownDuration(configManager.TurretCodeAccessCooldownDuration);
+        // Turret Detection Settings
+        detectionRotation = configManager.TurretDetectionRotation;
+        detectionRotationSpeed = configManager.TurretDetectionRotationSpeed;
+
+        // Turret Charging Settings
+        chargingDuration = configManager.TurretChargingDuration;
+        chargingRotationSpeed = configManager.TurretChargingRotationSpeed;
+
+        // Turret Firing Settings
+        firingRotationSpeed = configManager.TurretFiringRotationSpeed;
+
+        // Turret Berserk Settings
+        berserkDuration = configManager.TurretBerserkDuration;
+        berserkRotationSpeed = configManager.TurretBerserkRotationSpeed;
+
+        rotationSpeed = detectionRotationSpeed;
 
         if (Plugin.IsHostOrServer)
         {
             SetObjectCodeOnServer();
         }
-    }
-
-    public void SetCodeAccessCooldownDuration(float duration)
-    {
-        FollowTerminalAccessibleObjectBehaviour behaviour = gameObject.GetComponent<FollowTerminalAccessibleObjectBehaviour>();
-        if (behaviour == null) return;
-
-        behaviour.codeAccessCooldownTimer = duration;
     }
 
     private IEnumerator FadeBulletAudio()
@@ -138,32 +169,6 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             wasTargetingPlayerLastFrame = false;
             turretMode = TurretMode.Detection;
         }
-
-        return true;
-    }
-
-    private bool RotateTurretRod()
-    {
-        if (rotatingClockwise)
-        {
-            turnTowardsObjectCompass.localEulerAngles = new Vector3(25f, turretRod.localEulerAngles.y - Time.deltaTime * rotationSpeed, 0f);
-            turretRod.localRotation = Quaternion.RotateTowards(turretRod.localRotation, turnTowardsObjectCompass.localRotation, rotationSpeed * Time.deltaTime);
-            return false;
-        }
-
-        if (rotatingSmoothly)
-        {
-            if (rotateWhenSearching)
-            {
-                turnTowardsObjectCompass.localEulerAngles = new Vector3(0f, Mathf.Clamp(targetRotation, 0f - rotationRange, rotationRange), 0f);
-            }
-            else
-            {
-                turnTowardsObjectCompass.localEulerAngles = Vector3.zero;
-            }
-        }
-
-        turretRod.localRotation = Quaternion.RotateTowards(turretRod.localRotation, turnTowardsObjectCompass.localRotation, rotationSpeed * Time.deltaTime);
 
         return true;
     }
@@ -219,7 +224,6 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             switchRotationTimer = 0f;
             bool setRotateRight = !rotatingRight;
             SwitchRotationClientRpc(setRotateRight);
-            SwitchRotationOnInterval(setRotateRight);
         }
         else
         {
@@ -228,7 +232,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (turretInterval >= 0.25f)
         {
             turretInterval = 0f;
-            PlayerControllerB playerControllerB = CheckForPlayersInLineOfSight(1.35f, angleRangeCheck: true);
+            PlayerControllerB playerControllerB = CheckForPlayersInLineOfSight(angleRangeCheck: true);
             if (playerControllerB != null && !playerControllerB.isPlayerDead)
             {
                 targetPlayerWithRotation = playerControllerB;
@@ -260,13 +264,13 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         {
             return;
         }
-        if (turretInterval >= 1.5f)
+        if (turretInterval >= chargingDuration)
         {
             turretInterval = 0f;
-            Debug.Log("ToilHead Turret: Charging timer is up, setting to firing mode");
+            Plugin.logger.LogInfo("Charging timer is up, setting to firing mode");
             if (!hasLineOfSight)
             {
-                Debug.Log("hasLineOfSight is false");
+                Plugin.logger.LogInfo("hasLineOfSight is false");
                 targetPlayerWithRotation = null;
                 RemoveTargetedPlayerClientRpc();
             }
@@ -299,6 +303,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 StopCoroutine(fadeBulletAudioCoroutine);
             }
             bulletCollisionAudio.volume = 1f;
+            rotationSpeed = firingRotationSpeed;
             rotatingSmoothly = false;
             lostLOSTimer = 0f;
             turretAnimator.SetInteger("TurretMode", 2);
@@ -306,7 +311,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (turretInterval >= 0.21f)
         {
             turretInterval = 0f;
-            if (CheckForPlayersInLineOfSight(3f) == GameNetworkManager.Instance.localPlayerController)
+            if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == GameNetworkManager.Instance.localPlayerController)
             {
                 if (GameNetworkManager.Instance.localPlayerController.health > 50)
                 {
@@ -337,7 +342,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             turretAnimator.SetInteger("TurretMode", 1);
             berserkTimer = 1.3f;
             berserkAudio.Play();
-            rotationSpeed = 77f;
+            rotationSpeed = berserkRotationSpeed;
             enteringBerserkMode = true;
             rotatingSmoothly = true;
             lostLOSTimer = 0f;
@@ -351,7 +356,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             {
                 enteringBerserkMode = false;
                 rotatingClockwise = true;
-                berserkTimer = 9f;
+                berserkTimer = berserkDuration;
                 turretAnimator.SetInteger("TurretMode", 2);
                 mainAudio.clip = firingSFX;
                 mainAudio.Play();
@@ -370,7 +375,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (turretInterval >= 0.21f)
         {
             turretInterval = 0f;
-            if (CheckForPlayersInLineOfSight(3f) == GameNetworkManager.Instance.localPlayerController)
+            if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == GameNetworkManager.Instance.localPlayerController)
             {
                 if (GameNetworkManager.Instance.localPlayerController.health > 50)
                 {
@@ -402,6 +407,32 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
     }
     #endregion
+
+    private bool RotateTurretRod()
+    {
+        if (rotatingClockwise)
+        {
+            turnTowardsObjectCompass.localEulerAngles = new Vector3(25f, turretRod.localEulerAngles.y - Time.deltaTime * rotationSpeed, 0f);
+            turretRod.localRotation = Quaternion.RotateTowards(turretRod.localRotation, turnTowardsObjectCompass.localRotation, rotationSpeed * Time.deltaTime);
+            return false;
+        }
+
+        if (rotatingSmoothly)
+        {
+            if (detectionRotation)
+            {
+                turnTowardsObjectCompass.localEulerAngles = new Vector3(0f, Mathf.Clamp(targetRotation, 0f - rotationRange, rotationRange), 0f);
+            }
+            else
+            {
+                turnTowardsObjectCompass.localEulerAngles = Vector3.zero;
+            }
+        }
+
+        turretRod.localRotation = Quaternion.RotateTowards(turretRod.localRotation, turnTowardsObjectCompass.localRotation, rotationSpeed * Time.deltaTime);
+
+        return true;
+    }
 
     private void SetTargetToPlayerBody()
     {
@@ -455,62 +486,108 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         lostLOSTimer += Time.deltaTime;
 
-        if (lostLOSTimer >= 2f)
+        if (lostLOSTimer >= lostLOSDuration)
         {
             lostLOSTimer = 0f;
-            Debug.Log("ToilHead Turret: LOS timer ended on server. checking for new player target");
+            Plugin.logger.LogInfo("LOS timer ended on server. checking for new player target");
             PlayerControllerB playerControllerB = CheckForPlayersInLineOfSight();
             if (playerControllerB != null)
             {
                 targetPlayerWithRotation = playerControllerB;
                 SwitchTargetedPlayerClientRpc((int)playerControllerB.playerClientId);
-                Debug.Log("ToilHead Turret: Got new player target");
+                Plugin.logger.LogInfo("Got new player target");
             }
             else
             {
-                Debug.Log("ToilHead Turret: No new player to target; returning to detection mode.");
+                Plugin.logger.LogInfo("No new player to target; returning to detection mode.");
                 targetPlayerWithRotation = null;
                 RemoveTargetedPlayerClientRpc();
             }
         }
     }
 
-    public PlayerControllerB CheckForPlayersInLineOfSight(float radius = 2f, bool angleRangeCheck = false)
+    #region LineOfSight
+    public PlayerControllerB CheckForPlayersInLineOfSight(float range = -1f, int verticalRays = -1, int horizontalRays = -1, bool angleRangeCheck = false)
     {
-        Vector3 forward = aimPoint.forward;
-        forward = Quaternion.Euler(0f, (float)(int)(0f - rotationRange) / radius, 0f) * forward;
-        float num = rotationRange / radius * 2f;
-        for (int i = 0; i <= 6; i++)
+        if (range == -1f) range = LOSRange;
+        if (verticalRays == -1) verticalRays = LOSVerticalRays;
+        if (horizontalRays == -1) horizontalRays = LOSHorizontalRays;
+
+        return CheckForPlayersInLineOfSightVertical(range, verticalRays, horizontalRays, angleRangeCheck);
+    }
+
+    private PlayerControllerB CheckForPlayersInLineOfSightVertical(float range, int verticalRays, int horizontalRays, bool angleRangeCheck)
+    {
+        float xRotationOffset = LOSXRotationOffsetStart;
+
+        if (verticalRays < 2)
         {
-            shootRay = new Ray(centerPoint.position, forward);
-            if (Physics.Raycast(shootRay, out hit, 30f, 1051400, QueryTriggerInteraction.Ignore))
+            xRotationOffset = 0f;
+        }
+
+        for (int i = 0; i < horizontalRays; i++)
+        {
+            PlayerControllerB playerControllerB = CheckForPlayersInLineOfSightHorizontal(range, horizontalRays, angleRangeCheck, xRotationOffset);
+            xRotationOffset += LOSXRotationOffsetAmountPerRay;
+            if (playerControllerB is null) continue;
+
+            return playerControllerB;
+        }
+
+        return null;
+    }
+
+    private PlayerControllerB CheckForPlayersInLineOfSightHorizontal(float range, int horizontalRays, bool angleRangeCheck, float xRotationOffset)
+    {
+        float yRotationAmount = range;
+        float yRotationOffset = 0f;
+
+        if (horizontalRays > 1)
+        {
+            yRotationAmount = range / (horizontalRays - 1);
+            yRotationOffset = 0f - range / 2f;
+        }
+
+        for (int i = 0; i <= horizontalRays; i++)
+        {
+            Vector3 forward = aimPoint.forward;
+            forward = Quaternion.Euler(xRotationOffset, yRotationOffset + yRotationAmount * i, 0f) * forward;
+            shootRay = new Ray(aimTurretCenterPoint.position, forward);
+
+            if (Physics.Raycast(shootRay, out hit, LOSDistance, 1051400, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.CompareTag("Player"))
                 {
                     PlayerControllerB component = hit.transform.GetComponent<PlayerControllerB>();
-                    if (!(component == null))
+                    
+                    if (component is not null)
                     {
                         if (angleRangeCheck && Vector3.Angle(component.transform.position + Vector3.up * 1.75f - centerPoint.position, forwardFacingPos.forward) > rotationRange)
                         {
                             return null;
                         }
+
                         return component;
                     }
+
                     continue;
                 }
+
                 if ((turretMode == TurretMode.Firing || (turretMode == TurretMode.Berserk && !enteringBerserkMode)) && hit.transform.tag.StartsWith("PlayerRagdoll"))
                 {
                     Rigidbody component2 = hit.transform.GetComponent<Rigidbody>();
-                    if (component2 != null)
+
+                    if (component2 is not null)
                     {
                         component2.AddForce(forward.normalized * 42f, ForceMode.Impulse);
                     }
                 }
             }
-            forward = Quaternion.Euler(0f, num / 6f, 0f) * forward;
         }
+
         return null;
     }
+    #endregion
 
     #region Networking
     [ClientRpc]
@@ -626,6 +703,59 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         behaviour.InitializeValues();
         behaviour.SetCodeTo(codeIndex);
+    }
+    #endregion
+
+    #region Debugging
+    private void OnDrawGizmosSelected()
+    {
+        DrawLineOfSightLines();
+    }
+
+    private void DrawLineOfSightLines()
+    {
+        if (aimPoint is null || aimTurretCenterPoint is null) return;
+
+        DrawLineOfSightLinesVertical();
+    }
+
+    private void DrawLineOfSightLinesVertical()
+    {
+        float xRotationOffset = LOSXRotationOffsetStart;
+
+        if (LOSVerticalRays < 2)
+        {
+            xRotationOffset = 0f;
+        }
+
+        for (int i = 0; i < LOSVerticalRays; i++)
+        {
+            DrawLineOfSightLinesHorizontal(xRotationOffset);
+            xRotationOffset += LOSXRotationOffsetAmountPerRay;
+        }
+    }
+
+    private void DrawLineOfSightLinesHorizontal(float xRotationOffset)
+    {
+        Gizmos.color = Color.red;
+
+        Vector3 position = aimTurretCenterPoint.position;
+        float yRotationAmount = LOSRange;
+        float yRotationOffset = 0f;
+
+        if (LOSHorizontalRays > 1)
+        {
+            yRotationAmount = LOSRange / (LOSHorizontalRays - 1);
+            yRotationOffset = 0f - LOSRange / 2f;
+        }
+
+        for (int i = 0; i < LOSHorizontalRays; i++)
+        {
+            Vector3 forward = aimPoint.forward;
+            forward = Quaternion.Euler(xRotationOffset, yRotationOffset + yRotationAmount * i, 0f) * forward;
+
+            Gizmos.DrawLine(position, position + new Ray(position, forward).direction * LOSDistance);
+        }
     }
     #endregion
 }
