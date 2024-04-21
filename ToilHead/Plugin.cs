@@ -69,7 +69,7 @@ internal class Plugin : BaseUnityPlugin
 
     public void OnNewLevelLoaded()
     {
-        // I will enabled this when Wesley's Asteroid13 moons is working in v50 (This includes LLL working in v50)
+        // I will enabled this when Wesley's Asteroid13 moon is working in v50 (This includes LLL working in v50)
         //Secret.SpawnSecrets();
     }
 
@@ -85,75 +85,93 @@ internal class Plugin : BaseUnityPlugin
 
         if (enemyAI == null)
         {
-            logger.LogError("Error: failed to set Toil-Head on server. EnemyAI could not be found.");
+            logger.LogError("Error: Failed to set Toil-Head on server. EnemyAI is null.");
             return false;
         }
 
+        NetworkObject enemyNetworkObject = enemyAI.GetComponent<NetworkObject>();
+
         if (!Utils.IsSpring(enemyAI))
         {
-            logger.LogError("Error: failed to set Toil-Head on server. EnemyAI is not a Coil-Head.");
+            logger.LogError($"Error: Failed to set Toil-Head on server. Enemy is not a Coil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
             return false;
         }
 
         if (Utils.IsToilHead(enemyAI))
         {
-            logger.LogError("Error: failed to set Toil-Head on server. EnemyAI is already a Toil-Head. Skipping.");
+            logger.LogWarning($"Warning: Failed to set Toil-Head on server. Enemy is already a Toil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
             return false;
         }
-
-        if (Content.turretPrefab == null)
-        {
-            logger.LogError("Error: failed to set Toil-Head on server. Turret prefab could not be found.");
-            return false;
-        }
-
-        NetworkObject enemyNetworkObject = enemyAI.gameObject.GetComponent<NetworkObject>();
-        NetworkObject turretNetworkObject = SpawnTurretOnServer(enemyAI.gameObject.transform);
-        EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretNetworkObject);
-
-        PluginNetworkBehaviour.Instance.SetToilHeadClientRpc(NetworkUtils.GetNetworkObjectId(enemyNetworkObject));
-        SetToilHeadOnLocalClient(enemyAI.gameObject);
-
-        EnemyAIPatch.spawnCount++;
+        
+        SpawnTurretOnServer(enemyAI.transform);
+        PluginNetworkBehaviour.Instance.SetToilHeadClientRpc(enemyNetworkObject);
+        SetToilHeadOnLocalClient(enemyNetworkObject);
 
         return true;
     }
 
-    private NetworkObject SpawnTurretOnServer(Transform parent)
+    private NetworkObject SpawnTurretOnServer(Transform parentTransform)
     {
         if (!IsHostOrServer) return null;
 
-        GameObject turretObject = Object.Instantiate(Content.turretPrefab, Vector3.zero, Quaternion.identity, parent);
+        GameObject turretObject = Object.Instantiate(Content.turretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
+        NetworkObject enemyNetworkObject = turretObject.GetComponent<NetworkObject>();
+        enemyNetworkObject.Spawn(destroyWithScene: true);
+        turretObject.transform.SetParent(parentTransform);
 
-        NetworkObject turretNetworkObject = turretObject.GetComponent<NetworkObject>();
-        turretNetworkObject.Spawn(destroyWithScene: true);
-
-        turretObject.transform.SetParent(parent);
-
-        return turretNetworkObject;
+        return enemyNetworkObject;
     }
 
-    public void SetToilHeadOnLocalClient(GameObject enemyObject)
+    public void SetToilHeadOnLocalClient(NetworkObject enemyNetworkObject)
     {
-        Transform enemyHeadTransform = enemyObject.transform.GetChild(0).Find("Head");
-        if (enemyHeadTransform == null) return;
+        if (enemyNetworkObject == null)
+        {
+            logger.LogError($"Error: Failed to set Toil-Head on local client. Enemy NetworkObject is null.");
+            return;
+        }
 
-        Transform turretTransform = enemyObject.transform.Find("ToilHeadTurretContainer(Clone)");
-        if (turretTransform == null) return;
+        if (enemyNetworkObject.TryGetComponent<EnemyAI>(out EnemyAI enemyAI))
+        {
+            if (!Utils.IsSpring(enemyAI))
+            {
+                logger.LogError($"Error: Failed to set Toil-Head on local client. Enemy \"{enemyNetworkObject.gameObject.name}\" is not a Coil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+                return;
+            }
 
-        turretTransform.localPosition = Vector3.zero;
-        turretTransform.localRotation = Quaternion.identity;
+            if (EnemyAIPatch.enemyTurretPairs.ContainsKey(enemyNetworkObject))
+            {
+                logger.LogWarning($"Warning: Failed to set Toil-Head on local client. Enemy is already a Toil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+                return;
+            }
+        }
+        else
+        {
+            logger.LogError($"Error: Failed to set Toil-Head on local client. Could not find EnemyAI. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return;
+        }
 
-        Utils.DisableColliders(turretTransform.gameObject, keepScanNodeEnabled: true);
+        try
+        {
+            Transform turretTransform = enemyNetworkObject.transform.Find("ToilHeadTurretContainer(Clone)");
+            Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
+            Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).Find("Head");
 
-        Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
-        if (syncToHeadTransform == null) return;
+            turretTransform.localPosition = Vector3.zero;
+            turretTransform.localRotation = Quaternion.identity;
 
-        ParentToTransformBehaviour behaviour = enemyHeadTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
-        behaviour.SetTargetAndParent(syncToHeadTransform, enemyHeadTransform);
-        behaviour.SetPositionOffset(new Vector3(0f, 0.425f, -0.02f));
-        behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
+            Utils.DisableColliders(turretTransform.gameObject, keepScanNodeEnabled: true);
 
-        logger.LogInfo("Spawned Toil-Head, Good luck :3");
+            ParentToTransformBehaviour behaviour = enemyHeadTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+            behaviour.SetTargetAndParent(syncToHeadTransform, enemyHeadTransform);
+            behaviour.SetPositionOffset(new Vector3(0f, 0.425f, -0.02f));
+            behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
+
+            EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
+            EnemyAIPatch.spawnCount++;
+        }
+        catch (System.Exception e)
+        {
+            logger.LogError($"Error: Failed to set Toil-Head on local client. (NetworkObject: {enemyNetworkObject.NetworkObjectId})\n\n{e}");
+        }
     }
 }

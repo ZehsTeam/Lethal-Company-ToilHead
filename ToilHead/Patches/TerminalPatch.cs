@@ -9,18 +9,17 @@ internal class TerminalPatch
 {
     [HarmonyPatch("CallFunctionInAccessibleTerminalObject")]
     [HarmonyPostfix]
-    static void CallFunctionInAccessibleTerminalObjectPatch(ref Terminal __instance, string word, ref bool ___broadcastedCodeThisFrame)
+    static void CallFunctionInAccessibleTerminalObjectPatch(string word, ref bool ___broadcastedCodeThisFrame)
     {
         FollowTerminalAccessibleObjectBehaviour[] array = Object.FindObjectsByType<FollowTerminalAccessibleObjectBehaviour>(FindObjectsSortMode.None);
 
         foreach (var item in array)
         {
-            if (item.objectCode == word)
-            {
-                Plugin.logger.LogInfo("Found accessible terminal object with corresponding string, calling function");
-                ___broadcastedCodeThisFrame = true;
-                item.CallFunctionFromTerminal();
-            }
+            if (item.objectCode != word) continue;
+
+            Plugin.logger.LogInfo("Found accessible terminal object with corresponding string, calling function.");
+            ___broadcastedCodeThisFrame = true;
+            item.CallFunctionFromTerminal();
         }
     }
 }

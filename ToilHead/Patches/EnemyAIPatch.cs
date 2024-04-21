@@ -9,8 +9,8 @@ namespace com.github.zehsteam.ToilHead.Patches;
 [HarmonyPatch(typeof(EnemyAI))]
 internal class EnemyAIPatch
 {
-    public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs;
-    public static int spawnCount;
+    public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs = [];
+    public static int spawnCount = 0;
 
     public static void Reset()
     {
@@ -27,15 +27,11 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        NetworkObject[] turretNetworkObjects = enemyTurretPairs.Values.ToArray();
+        NetworkObject[] enemyNetworkObjects = enemyTurretPairs.Keys.ToArray();
 
-        foreach (var networkObject in turretNetworkObjects)
+        foreach (var enemyNetworkObject in enemyNetworkObjects)
         {
-            if (!networkObject.IsSpawned) continue;
-
-            networkObject.Despawn();
-
-            Plugin.logger.LogInfo($"Despawned Toil-Head turret (NetworkObjectId: {networkObject.NetworkObjectId}).");
+            DespawnTurret(enemyNetworkObject);
         }
 
         Plugin.logger.LogInfo($"Finished despawning all Toil-Head turrets.");
@@ -97,10 +93,10 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        NetworkObject enemyNetworkObject = enemyAI.gameObject.GetComponent<NetworkObject>();
-        if (enemyNetworkObject == null) return;
-
-        DespawnTurret(enemyNetworkObject);
+        if (enemyAI.TryGetComponent<NetworkObject>(out NetworkObject enemyNetworkObject))
+        {
+            DespawnTurret(enemyNetworkObject);
+        }
     }
 
     private static void DespawnTurret(NetworkObject enemyNetworkObject)

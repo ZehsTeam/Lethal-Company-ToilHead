@@ -22,7 +22,11 @@ internal class GameNetworkManagerPatch
 
     private static void AddNetworkPrefab(GameObject prefab)
     {
-        if (prefab == null) return;
+        if (prefab == null)
+        {
+            Plugin.logger.LogError("Error: Failed to register network prefab. Prefab is null.");
+            return;
+        }
 
         NetworkManager.Singleton.AddNetworkPrefab(prefab);
 

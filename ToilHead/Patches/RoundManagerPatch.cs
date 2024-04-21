@@ -9,7 +9,7 @@ internal class RoundManagerPatch
     [HarmonyPostfix]
     static void LoadNewLevelPatch()
     {
-        // Call on Host or Server
+        // Call on Host/Server
         Plugin.Instance.OnNewLevelLoaded();
     }
 

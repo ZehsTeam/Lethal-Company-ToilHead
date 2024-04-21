@@ -9,25 +9,25 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 {
     [Header("Audio Sources")]
     [Space(3f)]
-    public AudioSource mainAudio;
-    public AudioSource farAudio;
-    public AudioSource bulletCollisionAudio;
-    public AudioSource berserkAudio;
+    public AudioSource mainAudio = null;
+    public AudioSource farAudio = null;
+    public AudioSource bulletCollisionAudio = null;
+    public AudioSource berserkAudio = null;
 
     [Header("Audio Clips")]
     [Space(3f)]
-    public AudioClip firingSFX;
-    public AudioClip chargingSFX;
-    public AudioClip detectPlayerSFX;
-    public AudioClip firingFarSFX;
-    public AudioClip bulletsHitWallSFX;
-    public AudioClip turretActivate;
-    public AudioClip turretDeactivate;
+    public AudioClip firingSFX = null;
+    public AudioClip chargingSFX = null;
+    public AudioClip detectPlayerSFX = null;
+    public AudioClip firingFarSFX = null;
+    public AudioClip bulletsHitWallSFX = null;
+    public AudioClip turretActivate = null;
+    public AudioClip turretDeactivate = null;
 
     [Header("Other")]
     [Space(3f)]
-    public ParticleSystem bulletParticles;
-    public Animator turretAnimator;
+    public ParticleSystem bulletParticles = null;
+    public Animator turretAnimator = null;
     [HideInInspector] public bool turretActive = true;
     [HideInInspector] public TurretMode turretMode = TurretMode.Detection;
     [HideInInspector] public PlayerControllerB targetPlayerWithRotation;
@@ -37,13 +37,13 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     [Header("Transforms")]
     [Space(3f)]
-    public Transform turretRod;
-    public Transform turnTowardsObjectCompass;
-    public Transform forwardFacingPos;
-    public Transform aimPoint;
-    public Transform aimTurretCenterPoint;
-    public Transform centerPoint;
-    public Transform tempTransform;
+    public Transform turretRod = null;
+    public Transform turnTowardsObjectCompass = null;
+    public Transform forwardFacingPos = null;
+    public Transform aimPoint = null;
+    public Transform aimTurretCenterPoint = null;
+    public Transform centerPoint = null;
+    public Transform tempTransform = null;
     [HideInInspector] public Transform targetTransform;
 
     [Header("Line Of Sight")]
@@ -74,7 +74,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     #region Custom Variables
     // Turret Settings
-    [HideInInspector] public float lostLOSDuration = 1f;
+    [HideInInspector] public float lostLOSDuration = 0.75f;
 
     // Turret Detection Settings
     [HideInInspector] public bool detectionRotation = false;
@@ -272,7 +272,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (turretInterval >= chargingDuration)
         {
             turretInterval = 0f;
-            Plugin.logger.LogInfo("Charging timer is up, setting to firing mode");
+            Plugin.logger.LogInfo("Charging timer is up, setting to firing mode.");
             if (!hasLineOfSight)
             {
                 Plugin.logger.LogInfo("hasLineOfSight is false");
@@ -494,13 +494,13 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (lostLOSTimer >= lostLOSDuration)
         {
             lostLOSTimer = 0f;
-            Plugin.logger.LogInfo("LOS timer ended on server. checking for new player target");
+            Plugin.logger.LogInfo("LOS timer ended on server. checking for new player target.");
             PlayerControllerB playerControllerB = CheckForPlayersInLineOfSight();
             if (playerControllerB != null)
             {
                 targetPlayerWithRotation = playerControllerB;
                 SwitchTargetedPlayerClientRpc((int)playerControllerB.playerClientId);
-                Plugin.logger.LogInfo("Got new player target");
+                Plugin.logger.LogInfo("Got new player target.");
             }
             else
             {

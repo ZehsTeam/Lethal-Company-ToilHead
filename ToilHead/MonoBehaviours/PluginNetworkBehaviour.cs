@@ -14,19 +14,25 @@ public class PluginNetworkBehaviour : NetworkBehaviour
     [ClientRpc]
     internal void SendConfigToPlayerClientRpc(SyncedConfigData syncedConfigData, ClientRpcParams clientRpcParams = default)
     {
-        if (Plugin.IsHostOrServer) return;
+        if (IsHost || IsServer) return;
 
         Plugin.logger.LogInfo("Syncing config with host.");
         Plugin.Instance.ConfigManager.SetHostConfigData(syncedConfigData);
     }
 
     [ClientRpc]
-    public void SetToilHeadClientRpc(int enemyNetworkObjectId)
+    public void SetToilHeadClientRpc(NetworkObjectReference enemyReference)
     {
-        if (Plugin.IsHostOrServer) return;
+        if (IsHost || IsServer) return;
 
-        NetworkObject enemyNetworkObject = NetworkUtils.GetNetworkObject(enemyNetworkObjectId);
-
-        Plugin.Instance.SetToilHeadOnLocalClient(enemyNetworkObject.gameObject);
+        if (enemyReference.TryGet(out NetworkObject targetObject))
+        {
+            Plugin.Instance.SetToilHeadOnLocalClient(targetObject);
+        }
+        else
+        {
+            // Target not found on server, likely because it already has been destroyed/despawned.
+            Plugin.Instance.SetToilHeadOnLocalClient(null);
+        }
     }
 }
