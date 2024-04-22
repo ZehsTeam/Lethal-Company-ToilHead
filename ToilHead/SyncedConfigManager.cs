@@ -12,6 +12,7 @@ public class SyncedConfigManager
     #region ConfigEntries
     // Toil-Head Settings
     private ConfigEntry<int> SpawnChanceCfg;
+    private ConfigEntry<bool> UseAdditionalSpawnChanceCfg;
     private ConfigEntry<int> MaxSpawnCountCfg;
 
     // Turret Settings
@@ -38,6 +39,7 @@ public class SyncedConfigManager
     #region Config Setting Get/Set Properties
     // Toil-Head Settings
     internal int SpawnChance { get { return SpawnChanceCfg.Value; } set { SpawnChanceCfg.Value = value; } }
+    internal bool UseAdditionalSpawnChance { get { return UseAdditionalSpawnChanceCfg.Value; } set { UseAdditionalSpawnChanceCfg.Value = value; } }
     internal int MaxSpawnCount { get { return MaxSpawnCountCfg.Value; } set { MaxSpawnCountCfg.Value = value; } }
 
     // Turret Settings
@@ -189,9 +191,14 @@ public class SyncedConfigManager
         // Toil-Head Settings
         SpawnChanceCfg = config.Bind(
             new ConfigDefinition("Toil-Head Settings", "spawnChance"),
-            30,
+            40,
             new ConfigDescription("The percent chance for a Coil-Head to turn into a Toil-Head.",
             new AcceptableValueRange<int>(0, 100))
+        );
+        UseAdditionalSpawnChanceCfg = config.Bind(
+            new ConfigDefinition("Toil-Head Settings", "useAdditionalSpawnChance"),
+            true,
+            new ConfigDescription("The dynamic additional spawn chance for the Toil-Head based certain circumstances.")
         );
         MaxSpawnCountCfg = config.Bind(
             new ConfigDefinition("Toil-Head Settings", "maxSpawnCount"),

@@ -1,5 +1,5 @@
 # ToilHead
-**Coil-Heads can sometimes spawn with a turret on their head.**
+**Coil-Heads can sometimes spawn with a turret on their head. Highly Configurable.**
 
 * This mod is for all clients.
 
@@ -9,8 +9,9 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 ## Mod Compatibility
 **This mod is compatible with:**
-* CoilHeadStare
-* GhostCodes
+* [CoilHeadStare](https://thunderstore.io/c/lethal-company/p/TwinDimensionalProductions/CoilHeadStare/)
+* [ghostCodes](https://thunderstore.io/c/lethal-company/p/darmuh/ghostCodes/) (Includes extra functionality)
+* [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) (Includes extra functionality)
 
 ## Config Settings
 * **Toil-Head Settings** are host only.
@@ -18,7 +19,8 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `spawnChance` | `Int32` | `30` | The percent chance for a Coil-Head to turn into a Toil-Head. |
+| `spawnChance` | `Int32` | `40` | The percent chance for a Coil-Head to turn into a Toil-Head. |
+| `useAdditionalSpawnChance` | `Boolean` | `true` | The dynamic additional spawn chance for the Toil-Head based certain circumstances. |
 | `maxSpawnCount` | `Int32` | `1` | The max amount of Toil-Heads that can spawn. |
 
 | Turret Settings | Setting type | Default value | Description |

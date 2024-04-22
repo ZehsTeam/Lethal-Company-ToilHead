@@ -65,6 +65,8 @@ internal class Plugin : BaseUnityPlugin
     {
         logger.LogInfo($"Local player disconnected. Removing hostConfigData.");
         ConfigManager.SetHostConfigData(null);
+
+        EnemyAIPatch.Reset();
     }
 
     public void OnNewLevelLoaded()

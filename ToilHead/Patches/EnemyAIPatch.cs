@@ -12,6 +12,8 @@ internal class EnemyAIPatch
     public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs = [];
     public static int spawnCount = 0;
 
+    private static int additionalSpawnChance = 0;
+
     public static void Reset()
     {
         enemyTurretPairs = [];
@@ -51,10 +53,25 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        if (!Utils.RandomPercent(Plugin.Instance.ConfigManager.SpawnChance)) return;
         if (spawnCount >= Plugin.Instance.ConfigManager.MaxSpawnCount) return;
 
-        Plugin.Instance.SetToilHeadOnServer(enemyAI);
+        int spawnChance = Plugin.Instance.ConfigManager.SpawnChance;
+
+        if (Plugin.Instance.ConfigManager.UseAdditionalSpawnChance)
+        {
+            spawnChance += additionalSpawnChance;
+        }
+
+        if (!Utils.RandomPercent(spawnChance))
+        {
+            additionalSpawnChance += 10;
+            return;
+        }
+
+        if (Plugin.Instance.SetToilHeadOnServer(enemyAI))
+        {
+            additionalSpawnChance = 0;
+        }
     }
 
     [HarmonyPatch("HitEnemyServerRpc")]
