@@ -9,7 +9,7 @@ public class Utils
     {
         if (percent <= 0) return false;
         if (percent >= 100) return true;
-        return Random.Range(1f, 100f) <= percent;
+        return Random.value <= percent * 0.01f;
     }
 
     public static void DisableColliders(GameObject gameObject, bool keepScanNodeEnabled = false)
@@ -36,14 +36,11 @@ public class Utils
     {
         if (!IsSpring(enemyAI)) return false;
 
-        return enemyAI.transform.Find("ToilHeadTurretContainer(Clone)") != null;
+        return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
     }
 
     public static ToilHeadTurretBehaviour GetToilHeadTurretBehaviour(EnemyAI enemyAI)
     {
-        Transform toilHeadTurretTransform = enemyAI.transform.Find("ToilHeadTurretContainer(Clone)");
-        if (toilHeadTurretTransform == null) return null;
-
-        return toilHeadTurretTransform.gameObject.GetComponentInChildren<ToilHeadTurretBehaviour>();
+        return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>();
     }
 }

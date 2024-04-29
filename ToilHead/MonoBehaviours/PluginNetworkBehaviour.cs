@@ -17,7 +17,7 @@ public class PluginNetworkBehaviour : NetworkBehaviour
         if (IsHost || IsServer) return;
 
         Plugin.logger.LogInfo("Syncing config with host.");
-        Plugin.Instance.ConfigManager.SetHostConfigData(syncedConfigData);
+        Plugin.ConfigManager.SetHostConfigData(syncedConfigData);
     }
 
     [ClientRpc]

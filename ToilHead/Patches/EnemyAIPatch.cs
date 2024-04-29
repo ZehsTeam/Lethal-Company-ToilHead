@@ -12,7 +12,9 @@ internal class EnemyAIPatch
     public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs = [];
     public static int spawnCount = 0;
 
-    private static int additionalSpawnChance = 0;
+    public static ToilHeadData toilHeadData => ToilHeadDataManager.GetToilHeadDataForCurrentLevel();
+    public static int maxSpawnCount => toilHeadData.configData.maxSpawnCount;
+    public static int spawnChance => toilHeadData.configData.spawnChance;
 
     public static void Reset()
     {
@@ -53,25 +55,16 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        if (spawnCount >= Plugin.Instance.ConfigManager.MaxSpawnCount) return;
+        Plugin.Instance.LogInfoExtended($"spawnCount: {spawnCount}, maxSpawnCount: {maxSpawnCount}, spawnChance: %{spawnChance}");
 
-        int spawnChance = Plugin.Instance.ConfigManager.SpawnChance;
-
-        if (Plugin.Instance.ConfigManager.UseAdditionalSpawnChance)
-        {
-            spawnChance += additionalSpawnChance;
-        }
+        if (spawnCount >= maxSpawnCount) return;
 
         if (!Utils.RandomPercent(spawnChance))
         {
-            additionalSpawnChance += 10;
             return;
         }
 
-        if (Plugin.Instance.SetToilHeadOnServer(enemyAI))
-        {
-            additionalSpawnChance = 0;
-        }
+        Plugin.Instance.SetToilHeadOnServer(enemyAI);
     }
 
     [HarmonyPatch("HitEnemyServerRpc")]

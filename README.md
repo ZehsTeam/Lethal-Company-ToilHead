@@ -9,44 +9,57 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 ## Mod Compatibility
 **This mod is compatible with:**
-* [CoilHeadStare](https://thunderstore.io/c/lethal-company/p/TwinDimensionalProductions/CoilHeadStare/)
-* [ghostCodes](https://thunderstore.io/c/lethal-company/p/darmuh/ghostCodes/) (Includes extra functionality)
-* [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) (Includes extra functionality)
+* [CoilHeadStare](https://thunderstore.io/c/lethal-company/p/TwinDimensionalProductions/CoilHeadStare/) - *If you want to die harder :3*
+* [ghostCodes](https://thunderstore.io/c/lethal-company/p/darmuh/ghostCodes/) - *Includes extra functionality*
+* [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) - *Includes extra functionality*
 
 ## Config Settings
 * **Toil-Head Settings** are host only.
-* All other turret settings are synced with the host.
+* **All Turret Settings** are synced with the host.
+
+| General Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
+| `ExtendedLogging` | `Boolean` | `false` | Enable extended logging. |
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `spawnChance` | `Int32` | `40` | The percent chance for a Coil-Head to turn into a Toil-Head. |
-| `useAdditionalSpawnChance` | `Boolean` | `true` | The dynamic additional spawn chance for the Toil-Head based certain circumstances. |
-| `maxSpawnCount` | `Int32` | `1` | The max amount of Toil-Heads that can spawn. |
+|  |  | `MaxSpawnCount,SpawnChance` |  |
+| `OtherSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for Other/Modded moons. |
+| `LiquidationSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 44-Liquidation. |
+| `EmbrionSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 5-Embrion. |
+| `ArtificeSpawnSettings` | `String` | `1,70` | Toil-Head spawn settings for 68-Artifice. |
+| `TitanSpawnSettings` | `String` | `1,50` | Toil-Head spawn settings for 8-Titan. |
+| `DineSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for 7-Dine. |
+| `RendSpawnSettings` | `String` | `1,40` | Toil-Head spawn settings for 85-Rend. |
+| `AdamanceSpawnSettings` | `String` | `1,25` | Toil-Head spawn settings for 20-Adamance. |
+| `OffenseSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 21-Offense. |
+| `MarchSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 61-March. |
+| `VowSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 56-Vow. |
 
 | Turret Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `turretLostLOSDuration` | `Single` | `0.75` | The duration until the turret loses the target player when not in line of sight. |
-| `turretRotationRange` | `Single` | `75` | The rotation range of the turret in degrees. |
-| `turretCodeAccessCooldownDuration` | `Single` | `10` | The duration of the turret being disabled from the terminal in seconds. |
+| `TurretLostLOSDuration` | `Single` | `0.75` | The duration until the turret loses the target player when not in line of sight. |
+| `TurretRotationRange` | `Single` | `75` | The rotation range of the turret in degrees. |
+| `TurretCodeAccessCooldownDuration` | `Single` | `10` | The duration of the turret being disabled from the terminal in seconds. |
 
 | Turret Detection Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `turretDetectionRotation` | `Boolean` | `false` | If enabled, the turret will rotate when searching for players. |
-| `turretDetectionRotationSpeed` | `Single` | `28` | The rotation speed of the turret when in detection state. |
+| `TurretDetectionRotation` | `Boolean` | `false` | If enabled, the turret will rotate when searching for players. |
+| `TurretDetectionRotationSpeed` | `Single` | `28` | The rotation speed of the turret when in detection state. |
 
 | Turret Charging Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `turretChargingDuration` | `Single` | `2` | The duration of the turret charging state. |
-| `turretChargingRotationSpeed` | `Single` | `95` | The rotation speed of the turret when in charging state. |
+| `TurretChargingDuration` | `Single` | `2` | The duration of the turret charging state. |
+| `TurretChargingRotationSpeed` | `Single` | `95` | The rotation speed of the turret when in charging state. |
 
 | Turret Firing Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `turretFiringRotationSpeed` | `Single` | `95` | The rotation speed of the turret when in firing state. |
+| `TurretFiringRotationSpeed` | `Single` | `95` | The rotation speed of the turret when in firing state. |
 
 | Turret Berserk Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `turretBerserkDuration` | `Single` | `9` | The duration of the turret berserk state. |
-| `turretBerserkRotationSpeed` | `Single` | `77` | The rotation speed of the turret when in berserk state. |
+| `TurretBerserkDuration` | `Single` | `9` | The duration of the turret berserk state. |
+| `TurretBerserkRotationSpeed` | `Single` | `77` | The rotation speed of the turret when in berserk state. |
 
 ## Bug Reports, Help, or Suggestions
 https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues
@@ -61,20 +74,3 @@ https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues
     <img src="https://i.imgur.com/2wvuDcg.jpeg" width="412px">
     <img src="https://i.imgur.com/dXMbu6m.jpeg" width="412px">
 </div>
-
-## My Other Mods
-| Name | Description |
-| ----------- | ----------- |
-| [SellMyScrap](https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/) | Adds a few terminal commands to sell your scrap from the ship. Highly Configurable. SellFromTerminal + |
-| [OnlyPresents](https://thunderstore.io/c/lethal-company/p/Zehs/OnlyPresents/) | Moons will only spawn gift boxes. (Server-side) |
-| [Hitmarker](https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/) | Shows a hitmarker when you successfully hit an enemy. With additional features. (Client-side) |
-| [CoilHeadSettings](https://thunderstore.io/c/lethal-company/p/Zehs/CoilHeadSettings/) | This mod lets you configure the CoilHead. |
-| [OctolarPlush](https://thunderstore.io/c/lethal-company/p/Zehs/OctolarPlush/) | Adds a customizable Octolar Plushie scrap item. |
-| [TakeyPlush](https://thunderstore.io/c/lethal-company/p/Zehs/TakeyPlush/) | Adds a customizable Takey Plushie scrap item with some functionalities. 😈 |
-
-<a href="https://thunderstore.io/c/lethal-company/p/Zehs/SellMyScrap/"><img src="https://i.imgur.com/I6W498g.png" width="80px"></a>
-<a href="https://thunderstore.io/c/lethal-company/p/Zehs/OnlyPresents/"><img src="https://i.imgur.com/pesSqHI.png" width="80px"></a>
-<a href="https://thunderstore.io/c/lethal-company/p/Zehs/Hitmarker/"><img src="https://i.imgur.com/29IA990.png" width="80px"></a>
-<a href="https://thunderstore.io/c/lethal-company/p/Zehs/CoilHeadSettings/"><img src="https://i.imgur.com/QmIID55.png" width="80px"></a>
-<a href="https://thunderstore.io/c/lethal-company/p/Zehs/OctolarPlush/"><img src="https://i.imgur.com/Je0rHqE.png" width="80px"></a>
-<a href="https://thunderstore.io/c/lethal-company/p/Zehs/TakeyPlush/"><img src="https://i.imgur.com/ENIZdU0.png" width="80px"></a>

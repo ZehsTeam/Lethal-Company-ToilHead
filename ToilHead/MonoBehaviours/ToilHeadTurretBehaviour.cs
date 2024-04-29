@@ -104,7 +104,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     private void SetCustomVariables()
     {
-        SyncedConfigManager configManager = Plugin.Instance.ConfigManager;
+        SyncedConfigManager configManager = Plugin.ConfigManager;
 
         // Turret Settings
         lostLOSDuration = configManager.TurretLostLOSDuration;

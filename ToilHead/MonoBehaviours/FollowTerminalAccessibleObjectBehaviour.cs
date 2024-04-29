@@ -32,7 +32,7 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
     {
         InitializeValues();
 
-        codeAccessCooldownTimer = Plugin.Instance.ConfigManager.TurretCodeAccessCooldownDuration;
+        codeAccessCooldownTimer = Plugin.ConfigManager.TurretCodeAccessCooldownDuration;
     }
 
     public void InitializeValues()
@@ -131,7 +131,7 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
     {
         if (codeIndex > RoundManager.Instance.possibleCodesForBigDoors.Length)
         {
-            Plugin.logger.LogError("Attempted setting code to an index higher than the amount of possible codes in FollowTerminalAccessibleObjectBehaviour");
+            Plugin.logger.LogError("Attempted setting code to an index higher than the amount of possible codes in FollowTerminalAccessibleObjectBehaviour.");
             return;
         }
         objectCode = RoundManager.Instance.possibleCodesForBigDoors[codeIndex];

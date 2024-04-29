@@ -6,8 +6,9 @@ namespace com.github.zehsteam.ToilHead;
 
 public class Api
 {
-    public static int SpawnChance => Plugin.Instance.ConfigManager.SpawnChance;
-    public static int MaxSpawnCount => Plugin.Instance.ConfigManager.MaxSpawnCount;
+    public static ToilHeadData ToilHeadData => ToilHeadDataManager.GetToilHeadDataForCurrentLevel();
+    public static int MaxSpawnCount => ToilHeadData.configData.maxSpawnCount;
+    public static int SpawnChance => ToilHeadData.configData.spawnChance;
 
     public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs => EnemyAIPatch.enemyTurretPairs;
     public static int spawnCount => EnemyAIPatch.spawnCount;

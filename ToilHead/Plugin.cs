@@ -17,7 +17,7 @@ internal class Plugin : BaseUnityPlugin
     internal static Plugin Instance;
     internal static ManualLogSource logger;
 
-    internal SyncedConfigManager ConfigManager;
+    internal static SyncedConfigManager ConfigManager;
 
     public static bool IsHostOrServer => NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
 
@@ -36,6 +36,7 @@ internal class Plugin : BaseUnityPlugin
 
         ConfigManager = new SyncedConfigManager();
 
+        ToilHeadDataManager.Initialize();
         Content.Load();
         EnemyAIPatch.Reset();
 
@@ -104,10 +105,12 @@ internal class Plugin : BaseUnityPlugin
             logger.LogWarning($"Warning: Failed to set Toil-Head on server. Enemy is already a Toil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
             return false;
         }
-        
+
         SpawnTurretOnServer(enemyAI.transform);
         PluginNetworkBehaviour.Instance.SetToilHeadClientRpc(enemyNetworkObject);
         SetToilHeadOnLocalClient(enemyNetworkObject);
+
+        LogInfoExtended($"Spawned Toil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
 
         return true;
     }
@@ -174,6 +177,14 @@ internal class Plugin : BaseUnityPlugin
         catch (System.Exception e)
         {
             logger.LogError($"Error: Failed to set Toil-Head on local client. (NetworkObject: {enemyNetworkObject.NetworkObjectId})\n\n{e}");
+        }
+    }
+
+    public void LogInfoExtended(object data)
+    {
+        if (ConfigManager.ExtendedLogging)
+        {
+            logger.LogInfo(data);
         }
     }
 }
