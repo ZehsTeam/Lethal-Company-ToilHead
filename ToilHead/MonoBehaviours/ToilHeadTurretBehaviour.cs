@@ -315,16 +315,20 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
         if (turretInterval >= 0.21f)
         {
+            PlayerControllerB localPlayerScript = Utils.GetLocalPlayerScript();
+
             turretInterval = 0f;
-            if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == GameNetworkManager.Instance.localPlayerController)
+            if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == localPlayerScript)
             {
-                if (GameNetworkManager.Instance.localPlayerController.health > 50)
+                if (localPlayerScript.health > 50)
                 {
-                    GameNetworkManager.Instance.localPlayerController.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots);
+                    localPlayerScript.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Unknown, 2);
                 }
                 else
                 {
-                    GameNetworkManager.Instance.localPlayerController.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots);
+                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Unknown, 2);
+
+                    Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript);
                 }
             }
             shootRay = new Ray(aimPoint.position, aimPoint.forward);
@@ -379,16 +383,20 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
         if (turretInterval >= 0.21f)
         {
+            PlayerControllerB localPlayerScript = Utils.GetLocalPlayerScript();
+
             turretInterval = 0f;
-            if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == GameNetworkManager.Instance.localPlayerController)
+            if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == localPlayerScript)
             {
-                if (GameNetworkManager.Instance.localPlayerController.health > 50)
+                if (localPlayerScript.health > 50)
                 {
-                    GameNetworkManager.Instance.localPlayerController.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots);
+                    localPlayerScript.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Unknown, 2);
                 }
                 else
                 {
-                    GameNetworkManager.Instance.localPlayerController.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots);
+                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Unknown, 2);
+
+                    Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript);
                 }
             }
             shootRay = new Ray(aimPoint.position, aimPoint.forward);

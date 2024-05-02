@@ -23,6 +23,7 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
+| `SpawnToilHeadPlayerRagdolls` | `Boolean` | `true` | If enabled, will spawn a Toil-Head player ragdoll when a player dies to a Toil-Head in any way. |
 |  |  | `MaxSpawnCount,SpawnChance` |  |
 | `OtherSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for Other/Modded moons. |
 | `LiquidationSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 44-Liquidation. |

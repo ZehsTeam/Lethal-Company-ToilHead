@@ -2,7 +2,9 @@
 using BepInEx.Logging;
 using com.github.zehsteam.ToilHead.MonoBehaviours;
 using com.github.zehsteam.ToilHead.Patches;
+using GameNetcodeStuff;
 using HarmonyLib;
+using System.Collections;
 using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
@@ -33,6 +35,7 @@ internal class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(RoundManagerPatch));
         harmony.PatchAll(typeof(TerminalPatch));
         harmony.PatchAll(typeof(EnemyAIPatch));
+        harmony.PatchAll(typeof(SpringManAIPatch));
 
         ConfigManager = new SyncedConfigManager();
 
@@ -82,6 +85,7 @@ internal class Plugin : BaseUnityPlugin
         EnemyAIPatch.Reset();
     }
 
+    #region Coil-Head Enemy
     public bool SetToilHeadOnServer(EnemyAI enemyAI)
     {
         if (!IsHostOrServer) return false;
@@ -113,18 +117,6 @@ internal class Plugin : BaseUnityPlugin
         LogInfoExtended($"Spawned Toil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
 
         return true;
-    }
-
-    private NetworkObject SpawnTurretOnServer(Transform parentTransform)
-    {
-        if (!IsHostOrServer) return null;
-
-        GameObject turretObject = Object.Instantiate(Content.turretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
-        NetworkObject enemyNetworkObject = turretObject.GetComponent<NetworkObject>();
-        enemyNetworkObject.Spawn(destroyWithScene: true);
-        turretObject.transform.SetParent(parentTransform);
-
-        return enemyNetworkObject;
     }
 
     public void SetToilHeadOnLocalClient(NetworkObject enemyNetworkObject)
@@ -178,6 +170,130 @@ internal class Plugin : BaseUnityPlugin
         {
             logger.LogError($"Error: Failed to set Toil-Head on local client. (NetworkObject: {enemyNetworkObject.NetworkObjectId})\n\n{e}");
         }
+    }
+    #endregion
+
+    #region Player Ragdoll
+    public void SetToilHeadPlayerRagdoll(PlayerControllerB playerScript)
+    {
+        SetToilHeadPlayerRagdoll((int)playerScript.playerClientId);
+    }
+
+    public void SetToilHeadPlayerRagdoll(int playerId)
+    {
+        if (!IsHostOrServer)
+        {
+            PluginNetworkBehaviour.Instance.SetToilHeadPlayerRagdollServerRpc(playerId);
+            return;
+        }
+
+        if (!ConfigManager.SpawnToilHeadPlayerRagdolls) return;
+
+        StartOfRound.Instance.StartCoroutine(SetToilHeadPlayerRagdollOnServer(playerId));
+    }
+
+    private IEnumerator SetToilHeadPlayerRagdollOnServer(int playerId)
+    {
+        if (!IsHostOrServer) yield break;
+
+        PlayerControllerB playerScript = Utils.GetPlayerScript(playerId);
+
+        if (playerScript == null)
+        {
+            logger.LogError("Error: Failed to set Toil-Head on player ragdoll on server. Could not find PlayerControllerB.");
+            yield break;
+        }
+
+        yield return Utils.WaitUntil(() =>
+        {
+            return playerScript.deadBody != null;
+        });
+
+        if (playerScript.deadBody == null)
+        {
+            logger.LogError("Error: Failed to set Toil-Head on player ragdoll on server. Could not find DeadBodyInfo.");
+            yield break;
+        }
+
+        GameObject ragdollObject = playerScript.deadBody.gameObject;
+
+        if (ragdollObject.name != "PlayerRagdollSpring Variant(Clone)")
+        {
+            logger.LogError("Error: Failed to set Toil-Head on player ragdoll on server. Player ragdoll is not of type \"PlayerRagdollSpring Variant\".");
+            yield break;
+        }
+
+        yield return Utils.WaitUntil(() =>
+        {
+            return ragdollObject.GetComponentInChildren<NetworkObject>() != null;
+        });
+
+        NetworkObject ragdollNetworkObject = ragdollObject.GetComponentInChildren<NetworkObject>();
+
+        if (ragdollNetworkObject == null)
+        {
+            logger.LogError($"Error: Failed to set Toil-Head on player ragdoll on server. Could not find NetworkObject.");
+            yield break;
+        }
+
+        if (Utils.IsToilHeadPlayerRagdoll(ragdollNetworkObject.gameObject))
+        {
+            logger.LogWarning($"Warning: Failed to set Toil-Head on player ragdoll on server. Player ragdoll is already a Toil-Head player ragdoll. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})");
+            yield break;
+        }
+
+        SpawnTurretOnServer(ragdollNetworkObject.transform);
+        SetToilHeadPlayerRagdollOnLocalClient(ragdollNetworkObject);
+
+        LogInfoExtended($"Spawned Toil-Head on player ragdoll. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})");
+
+        yield return new WaitForSeconds(1f);
+
+        PluginNetworkBehaviour.Instance.SetToilHeadPlayerRagdollClientRpc(ragdollNetworkObject);
+    }
+
+    public void SetToilHeadPlayerRagdollOnLocalClient(NetworkObject ragdollNetworkObject)
+    {
+        if (ragdollNetworkObject == null)
+        {
+            logger.LogError($"Error: Failed to set Toil-Head on player ragdoll on local client. Player ragdoll NetworkObject is null.");
+            return;
+        }
+
+        try
+        {
+            Transform turretTransform = ragdollNetworkObject.transform.GetChild(0);
+            Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
+            Transform springTransform = ragdollNetworkObject.transform.parent.GetChild(0).Find("spine.004").Find("SpringContainer").Find("SpringMetarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0);
+
+            turretTransform.localPosition = Vector3.zero;
+            turretTransform.localRotation = Quaternion.identity;
+            turretTransform.localScale = new Vector3(1.949195f, 1.949194f, 1.949195f);
+
+            ParentToTransformBehaviour behaviour = springTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+            behaviour.SetTargetAndParent(syncToHeadTransform, springTransform);
+            behaviour.SetPositionOffset(new Vector3(0f, 0.0213f, 0.006f));
+            behaviour.SetRotationOffset(new Vector3(0f, 90f, 0f));
+
+            EnemyAIPatch.AddEnemyTurretPair(ragdollNetworkObject, turretTransform.GetComponent<NetworkObject>());
+        }
+        catch (System.Exception e)
+        {
+            logger.LogError($"Error: Failed to set Toil-Head on player ragdoll on local client. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})\n\n{e}");
+        }
+    }
+    #endregion
+
+    private NetworkObject SpawnTurretOnServer(Transform parentTransform)
+    {
+        if (!IsHostOrServer) return null;
+
+        GameObject turretObject = Object.Instantiate(Content.turretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
+        NetworkObject enemyNetworkObject = turretObject.GetComponent<NetworkObject>();
+        enemyNetworkObject.Spawn(destroyWithScene: true);
+        turretObject.transform.SetParent(parentTransform);
+
+        return enemyNetworkObject;
     }
 
     public void LogInfoExtended(object data)

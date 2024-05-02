@@ -11,6 +11,7 @@ internal class EnemyAIPatch
 {
     public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs = [];
     public static int spawnCount = 0;
+    public static bool forceToilHeadSpawns = false;
 
     public static ToilHeadData toilHeadData => ToilHeadDataManager.GetToilHeadDataForCurrentLevel();
     public static int maxSpawnCount => toilHeadData.configData.maxSpawnCount;
@@ -20,6 +21,7 @@ internal class EnemyAIPatch
     {
         enemyTurretPairs = [];
         spawnCount = 0;
+        forceToilHeadSpawns = false;
     }
 
     public static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
@@ -55,11 +57,9 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        Plugin.Instance.LogInfoExtended($"spawnCount: {spawnCount}, maxSpawnCount: {maxSpawnCount}, spawnChance: %{spawnChance}");
+        if (spawnCount >= maxSpawnCount && !forceToilHeadSpawns) return;
 
-        if (spawnCount >= maxSpawnCount) return;
-
-        if (!Utils.RandomPercent(spawnChance))
+        if (!Utils.RandomPercent(spawnChance) && !forceToilHeadSpawns)
         {
             return;
         }

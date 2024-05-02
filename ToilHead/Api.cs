@@ -14,6 +14,11 @@ public class Api
     public static int spawnCount => EnemyAIPatch.spawnCount;
 
     /// <summary>
+    /// If enabled, will force any spawned Coil-Heads to become Toil-Heads. This will get reset automatically when the day ends.
+    /// </summary>
+    public static bool forceToilHeadSpawns { get { return EnemyAIPatch.forceToilHeadSpawns; } set { EnemyAIPatch.forceToilHeadSpawns = value; } }
+
+    /// <summary>
     /// This must only be called on the Host/Server
     /// </summary>
     /// <param name="enemyAI">Coil-Head "Spring" EnemyAI instance.</param>

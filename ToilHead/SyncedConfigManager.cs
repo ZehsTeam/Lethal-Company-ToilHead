@@ -14,6 +14,7 @@ public class SyncedConfigManager
 
     #region ConfigEntries
     // Toil-Head Settings
+    private ConfigEntry<bool> SpawnToilHeadPlayerRagdollsCfg;
     private ConfigEntry<string> OtherSpawnSettingsCfg;
     private ConfigEntry<string> LiquidationSpawnSettingsCfg;
     private ConfigEntry<string> EmbrionSpawnSettingsCfg;
@@ -52,6 +53,7 @@ public class SyncedConfigManager
     internal bool ExtendedLogging { get { return ExtendedLoggingCfg.Value; } set { ExtendedLoggingCfg.Value = value; } }
 
     // Toil-Head Settings
+    internal bool SpawnToilHeadPlayerRagdolls { get { return SpawnToilHeadPlayerRagdollsCfg.Value; } set { SpawnToilHeadPlayerRagdollsCfg.Value = value; } }
     internal string OtherSpawnSettings { get { return OtherSpawnSettingsCfg.Value; } set { OtherSpawnSettingsCfg.Value = value; } }
     internal string LiquidationSpawnSettings { get { return LiquidationSpawnSettingsCfg.Value; } set { LiquidationSpawnSettingsCfg.Value = value; } }
     internal string EmbrionSpawnSettings { get { return EmbrionSpawnSettingsCfg.Value; } set { EmbrionSpawnSettingsCfg.Value = value; } }
@@ -218,6 +220,11 @@ public class SyncedConfigManager
 
         #region Toil-Head Settings
         // Toil-Head Settings
+        SpawnToilHeadPlayerRagdollsCfg = config.Bind(
+            new ConfigDefinition("Toil-Head Settings", "SpawnToilHeadPlayerRagdolls"),
+            true,
+            new ConfigDescription("If enabled, will spawn a Toil-Head player ragdoll when a player dies to a Toil-Head in any way.")
+        );
         OtherSpawnSettingsCfg = config.Bind(
             new ConfigDefinition("Toil-Head Settings", "OtherSpawnSettings"),
             $"1,30",
@@ -245,7 +252,7 @@ public class SyncedConfigManager
         );
         DineSpawnSettingsCfg = config.Bind(
             new ConfigDefinition("Toil-Head Settings", "DineSpawnSettings"),
-            $"1,30",
+            $"1,45",
             new ConfigDescription(GetSpawnSettingsDescription("7-Dine"))
         );
         RendSpawnSettingsCfg = config.Bind(

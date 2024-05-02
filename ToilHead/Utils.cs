@@ -1,4 +1,6 @@
 ﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
+using GameNetcodeStuff;
+using System.Collections;
 using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead;
@@ -39,8 +41,53 @@ public class Utils
         return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
     }
 
+    public static bool IsToilHeadPlayerRagdoll(GameObject gameObject)
+    {
+        return gameObject.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
+    }
+
     public static ToilHeadTurretBehaviour GetToilHeadTurretBehaviour(EnemyAI enemyAI)
     {
         return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>();
+    }
+
+    public static int GetLocalPlayerId()
+    {
+        return (int)GetLocalPlayerScript().playerClientId;
+    }
+
+    public static PlayerControllerB GetPlayerScript(int playerId)
+    {
+        try
+        {
+            return StartOfRound.Instance.allPlayerScripts[playerId];
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public static PlayerControllerB GetLocalPlayerScript()
+    {
+        return GameNetworkManager.Instance.localPlayerController;
+    }
+
+    public static IEnumerator WaitUntil(System.Func<bool> predicate, float maxDuration = 5f, int iterationsPerSecond = 10)
+    {
+        float timer = 0f;
+
+        float timePerIteration = 1f / iterationsPerSecond;
+
+        while (timer < maxDuration)
+        {
+            if (predicate())
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(timePerIteration);
+            timer += Time.deltaTime;
+        }
     }
 }
