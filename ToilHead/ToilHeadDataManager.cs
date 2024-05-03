@@ -6,7 +6,7 @@ internal class ToilHeadDataManager
 {
     public static List<ToilHeadData> dataList { get; private set; }
 
-    private static ToilHeadData otherData;
+    public static ToilHeadData otherData { get; private set; }
 
     public static void Initialize()
     {
@@ -28,7 +28,7 @@ internal class ToilHeadDataManager
         Plugin.logger.LogInfo("Finished initializing ToilHeadDataManager.");
     }
 
-    public static ToilHeadData GetToilHeadDataForCurrentLevel()
+    public static ToilHeadData GetDataForCurrentLevel()
     {
         string planetName = StartOfRound.Instance.currentLevel.PlanetName;
 

@@ -322,11 +322,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             {
                 if (localPlayerScript.health > 50)
                 {
-                    localPlayerScript.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Unknown, 2);
+                    localPlayerScript.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots, 2);
                 }
                 else
                 {
-                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Unknown, 2);
+                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots, 2);
 
                     Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript);
                 }
@@ -390,11 +390,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             {
                 if (localPlayerScript.health > 50)
                 {
-                    localPlayerScript.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Unknown, 2);
+                    localPlayerScript.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots, 2);
                 }
                 else
                 {
-                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Unknown, 2);
+                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots, 2);
 
                     Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript);
                 }

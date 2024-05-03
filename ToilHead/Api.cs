@@ -6,7 +6,7 @@ namespace com.github.zehsteam.ToilHead;
 
 public class Api
 {
-    public static ToilHeadData ToilHeadData => ToilHeadDataManager.GetToilHeadDataForCurrentLevel();
+    public static ToilHeadData ToilHeadData => ToilHeadDataManager.GetDataForCurrentLevel();
     public static int MaxSpawnCount => ToilHeadData.configData.maxSpawnCount;
     public static int SpawnChance => ToilHeadData.configData.spawnChance;
 
@@ -16,7 +16,12 @@ public class Api
     /// <summary>
     /// If enabled, will force any spawned Coil-Heads to become Toil-Heads. This will get reset automatically when the day ends.
     /// </summary>
-    public static bool forceToilHeadSpawns { get { return EnemyAIPatch.forceToilHeadSpawns; } set { EnemyAIPatch.forceToilHeadSpawns = value; } }
+    public static bool forceSpawns { get { return EnemyAIPatch.forceSpawns; } set { EnemyAIPatch.forceSpawns = value; } }
+
+    /// <summary>
+    /// If set to any value above -1, will temporarily override the Toil-Head max spawn count for the day. This will get reset automatically when the day ends.
+    /// </summary>
+    public static int forceMaxSpawnCount { get { return EnemyAIPatch.forceMaxSpawnCount; } set { EnemyAIPatch.forceMaxSpawnCount = value; } }
 
     /// <summary>
     /// This must only be called on the Host/Server
