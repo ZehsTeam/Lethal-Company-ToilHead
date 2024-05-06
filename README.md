@@ -100,8 +100,8 @@ public static bool forceSpawns { get; set; }
 // This will get reset automatically when the day ends.
 public static int forceMaxSpawnCount { get; set; }
 
-// This must only be called on the Host/Server
-// Only accepts an EnemyAI instance of type SpringManAI.
+// This must only be called on the Host/Server.
+// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".
 // Returns true if successful.
 public static bool SetToilHeadOnServer(EnemyAI enemyAI) { }
 ```

@@ -27,7 +27,7 @@ public class Api
 
     /// <summary>
     /// This must only be called on the Host/Server.
-    /// Only accepts an EnemyAI instance of type SpringManAI.
+    /// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".
     /// </summary>
     /// <param name="enemyAI">Coil-Head "Spring" EnemyAI instance.</param>
     /// <returns>True if successful.</returns>
