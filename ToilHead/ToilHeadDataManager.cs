@@ -18,14 +18,36 @@ internal class ToilHeadDataManager
             new ToilHeadData("7 Dine", new ToilHeadConfigData(Plugin.ConfigManager.DineSpawnSettings)),
             new ToilHeadData("85 Rend", new ToilHeadConfigData(Plugin.ConfigManager.RendSpawnSettings)),
             new ToilHeadData("20 Adamance", new ToilHeadConfigData(Plugin.ConfigManager.AdamanceSpawnSettings)),
-            new ToilHeadData("21 Offense", new ToilHeadConfigData(Plugin.ConfigManager.OffenseSpawnSettings)),
             new ToilHeadData("61 March", new ToilHeadConfigData(Plugin.ConfigManager.MarchSpawnSettings)),
+            new ToilHeadData("21 Offense", new ToilHeadConfigData(Plugin.ConfigManager.OffenseSpawnSettings)),
             new ToilHeadData("56 Vow", new ToilHeadConfigData(Plugin.ConfigManager.VowSpawnSettings)),
+            new ToilHeadData("220 Assurance", new ToilHeadConfigData(Plugin.ConfigManager.AssuranceSpawnSettings)),
+            new ToilHeadData("41 Experimentation", new ToilHeadConfigData(Plugin.ConfigManager.ExperimentationSpawnSettings)),
         ];
+
+        RegisterCustomSpawnSettings();
 
         otherData = new ToilHeadData("", new ToilHeadConfigData(Plugin.ConfigManager.OtherSpawnSettings));
 
         Plugin.logger.LogInfo("Finished initializing ToilHeadDataManager.");
+    }
+
+    private static void RegisterCustomSpawnSettings()
+    {
+        foreach (var entry in Plugin.ConfigManager.CustomSpawnSettings.Split(";"))
+        {
+            if (string.IsNullOrWhiteSpace(entry)) continue;
+
+            string[] items = entry.Split(",");
+            if (items.Length < 3) continue;
+
+            string planetName = items[0];
+            if (string.IsNullOrWhiteSpace(planetName)) continue;
+
+            ToilHeadData newData = new ToilHeadData(planetName, new ToilHeadConfigData($"{items[1]},{items[2]}"));
+            dataList.Add(newData);
+            Plugin.logger.LogInfo($"Registered moon \"{planetName}\" with MaxSpawnCount: {newData.configData.maxSpawnCount}, SpawnChance: {newData.configData.spawnChance}");
+        }
     }
 
     public static ToilHeadData GetDataForCurrentLevel()

@@ -14,6 +14,10 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 * [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) - *Includes extra functionality*
 
 ## Config Settings
+<details>
+  <summary>Expand</summary>
+<br>
+
 * **Toil-Head Settings** are host only.
 * **All Turret Settings** are synced with the host.
 
@@ -24,24 +28,35 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
 | `SpawnToilHeadPlayerRagdolls` | `Boolean` | `true` | If enabled, will spawn a Toil-Head player ragdoll when a player dies to a Toil-Head in any way. |
+| `RealToilHeadPlayerRagdolls` | `Boolean` | `true` | If enabled, will spawn a real turret on the Toil-Head player ragdoll. |
+
+| Toil-Head Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
+|  |  | `PlanetName,MaxSpawnCount,SpawnChance;` |  |
+| `CustomSpawnSettings` | `String` | `57 Asteroid-13,5,50;` | Toil-Head spawn settings for modded moons. |
+
+| Toil-Head Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
 |  |  | `MaxSpawnCount,SpawnChance` |  |
-| `OtherSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for Other/Modded moons. |
-| `LiquidationSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 44-Liquidation. |
+| `OtherSpawnSettings` | `String` | `1,30` | Toil-Head default spawn settings for modded moons. |
+| `LiquidationSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for 44-Liquidation. |
 | `EmbrionSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 5-Embrion. |
-| `ArtificeSpawnSettings` | `String` | `1,70` | Toil-Head spawn settings for 68-Artifice. |
-| `TitanSpawnSettings` | `String` | `1,50` | Toil-Head spawn settings for 8-Titan. |
-| `DineSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for 7-Dine. |
+| `ArtificeSpawnSettings` | `String` | `2,70` | Toil-Head spawn settings for 68-Artifice. |
+| `TitanSpawnSettings` | `String` | `2,50` | Toil-Head spawn settings for 8-Titan. |
+| `DineSpawnSettings` | `String` | `1,45` | Toil-Head spawn settings for 7-Dine. |
 | `RendSpawnSettings` | `String` | `1,40` | Toil-Head spawn settings for 85-Rend. |
-| `AdamanceSpawnSettings` | `String` | `1,25` | Toil-Head spawn settings for 20-Adamance. |
-| `OffenseSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 21-Offense. |
+| `AdamanceSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for 20-Adamance. |
 | `MarchSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 61-March. |
+| `OffenseSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 21-Offense. |
 | `VowSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 56-Vow. |
+| `AssuranceSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 220-Assurance. |
+| `ExperimentationSpawnSettings` | `String` | `1,10` | Toil-Head spawn settings for 41-Experimentation. |
 
 | Turret Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
 | `TurretLostLOSDuration` | `Single` | `0.75` | The duration until the turret loses the target player when not in line of sight. |
 | `TurretRotationRange` | `Single` | `75` | The rotation range of the turret in degrees. |
-| `TurretCodeAccessCooldownDuration` | `Single` | `10` | The duration of the turret being disabled from the terminal in seconds. |
+| `TurretCodeAccessCooldownDuration` | `Single` | `7` | The duration of the turret being disabled from the terminal in seconds. |
 
 | Turret Detection Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -61,6 +76,37 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 | ----------- | ----------- | ----------- | ----------- |
 | `TurretBerserkDuration` | `Single` | `9` | The duration of the turret berserk state. |
 | `TurretBerserkRotationSpeed` | `Single` | `77` | The rotation speed of the turret when in berserk state. |
+
+</details>
+
+## API
+<details>
+  <summary>Expand</summary>
+<br>
+
+https://github.com/ZehsTeam/Lethal-Company-ToilHead/blob/master/ToilHead/Api.cs
+```cs
+public static int MaxSpawnCount { get; }
+public static int SpawnChance { get; }
+
+public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs { get; }
+public static int spawnCount { get; }
+
+// If enabled, will force any spawned Coil-Heads to become Toil-Heads.
+// This will get reset automatically when the day ends.
+public static bool forceSpawns { get; set; }
+
+// If set to any value above -1, will temporarily override the Toil-Head max spawn count for the day.
+// This will get reset automatically when the day ends.
+public static int forceMaxSpawnCount { get; set; }
+
+// This must only be called on the Host/Server
+// Only accepts an EnemyAI instance of type SpringManAI.
+// Returns true if successful.
+public static bool SetToilHeadOnServer(EnemyAI enemyAI) { }
+```
+
+</details>
 
 ## Bug Reports, Help, or Suggestions
 https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues

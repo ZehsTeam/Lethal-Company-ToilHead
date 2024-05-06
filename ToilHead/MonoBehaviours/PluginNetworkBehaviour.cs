@@ -43,18 +43,18 @@ public class PluginNetworkBehaviour : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SetToilHeadPlayerRagdollClientRpc(NetworkObjectReference ragdollReference)
+    public void SetToilHeadPlayerRagdollClientRpc(NetworkObjectReference ragdollReference, bool realTurret)
     {
         if (IsHost || IsServer) return;
 
         if (ragdollReference.TryGet(out NetworkObject targetObject))
         {
-            Plugin.Instance.SetToilHeadPlayerRagdollOnLocalClient(targetObject);
+            Plugin.Instance.SetToilHeadPlayerRagdollOnLocalClient(targetObject, realTurret);
         }
         else
         {
             // Target not found on server, likely because it already has been destroyed/despawned.
-            Plugin.Instance.SetToilHeadPlayerRagdollOnLocalClient(null);
+            Plugin.Instance.SetToilHeadPlayerRagdollOnLocalClient(null, realTurret);
         }
     }
 }
