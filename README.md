@@ -32,8 +32,8 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-|  |  | `PlanetName,MaxSpawnCount,SpawnChance;` |  |
-| `CustomSpawnSettings` | `String` | `57 Asteroid-13,5,50;` | Toil-Head spawn settings for modded moons. |
+|  |  | `PlanetName:MaxSpawnCount:SpawnChance,` |  |
+| `CustomSpawnSettings` | `String` | `57 Asteroid-13:2:30,` | Toil-Head spawn settings for modded moons. |
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |

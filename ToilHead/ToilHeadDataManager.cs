@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace com.github.zehsteam.ToilHead;
 
@@ -34,11 +35,11 @@ internal class ToilHeadDataManager
 
     private static void RegisterCustomSpawnSettings()
     {
-        foreach (var entry in Plugin.ConfigManager.CustomSpawnSettings.Split(";"))
+        foreach (var entry in Plugin.ConfigManager.CustomSpawnSettings.Split(","))
         {
             if (string.IsNullOrWhiteSpace(entry)) continue;
 
-            string[] items = entry.Split(",");
+            string[] items = entry.Split(":").Select(_ => _.Trim()).ToArray();
             if (items.Length < 3) continue;
 
             string planetName = items[0];
@@ -46,7 +47,7 @@ internal class ToilHeadDataManager
 
             ToilHeadData newData = new ToilHeadData(planetName, new ToilHeadConfigData($"{items[1]},{items[2]}"));
             dataList.Add(newData);
-            Plugin.logger.LogInfo($"Registered moon \"{planetName}\" with MaxSpawnCount: {newData.configData.maxSpawnCount}, SpawnChance: {newData.configData.spawnChance}");
+            Plugin.logger.LogInfo($"Registered \"{planetName}\" moon with MaxSpawnCount: {newData.configData.maxSpawnCount}, SpawnChance: {newData.configData.spawnChance}");
         }
     }
 

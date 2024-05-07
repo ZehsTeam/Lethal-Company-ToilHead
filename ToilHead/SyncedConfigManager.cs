@@ -240,7 +240,7 @@ public class SyncedConfigManager
         );
         CustomSpawnSettingsCfg = config.Bind(
             new ConfigDefinition("Toil-Head Settings", "CustomSpawnSettings"),
-            $"57 Asteroid-13,5,50;",
+            $"57 Asteroid-13:2:30,",
             new ConfigDescription(GetCustomSpawnSettingsDescription())
         );
         OtherSpawnSettingsCfg = config.Bind(
@@ -388,8 +388,8 @@ public class SyncedConfigManager
         string description = $"Toil-Head spawn settings for modded moons.\n";
         description += $"This setting will override OtherSpawnSettings for the specified moons.\n";
         description += $"This setting uses SelectableLevel.PlanetName\n";
-        description += "PlanetName,MaxSpawnCount,SpawnChance\n";
-        description += "<string>,<int>,<int>;";
+        description += "PlanetName:MaxSpawnCount:SpawnChance,\n";
+        description += "<string>:<int>:<int>,";
 
         return description;
     }
