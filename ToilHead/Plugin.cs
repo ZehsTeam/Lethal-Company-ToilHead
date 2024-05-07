@@ -12,6 +12,8 @@ using UnityEngine;
 namespace com.github.zehsteam.ToilHead;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInDependency(LethalLib.Plugin.ModGUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(ScrapHelper.MonsterPlushiesGUID, BepInDependency.DependencyFlags.SoftDependency)]
 internal class Plugin : BaseUnityPlugin
 {
     private readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
@@ -43,6 +45,7 @@ internal class Plugin : BaseUnityPlugin
         Content.Load();
         EnemyAIPatch.Reset();
 
+        RegisterScrapItems();
         NetcodePatcherAwake();
     }
 
@@ -75,14 +78,25 @@ internal class Plugin : BaseUnityPlugin
 
     public void OnNewLevelLoaded()
     {
-        // I will enabled this when Wesley's Asteroid13 moon is working in v50 (This includes LLL working in v50)
-        //Secret.SpawnSecrets();
+        Secret.SpawnSecrets();
     }
 
     public void OnShipHasLeft()
     {
         EnemyAIPatch.DespawnAllTurrets();
         EnemyAIPatch.Reset();
+    }
+
+    private void RegisterScrapItems()
+    {
+        try
+        {
+            ScrapHelper.RegisterScrap(Content.toilHeadPlush, iRarity: 10, twoHanded: false, carryWeight: 4,  minValue: 150, maxValue: 250);
+        }
+        catch (System.Exception e)
+        {
+            logger.LogWarning($"Warning: Failed to register scrap items.\n\n{e}");
+        }
     }
 
     #region Coil-Head Enemy
