@@ -100,7 +100,7 @@ internal class Plugin : BaseUnityPlugin
             logger.LogWarning($"Warning: Failed to register scrap items.\n\n{e}");
         }
     }
-
+    
     #region Coil-Head Enemy
     public bool SetToilHeadOnServer(EnemyAI enemyAI)
     {
