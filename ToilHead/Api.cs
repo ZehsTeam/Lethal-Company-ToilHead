@@ -20,7 +20,7 @@ public class Api
     public static bool forceSpawns { get { return EnemyAIPatch.forceSpawns; } set { EnemyAIPatch.forceSpawns = value; } }
 
     /// <summary>
-    /// If set to any value above -1, will temporarily override the Toil-Head max spawn count for the day.
+    /// If set to any value above -1, will temporarily override the Toil-Head max spawn count.
     /// This will get reset automatically when the day ends.
     /// </summary>
     public static int forceMaxSpawnCount { get { return EnemyAIPatch.forceMaxSpawnCount; } set { EnemyAIPatch.forceMaxSpawnCount = value; } }

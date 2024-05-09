@@ -10,8 +10,9 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 ## Mod Compatibility
 **This mod is compatible with:**
 * [CoilHeadStare](https://thunderstore.io/c/lethal-company/p/TwinDimensionalProductions/CoilHeadStare/) - *If you want to die harder :3*
-* [ghostCodes](https://thunderstore.io/c/lethal-company/p/darmuh/ghostCodes/) - *Includes extra functionality*
-* [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) - *Includes extra functionality*
+* [ghostCodes](https://thunderstore.io/c/lethal-company/p/darmuh/ghostCodes/) - *Adds extra functionality*
+* [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) - *Adds extra functionality*
+* [Monster Plushies](https://thunderstore.io/c/lethal-company/p/Scintesto/Monster_Plushies/) - *Adds another plushie :3*
 
 ## Config Settings
 <details>
@@ -51,6 +52,10 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 | `VowSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 56-Vow. |
 | `AssuranceSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 220-Assurance. |
 | `ExperimentationSpawnSettings` | `String` | `1,10` | Toil-Head spawn settings for 41-Experimentation. |
+
+| Plushie Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
+| `PlushieSpawnWeight` | `Int32` | `10` | Toil-Head plushie spawn chance weight. higher = more common. |
 
 | Turret Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -96,7 +101,7 @@ public static int spawnCount { get; }
 // This will get reset automatically when the day ends.
 public static bool forceSpawns { get; set; }
 
-// If set to any value above -1, will temporarily override the Toil-Head max spawn count for the day.
+// If set to any value above -1, will temporarily override the Toil-Head max spawn count.
 // This will get reset automatically when the day ends.
 public static int forceMaxSpawnCount { get; set; }
 

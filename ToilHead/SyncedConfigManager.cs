@@ -31,6 +31,9 @@ public class SyncedConfigManager
     private ConfigEntry<string> AssuranceSpawnSettingsCfg;
     private ConfigEntry<string> ExperimentationSpawnSettingsCfg;
 
+    // Plushie Settings
+    private ConfigEntry<int> PlushieSpawnWeightCfg;
+
     // Turret Settings
     private ConfigEntry<float> TurretLostLOSDurationCfg;
     private ConfigEntry<float> TurretRotationRangeCfg;
@@ -73,6 +76,9 @@ public class SyncedConfigManager
     internal string VowSpawnSettings { get { return VowSpawnSettingsCfg.Value; } set { VowSpawnSettingsCfg.Value = value; } }
     internal string AssuranceSpawnSettings { get { return AssuranceSpawnSettingsCfg.Value; } set { AssuranceSpawnSettingsCfg.Value = value; } }
     internal string ExperimentationSpawnSettings { get { return ExperimentationSpawnSettingsCfg.Value; } set { ExperimentationSpawnSettingsCfg.Value = value; } }
+
+    // Plushie Settings
+    internal int PlushieSpawnWeight { get { return PlushieSpawnWeightCfg.Value; } set { PlushieSpawnWeightCfg.Value = value; } }
 
     // Turret Settings
     internal float TurretLostLOSDuration
@@ -309,6 +315,13 @@ public class SyncedConfigManager
             new ConfigDescription(GetSpawnSettingsDescription("41-Experimentation"))
         );
         #endregion
+
+        // Plushie Settings
+        PlushieSpawnWeightCfg = config.Bind(
+            new ConfigDefinition("Plushie Settings", "PlushieSpawnWeight"),
+            10,
+            new ConfigDescription("Toil-Head plushie spawn chance weight. higher = more common.")
+        );
 
         #region All Turret Settings
         // Turret Settings

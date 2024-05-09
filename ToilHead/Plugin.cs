@@ -89,9 +89,11 @@ internal class Plugin : BaseUnityPlugin
 
     private void RegisterScrapItems()
     {
+        int iRarity = ConfigManager.PlushieSpawnWeight;
+
         try
         {
-            ScrapHelper.RegisterScrap(Content.toilHeadPlush, iRarity: 10, twoHanded: false, carryWeight: 4,  minValue: 150, maxValue: 250);
+            ScrapHelper.RegisterScrap(Content.toilHeadPlush, iRarity, twoHanded: false, carryWeight: 4,  minValue: 150, maxValue: 250);
         }
         catch (System.Exception e)
         {
@@ -352,6 +354,14 @@ internal class Plugin : BaseUnityPlugin
         if (ConfigManager.ExtendedLogging)
         {
             logger.LogInfo(data);
+        }
+    }
+
+    public void LogWarningExtended(object data)
+    {
+        if (ConfigManager.ExtendedLogging)
+        {
+            logger.LogWarning(data);
         }
     }
 }
