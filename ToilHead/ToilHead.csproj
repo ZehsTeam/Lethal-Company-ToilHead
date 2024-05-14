@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -8,7 +7,7 @@
 
     <AssemblyName>com.github.zehsteam.$(MSBuildProjectName)</AssemblyName> <!-- PLUGIN_GUID -->
     <Product>$(MSBuildProjectName)</Product>                               <!-- PLUGIN_NAME -->
-    <Version>1.3.6</Version>                                               <!-- PLUGIN_VERSION -->
+    <Version>1.3.7</Version>                                               <!-- PLUGIN_VERSION -->
     <Description>CoilHeads can sometimes spawn with a turret on their head. Highly Configurable.</Description>
 
     <RootNamespace>com.github.zehsteam.$(MSBuildProjectName)</RootNamespace>
@@ -18,7 +17,6 @@
       https://nuget.bepinex.dev/v3/index.json;
       https://nuget.samboy.dev/v3/index.json;
     </RestoreAdditionalProjectSources>
-
   </PropertyGroup>
 
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
@@ -63,7 +61,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-
 		<Reference Include="0Harmony">                      <HintPath>$(BepInTools)\0Harmony.dll</HintPath>                          </Reference>
 		<Reference Include="BepInEx">                       <HintPath>$(BepInTools)\BepInEx.dll</HintPath>                           </Reference>
 		<Reference Include="Mono.Cecil">                    <HintPath>$(BepInTools)\Mono.Cecil.dll</HintPath>                        </Reference>
@@ -76,14 +73,10 @@
 		<Reference Include="DissonanceVoip">                <HintPath>$(AssembliesPath)\DissonanceVoip.dll</HintPath>                </Reference>
 		<Reference Include="Facepunch.Steamworks.Win64">    <HintPath>$(AssembliesPath)\Facepunch.Steamworks.Win64.dll</HintPath>    </Reference>
 		<Reference Include="Unity.Netcode.Runtime">         <HintPath>$(AssembliesPath)\Unity.Netcode.Runtime.dll</HintPath>         </Reference>
-		<Reference Include="Unity.InputSystem">             <HintPath>$(AssembliesPath)\Unity.InputSystem.dll</HintPath>             </Reference>
 		<Reference Include="Unity.TextMeshPro">             <HintPath>$(AssembliesPath)\Unity.TextMeshPro.dll</HintPath>             </Reference>
-		<Reference Include="UnityEngine">                   <HintPath>$(AssembliesPath)\UnityEngine.dll</HintPath>                   </Reference>
-		<Reference Include="UnityEngine.AssetBundleModule"> <HintPath>$(AssembliesPath)\UnityEngine.AssetBundleModule.dll</HintPath> </Reference>
 		<Reference Include="UnityEngine.UI">                <HintPath>$(AssembliesPath)\UnityEngine.UI.dll</HintPath>                </Reference>
     
     <Reference Include="LethalLib">                     <HintPath>$(PluginsFolder)\LethalLib\LethalLib.dll</HintPath>            </Reference>
-
 	</ItemGroup>
 
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">

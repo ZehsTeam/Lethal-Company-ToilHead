@@ -33,6 +33,11 @@ public class SyncedConfigManager
 
     // Plushie Settings
     private ConfigEntry<int> PlushieSpawnWeightCfg;
+    private ConfigEntry<bool> PlushieSpawnAllMoonsCfg;
+    private ConfigEntry<string> PlushieMoonSpawnListCfg;
+    private ConfigEntry<int> PlushieCarryWeightCfg;
+    private ConfigEntry<int> PlushieMinValueCfg;
+    private ConfigEntry<int> PlushieMaxValueCfg;
 
     // Turret Settings
     private ConfigEntry<float> TurretLostLOSDurationCfg;
@@ -79,6 +84,11 @@ public class SyncedConfigManager
 
     // Plushie Settings
     internal int PlushieSpawnWeight { get { return PlushieSpawnWeightCfg.Value; } set { PlushieSpawnWeightCfg.Value = value; } }
+    internal bool PlushieSpawnAllMoons { get { return PlushieSpawnAllMoonsCfg.Value; } set { PlushieSpawnAllMoonsCfg.Value = value; } }
+    internal string PlushieMoonSpawnList { get { return PlushieMoonSpawnListCfg.Value; } set { PlushieMoonSpawnListCfg.Value = value; } }
+    internal int PlushieCarryWeight { get { return PlushieCarryWeightCfg.Value; } set { PlushieCarryWeightCfg.Value = value; } }
+    internal int PlushieMinValue { get { return PlushieMinValueCfg.Value; } set { PlushieMinValueCfg.Value = value; } }
+    internal int PlushieMaxValue { get { return PlushieMaxValueCfg.Value; } set { PlushieMaxValueCfg.Value = value; } }
 
     // Turret Settings
     internal float TurretLostLOSDuration
@@ -316,12 +326,39 @@ public class SyncedConfigManager
         );
         #endregion
 
+        #region Plushie Settings
         // Plushie Settings
         PlushieSpawnWeightCfg = config.Bind(
             new ConfigDefinition("Plushie Settings", "PlushieSpawnWeight"),
             10,
-            new ConfigDescription("Toil-Head plushie spawn chance weight. higher = more common.")
+            new ConfigDescription("Toil-Head plushie spawn chance weight. (Higher = more common)")
         );
+        PlushieSpawnAllMoonsCfg = config.Bind(
+            new ConfigDefinition("Plushie Settings", "PlushieSpawnAllMoons"),
+            true,
+            new ConfigDescription("If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list.")
+        );
+        PlushieMoonSpawnListCfg = config.Bind(
+            new ConfigDefinition("Plushie Settings", "PlushieMoonSpawnList"),
+            "Experimentation, Assurance, Vow, Offense, March, Rend, Dine, Titan",
+            new ConfigDescription("The list of moons the Toil-Head plushie will spawn on.\n(Experimentation, Assurance, Vow, Offense, March, Rend, Dine, Titan)\nOnly works if PlushieSpawnAllMoons is false.")
+        );
+        PlushieCarryWeightCfg = config.Bind(
+            new ConfigDefinition("Plushie Settings", "PlushieCarryWeight"),
+            4,
+            new ConfigDescription("Toil-Head plushie carry weight in pounds.")
+        );
+        PlushieMinValueCfg = config.Bind(
+            new ConfigDefinition("Plushie Settings", "PlushieMinValue"),
+            150,
+            new ConfigDescription("Toil-Head plushie min scrap value.")
+        );
+        PlushieMaxValueCfg = config.Bind(
+            new ConfigDefinition("Plushie Settings", "PlushieMaxValue"),
+            250,
+            new ConfigDescription("Toil-Head plushie max scrap value.")
+        );
+        #endregion
 
         #region All Turret Settings
         // Turret Settings

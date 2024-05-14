@@ -1,4 +1,7 @@
 ﻿using BepInEx.Bootstrap;
+using System.Collections.Generic;
+using System.Linq;
+using static LethalLib.Modules.Levels;
 
 namespace com.github.zehsteam.ToilHead;
 
@@ -16,7 +19,7 @@ internal class ScrapHelper
         return Chainloader.PluginInfos.ContainsKey(MonsterPlushiesGUID);
     }
 
-    public static void RegisterScrap(Item item, int iRarity, bool twoHanded, int carryWeight, int minValue, int maxValue)
+    public static void RegisterScrap(Item item, int iRarity, bool spawnAllMoons, string moonSpawnList, bool twoHanded, int carryWeight, int minValue, int maxValue)
     {
         if (!HasLethalLib()) return;
         if (!HasMonsterPlushieMod()) return;
@@ -30,13 +33,64 @@ internal class ScrapHelper
 
             LethalLib.Modules.Utilities.FixMixerGroups(item.spawnPrefab);
             LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(item.spawnPrefab);
-            LethalLib.Modules.Items.RegisterScrap(item, iRarity, LethalLib.Modules.Levels.LevelTypes.All);
 
-            Plugin.logger.LogInfo($"Registered \"{item.itemName}\" scrap item with {iRarity} rarity.");
+            if (spawnAllMoons)
+            {
+                LethalLib.Modules.Items.RegisterScrap(item, iRarity, LevelTypes.All);
+                Plugin.logger.LogInfo($"Registered \"{item.itemName}\" scrap item with {iRarity} rarity.");
+            }
+            else
+            {
+                RegisterScrapForMoons(item, iRarity, moonSpawnList);
+            }
         }
         catch (System.Exception e)
         {
             Plugin.logger.LogError($"Error: Failed to register \"{item.itemName}\" scrap item.\n\n{e}");
         }
+    }
+    
+    private static void RegisterScrapForMoons(Item item, int iRarity, string moonSpawnList)
+    {
+        Dictionary<string, LevelTypes> vanillaMoonLevelTypePair = [];
+        vanillaMoonLevelTypePair.Add("Experimentation", LevelTypes.ExperimentationLevel);
+        vanillaMoonLevelTypePair.Add("Assurance", LevelTypes.AssuranceLevel);
+        vanillaMoonLevelTypePair.Add("Vow", LevelTypes.VowLevel);
+        vanillaMoonLevelTypePair.Add("Offense", LevelTypes.OffenseLevel);
+        vanillaMoonLevelTypePair.Add("March", LevelTypes.MarchLevel);
+        vanillaMoonLevelTypePair.Add("Rend", LevelTypes.RendLevel);
+        vanillaMoonLevelTypePair.Add("Dine", LevelTypes.DineLevel);
+        vanillaMoonLevelTypePair.Add("Titan", LevelTypes.TitanLevel);
+
+        //List<string> levelOverrides = [];
+
+        foreach (var moon in moonSpawnList.Split(',').Select(_ => GetFormattedSting(_.Trim())))
+        {
+            if (vanillaMoonLevelTypePair.TryGetValue(moon, out LevelTypes levelTypes))
+            {
+                LethalLib.Modules.Items.RegisterScrap(item, iRarity, levelTypes);
+                Plugin.logger.LogInfo($"Registered \"{item.itemName}\" scrap item on moon \"{moon}\" with {iRarity} rarity.");
+                continue;
+            }
+
+            //levelOverrides.Add(moon);
+        }
+
+        //if (levelOverrides.Count > 0)
+        //{
+        //    LethalLib.Modules.Items.RegisterScrap(item, iRarity, LevelTypes.Modded, levelOverrides.ToArray());
+        //}
+
+        //foreach (var moon in levelOverrides)
+        //{
+        //    Plugin.logger.LogInfo($"Registered \"{item.itemName}\" scrap item on moon \"{moon}\" with {iRarity} rarity.");
+        //}
+    }
+
+    private static string GetFormattedSting(string value)
+    {
+        if (value.Length <= 1) return value.ToUpper();
+
+        return value.Substring(0, 1).ToUpper() + value.Substring(1, value.Length - 1).ToLower();
     }
 }

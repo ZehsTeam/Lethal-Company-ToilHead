@@ -9,6 +9,7 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 ## Mod Compatibility
 **This mod is compatible with:**
+* [Asteroid13](https://thunderstore.io/c/lethal-company/p/Magic_Wesley/Asteroid13/) - *Adds some secrets*
 * [CoilHeadStare](https://thunderstore.io/c/lethal-company/p/TwinDimensionalProductions/CoilHeadStare/) - *If you want to die harder :3*
 * [ghostCodes](https://thunderstore.io/c/lethal-company/p/darmuh/ghostCodes/) - *Adds extra functionality*
 * [Brutal Company Minus](https://thunderstore.io/c/lethal-company/p/DrinkableWater/Brutal_Company_Minus/) - *Adds extra functionality*
@@ -55,7 +56,12 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 | Plushie Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `PlushieSpawnWeight` | `Int32` | `10` | Toil-Head plushie spawn chance weight. higher = more common. |
+| `PlushieSpawnWeight` | `Int32` | `10` | Toil-Head plushie spawn chance weight. (Higher = more common) |
+| `PlushieSpawnAllMoons` | `Boolean` | `true` | If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list. |
+| `PlushieMoonSpawnList` | `String` | `Experimentation, Assurance, Vow, Offense, March, Rend, Dine, Titan` | The list of moons the Toil-Head plushie will spawn on. |
+| `PlushieCarryWeight` | `Int32` | `4` | Toil-Head plushie carry weight in pounds. |
+| `PlushieMinValue` | `Int32` | `150` | Toil-Head plushie min scrap value. |
+| `PlushieMaxValue` | `Int32` | `250` | Toil-Head plushie max scrap value. |
 
 | Turret Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |

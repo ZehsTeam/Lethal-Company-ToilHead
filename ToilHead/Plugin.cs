@@ -90,10 +90,15 @@ internal class Plugin : BaseUnityPlugin
     private void RegisterScrapItems()
     {
         int iRarity = ConfigManager.PlushieSpawnWeight;
+        bool spawnAllMoons = ConfigManager.PlushieSpawnAllMoons;
+        string moonSpawnList = ConfigManager.PlushieMoonSpawnList;
+        int carryWeight = ConfigManager.PlushieCarryWeight;
+        int minValue = ConfigManager.PlushieMinValue;
+        int maxValue = ConfigManager.PlushieMaxValue;
 
         try
         {
-            ScrapHelper.RegisterScrap(Content.toilHeadPlush, iRarity, twoHanded: false, carryWeight: 4,  minValue: 150, maxValue: 250);
+            ScrapHelper.RegisterScrap(Content.toilHeadPlush, iRarity, spawnAllMoons, moonSpawnList, twoHanded: false, carryWeight,  minValue, maxValue);
         }
         catch (System.Exception e)
         {
