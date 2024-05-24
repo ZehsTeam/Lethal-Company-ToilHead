@@ -10,18 +10,28 @@ namespace com.github.zehsteam.ToilHead.Patches;
 internal class EnemyAIPatch
 {
     public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs = [];
-    public static int spawnCount = 0;
-    public static bool forceSpawns = false;
-    public static int forceMaxSpawnCount = -1;
 
-    public static ToilHeadConfigData currentConfigData => ToilHeadDataManager.GetDataForCurrentLevel().configData;
+    public static int toilHeadSpawnCount = 0;
+    public static bool forceToilHeadSpawns = false;
+    public static int forceToilHeadMaxSpawnCount = -1;
+
+    public static int mantiToilSpawnCount = 0;
+    public static bool forceMantiToilSpawns = false;
+    public static int forceMantiToilMaxSpawnCount = -1;
+
+    public static ToilHeadConfigData currentToilHeadConfigData => ToilHeadDataManager.GetDataForCurrentLevel().configData;
 
     public static void Reset()
     {
         enemyTurretPairs = [];
-        spawnCount = 0;
-        forceSpawns = false;
-        forceMaxSpawnCount = -1;
+
+        toilHeadSpawnCount = 0;
+        forceToilHeadSpawns = false;
+        forceToilHeadMaxSpawnCount = -1;
+
+        mantiToilSpawnCount = 0;
+        forceMantiToilSpawns = false;
+        forceMantiToilMaxSpawnCount = -1;
     }
 
     public static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
@@ -42,7 +52,7 @@ internal class EnemyAIPatch
 
         enemyTurretPairs.Clear();
 
-        Plugin.logger.LogInfo($"Finished despawning all Toil-Head turrets.");
+        Plugin.logger.LogInfo($"Finished despawning all Toil-Head/Manti-Toil turrets.");
     }
 
     [HarmonyPatch("Start")]
@@ -52,6 +62,13 @@ internal class EnemyAIPatch
         if (Utils.IsSpring(__instance))
         {
             SpringStart(__instance);
+            return;
+        }
+
+        if (Utils.IsManticoil(__instance))
+        {
+            ManticoilStart(__instance);
+            return;
         }
     }
 
@@ -59,21 +76,48 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        int maxSpawnCount = currentConfigData.maxSpawnCount;
+        int maxSpawnCount = currentToilHeadConfigData.maxSpawnCount;
 
-        if (forceMaxSpawnCount > -1)
+        if (forceToilHeadMaxSpawnCount > -1)
         {
-            maxSpawnCount = forceMaxSpawnCount;
+            maxSpawnCount = forceToilHeadMaxSpawnCount;
         }
  
-        if (spawnCount >= maxSpawnCount && !forceSpawns) return;
-
-        if (!Utils.RandomPercent(currentConfigData.spawnChance) && !forceSpawns)
+        if (!forceToilHeadSpawns)
         {
-            return;
+            if (toilHeadSpawnCount >= maxSpawnCount) return;
+
+            if (!Utils.RandomPercent(currentToilHeadConfigData.spawnChance))
+            {
+                return;
+            }
         }
 
         Plugin.Instance.SetToilHeadOnServer(enemyAI);
+    }
+
+    private static void ManticoilStart(EnemyAI enemyAI)
+    {
+        if (!Plugin.IsHostOrServer) return;
+
+        int maxSpawnCount = Plugin.ConfigManager.MantiToilMaxSpawnCount;
+
+        if (forceMantiToilMaxSpawnCount > -1)
+        {
+            maxSpawnCount = forceMantiToilMaxSpawnCount;
+        }
+
+        if (!forceMantiToilSpawns)
+        {
+            if (mantiToilSpawnCount >= maxSpawnCount) return;
+
+            if (!Utils.RandomPercent(Plugin.ConfigManager.MantiToilSpawnChance))
+            {
+                return;
+            }
+        }
+
+        Plugin.Instance.SetMantiToilOnServer(enemyAI);
     }
 
     [HarmonyPatch("HitEnemyServerRpc")]
@@ -84,11 +128,11 @@ internal class EnemyAIPatch
 
         if (Utils.IsToilHead(__instance))
         {
-            ToilHeadOnHitEnemyOnServer(__instance);
+            TurretHeadOnHitEnemyOnServer(__instance);
         }
     }
 
-    private static void ToilHeadOnHitEnemyOnServer(EnemyAI enemyAI)
+    private static void TurretHeadOnHitEnemyOnServer(EnemyAI enemyAI)
     {
         ToilHeadTurretBehaviour behaviour = Utils.GetToilHeadTurretBehaviour(enemyAI);
         if (behaviour == null) return;
@@ -104,15 +148,15 @@ internal class EnemyAIPatch
     {
         if (Utils.IsSpring(__instance))
         {
-            SpringOnDestroy(__instance);
+            TurretHeadOnDestroy(__instance);
         }
     }
 
-    private static void SpringOnDestroy(EnemyAI enemyAI)
+    private static void TurretHeadOnDestroy(EnemyAI enemyAI)
     {
         if (!Plugin.IsHostOrServer) return;
 
-        if (enemyAI.TryGetComponent<NetworkObject>(out NetworkObject enemyNetworkObject))
+        if (enemyAI.TryGetComponent(out NetworkObject enemyNetworkObject))
         {
             DespawnTurret(enemyNetworkObject);
         }
@@ -129,7 +173,7 @@ internal class EnemyAIPatch
             turretNetworkObject.Despawn();
             enemyTurretPairs.Remove(enemyNetworkObject);
 
-            Plugin.logger.LogInfo($"Despawned Toil-Head turret (NetworkObjectId: {turretNetworkObject.NetworkObjectId}).");
+            Plugin.logger.LogInfo($"Despawned Toil-Head/Manti-Toil turret (NetworkObjectId: {turretNetworkObject.NetworkObjectId}).");
         }
     }
 }

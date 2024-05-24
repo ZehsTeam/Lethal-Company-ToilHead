@@ -148,7 +148,7 @@ internal class Plugin : BaseUnityPlugin
             return;
         }
 
-        if (enemyNetworkObject.TryGetComponent<EnemyAI>(out EnemyAI enemyAI))
+        if (enemyNetworkObject.TryGetComponent(out EnemyAI enemyAI))
         {
             if (!Utils.IsSpring(enemyAI))
             {
@@ -185,7 +185,7 @@ internal class Plugin : BaseUnityPlugin
             behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
 
             EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
-            EnemyAIPatch.spawnCount++;
+            EnemyAIPatch.toilHeadSpawnCount++;
         }
         catch (System.Exception e)
         {
@@ -338,6 +338,98 @@ internal class Plugin : BaseUnityPlugin
         catch (System.Exception e)
         {
             logger.LogError($"Error: Failed to set Toil-Head on player ragdoll on local client. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})\n\n{e}");
+        }
+    }
+    #endregion
+
+    #region Manti-Toil
+    public bool SetMantiToilOnServer(EnemyAI enemyAI)
+    {
+        if (!IsHostOrServer) return false;
+
+        if (enemyAI == null)
+        {
+            logger.LogError("Error: Failed to set Manti-Toil on server. EnemyAI is null.");
+            return false;
+        }
+
+        NetworkObject enemyNetworkObject = enemyAI.GetComponent<NetworkObject>();
+
+        if (!Utils.IsManticoil(enemyAI))
+        {
+            logger.LogError($"Error: Failed to set Manti-Toil on server. Enemy is not a Manticoil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return false;
+        }
+
+        if (Utils.IsMantiToil(enemyAI))
+        {
+            logger.LogWarning($"Warning: Failed to set Manti-Toil on server. Enemy is already a Manti-Toil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return false;
+        }
+
+        SpawnTurretOnServer(enemyAI.transform);
+        PluginNetworkBehaviour.Instance.SetMantiToilClientRpc(enemyNetworkObject);
+        SetMantiToilOnLocalClient(enemyNetworkObject);
+
+        LogInfoExtended($"Spawned Manti-Toil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+
+        return true;
+    }
+
+    public void SetMantiToilOnLocalClient(NetworkObject enemyNetworkObject)
+    {
+        if (enemyNetworkObject == null)
+        {
+            logger.LogError($"Error: Failed to set Manti-Toil on local client. Enemy NetworkObject is null.");
+            return;
+        }
+
+        if (enemyNetworkObject.TryGetComponent(out EnemyAI enemyAI))
+        {
+            if (!Utils.IsManticoil(enemyAI))
+            {
+                logger.LogError($"Error: Failed to set Manti-Toil on local client. Enemy \"{enemyNetworkObject.gameObject.name}\" is not a Manticoil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+                return;
+            }
+
+            if (EnemyAIPatch.enemyTurretPairs.ContainsKey(enemyNetworkObject))
+            {
+                logger.LogWarning($"Warning: Failed to set Manti-Toil on local client. Enemy is already a Manti-Toil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+                return;
+            }
+        }
+        else
+        {
+            logger.LogError($"Error: Failed to set Manti-Toil on local client. Could not find EnemyAI. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return;
+        }
+
+        try
+        {
+            Transform turretTransform = enemyNetworkObject.transform.Find("ToilHeadTurretContainer(Clone)");
+            Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
+            Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetChild(0);
+
+            turretTransform.localScale = new Vector3(2.051871f, 2.051871f, 2.051871f);
+            turretTransform.localPosition = Vector3.zero;
+            turretTransform.localRotation = Quaternion.identity;
+
+            Utils.DisableColliders(turretTransform.gameObject, keepScanNodeEnabled: true);
+
+            ParentToTransformBehaviour behaviour = enemyHeadTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+            behaviour.SetTargetAndParent(syncToHeadTransform, enemyHeadTransform);
+            behaviour.SetPositionOffset(new Vector3(0f, 0.12f, -0.025f));
+            behaviour.SetRotationOffset(new Vector3(0f, 0f, 0f));
+
+            ToilHeadTurretBehaviour toilHeadTurretBehaviour = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
+            toilHeadTurretBehaviour.useMantiToilSettings = true;
+
+            EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
+            EnemyAIPatch.mantiToilSpawnCount++;
+        }
+        catch (System.Exception e)
+        {
+            logger.LogError($"Error: Failed to set Manti-Toil on local client. (NetworkObject: {enemyNetworkObject.NetworkObjectId})\n\n{e}");
         }
     }
     #endregion

@@ -49,10 +49,10 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     [Header("Line Of Sight")]
     public float LOSRange = 30f;
     public float LOSDistance = 30f;
-    public int LOSVerticalRays = 1;
+    public int LOSVerticalRays = 3;
     public int LOSHorizontalRays = 7;
-    public float LOSXRotationOffsetStart = 0f;
-    public float LOSXRotationOffsetAmountPerRay = 0f;
+    public float LOSXRotationOffsetStart = -5;
+    public float LOSXRotationOffsetAmountPerRay = 5f;
 
     #region Private Variables
     private TurretMode turretModeLastFrame;
@@ -73,6 +73,8 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     #endregion
 
     #region Custom Variables
+    [HideInInspector] public bool useMantiToilSettings = false;
+
     // Turret Settings
     [HideInInspector] public float lostLOSDuration = 0.75f;
 
@@ -110,6 +112,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         lostLOSDuration = configManager.TurretLostLOSDuration;
         rotationRange = Mathf.Abs(configManager.TurretRotationRange);
 
+        if (useMantiToilSettings)
+        {
+            lostLOSDuration = 5f;
+        }
+
         // Turret Detection Settings
         detectionRotation = configManager.TurretDetectionRotation;
         detectionRotationSpeed = configManager.TurretDetectionRotationSpeed;
@@ -117,6 +124,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         // Turret Charging Settings
         chargingDuration = configManager.TurretChargingDuration;
         chargingRotationSpeed = configManager.TurretChargingRotationSpeed;
+
+        if (useMantiToilSettings)
+        {
+            chargingDuration = 1.5f;
+        }
 
         // Turret Firing Settings
         firingRotationSpeed = configManager.TurretFiringRotationSpeed;
@@ -126,6 +138,14 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         berserkRotationSpeed = configManager.TurretBerserkRotationSpeed;
 
         rotationSpeed = detectionRotationSpeed;
+
+        if (useMantiToilSettings)
+        {
+            LOSRange = 40;
+            LOSDistance = 50;
+            LOSVerticalRays = 5;
+            LOSXRotationOffsetStart = -10;
+        }
     }
 
     private IEnumerator FadeBulletAudio()

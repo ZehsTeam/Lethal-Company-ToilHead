@@ -36,6 +36,22 @@ public class PluginNetworkBehaviour : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    public void SetMantiToilClientRpc(NetworkObjectReference enemyReference)
+    {
+        if (IsHost || IsServer) return;
+
+        if (enemyReference.TryGet(out NetworkObject targetObject))
+        {
+            Plugin.Instance.SetMantiToilOnLocalClient(targetObject);
+        }
+        else
+        {
+            // Target not found on server, likely because it already has been destroyed/despawned.
+            Plugin.Instance.SetMantiToilOnLocalClient(null);
+        }
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void SetToilHeadPlayerRagdollServerRpc(int fromPlayerId)
     {

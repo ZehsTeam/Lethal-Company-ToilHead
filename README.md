@@ -1,7 +1,8 @@
 # ToilHead
 **Coil-Heads can sometimes spawn with a turret on their head. Highly Configurable.**
 
-* This mod is for all clients.
+<ins><b>This mod does not add a new enemy. It gives Coil-Heads a chance to spawn with a turret on their head.</b></ins><br>
+<ins><b>This mod is for all clients!</b></ins>
 
 ## <img src="https://i.imgur.com/TpnrFSH.png" width="20px"> Download
 
@@ -35,7 +36,7 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
 |  |  | `PlanetName:MaxSpawnCount:SpawnChance,` |  |
-| `CustomSpawnSettings` | `String` | `57 Asteroid-13:2:30,` | Toil-Head spawn settings for modded moons. |
+| `CustomSpawnSettings` | `String` | `57 Asteroid-13:2:30,523 Ooblterra:3:80,` | Toil-Head spawn settings for modded moons. |
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -53,6 +54,11 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 | `VowSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 56-Vow. |
 | `AssuranceSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 220-Assurance. |
 | `ExperimentationSpawnSettings` | `String` | `1,10` | Toil-Head spawn settings for 41-Experimentation. |
+
+| Manti-Toil Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
+| `MantiToilMaxSpawnCount` | `Int32` | `5` | Manti-Toil max spawn count. |
+| `MantiToilSpawnChance` | `Int32` | `50` | The percent chance a Manticoil turns into a Manti-Toil. |
 
 | Plushie Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -97,10 +103,10 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 https://github.com/ZehsTeam/Lethal-Company-ToilHead/blob/master/ToilHead/Api.cs
 ```cs
-public static int MaxSpawnCount { get; }
-public static int SpawnChance { get; }
-
+// This is for all enemy turret pairs.
 public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs { get; }
+
+// Toil-Head spawn count.
 public static int spawnCount { get; }
 
 // If enabled, will force any spawned Coil-Heads to become Toil-Heads.
@@ -115,6 +121,22 @@ public static int forceMaxSpawnCount { get; set; }
 // Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".
 // Returns true if successful.
 public static bool SetToilHeadOnServer(EnemyAI enemyAI) { }
+
+// Manti-Toil spawn count.
+public static int mantiToilSpawnCount { get; }
+
+// If enabled, will force any spawned Manticoils to become Manti-Toils.
+// This will get reset automatically when the day ends.
+public static bool forceMantiToilSpawns { get; set; }
+
+// If set to any value above -1, will temporarily override the Manti-Toil max spawn count.
+// This will get reset automatically when the day ends.
+public static int forceMantiToilMaxSpawnCount { get; set; }
+
+// This must only be called on the Host/Server.
+// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Manticoil".
+// Returns true if successful.
+public static bool SetMantiToilOnServer(EnemyAI enemyAI) { }
 ```
 
 </details>

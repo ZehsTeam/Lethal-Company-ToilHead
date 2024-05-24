@@ -41,6 +41,18 @@ public class Utils
         return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
     }
 
+    public static bool IsManticoil(EnemyAI enemyAI)
+    {
+        return enemyAI.enemyType.enemyName == "Manticoil";
+    }
+
+    public static bool IsMantiToil(EnemyAI enemyAI)
+    {
+        if (!IsManticoil(enemyAI)) return false;
+
+        return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
+    }
+
     public static bool IsToilHeadPlayerRagdoll(GameObject gameObject)
     {
         return gameObject.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;

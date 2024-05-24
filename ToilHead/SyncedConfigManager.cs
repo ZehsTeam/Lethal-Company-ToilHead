@@ -31,6 +31,10 @@ public class SyncedConfigManager
     private ConfigEntry<string> AssuranceSpawnSettingsCfg;
     private ConfigEntry<string> ExperimentationSpawnSettingsCfg;
 
+    // Manti-Toil Settings
+    private ConfigEntry<int> MantiToilMaxSpawnCountCfg;
+    private ConfigEntry<int> MantiToilSpawnChanceCfg;
+
     // Plushie Settings
     private ConfigEntry<int> PlushieSpawnWeightCfg;
     private ConfigEntry<bool> PlushieSpawnAllMoonsCfg;
@@ -81,6 +85,10 @@ public class SyncedConfigManager
     internal string VowSpawnSettings { get { return VowSpawnSettingsCfg.Value; } set { VowSpawnSettingsCfg.Value = value; } }
     internal string AssuranceSpawnSettings { get { return AssuranceSpawnSettingsCfg.Value; } set { AssuranceSpawnSettingsCfg.Value = value; } }
     internal string ExperimentationSpawnSettings { get { return ExperimentationSpawnSettingsCfg.Value; } set { ExperimentationSpawnSettingsCfg.Value = value; } }
+
+    // Manti-Toil Settings
+    internal int MantiToilMaxSpawnCount { get { return MantiToilMaxSpawnCountCfg.Value; } set { MantiToilMaxSpawnCountCfg.Value = value; } }
+    internal int MantiToilSpawnChance { get { return MantiToilSpawnChanceCfg.Value; } set { MantiToilSpawnChanceCfg.Value = value; } }
 
     // Plushie Settings
     internal int PlushieSpawnWeight { get { return PlushieSpawnWeightCfg.Value; } set { PlushieSpawnWeightCfg.Value = value; } }
@@ -256,7 +264,7 @@ public class SyncedConfigManager
         );
         CustomSpawnSettingsCfg = config.Bind(
             new ConfigDefinition("Toil-Head Settings", "CustomSpawnSettings"),
-            $"57 Asteroid-13:2:30,",
+            $"57 Asteroid-13:2:30,523 Ooblterra:3:80,",
             new ConfigDescription(GetCustomSpawnSettingsDescription())
         );
         OtherSpawnSettingsCfg = config.Bind(
@@ -326,7 +334,19 @@ public class SyncedConfigManager
         );
         #endregion
 
+        #region Manti-Toil Settings
+        MantiToilMaxSpawnCountCfg = config.Bind(
             new ConfigDefinition("Manti-Toil Settings", "MantiToilMaxSpawnCount"),
+            5,
+            new ConfigDescription("Manti-Toil max spawn count.")
+        );
+        MantiToilSpawnChanceCfg = config.Bind(
+            new ConfigDefinition("Manti-Toil Settings", "MantiToilSpawnChance"),
+            50,
+            new ConfigDescription("The percent chance a Manticoil turns into a Manti-Toil.")
+        );
+        #endregion
+
         #region Plushie Settings
         // Plushie Settings
         PlushieSpawnWeightCfg = config.Bind(
