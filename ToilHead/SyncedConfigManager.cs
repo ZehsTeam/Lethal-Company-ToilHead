@@ -326,6 +326,7 @@ public class SyncedConfigManager
         );
         #endregion
 
+            new ConfigDefinition("Manti-Toil Settings", "MantiToilMaxSpawnCount"),
         #region Plushie Settings
         // Plushie Settings
         PlushieSpawnWeightCfg = config.Bind(
