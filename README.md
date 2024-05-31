@@ -26,6 +26,7 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 | General Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
+| `EnableConfiguration` | `Boolean` | `false` | Enable if you want to use custom set config setting values. If disabled, the default config setting values will be used. |
 | `ExtendedLogging` | `Boolean` | `false` | Enable extended logging. |
 
 | Toil-Head Settings | Setting type | Default value | Description |
@@ -62,11 +63,11 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 | Plushie Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `PlushieSpawnWeight` | `Int32` | `10` | Toil-Head plushie spawn chance weight. (Higher = more common) |
+| `PlushieSpawnWeight` | `Int32` | `10` | Toil-Head plushie spawn chance weight. |
 | `PlushieSpawnAllMoons` | `Boolean` | `true` | If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list. |
-| `PlushieMoonSpawnList` | `String` | `Experimentation, Assurance, Vow, Offense, March, Rend, Dine, Titan` | The list of moons the Toil-Head plushie will spawn on. |
-| `PlushieCarryWeight` | `Int32` | `4` | Toil-Head plushie carry weight in pounds. |
-| `PlushieMinValue` | `Int32` | `150` | Toil-Head plushie min scrap value. |
+| `PlushieMoonSpawnList` | `String` | `Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion` | The list of moons the Toil-Head plushie will spawn on. |
+| `PlushieCarryWeight` | `Int32` | `6` | Toil-Head plushie carry weight in pounds. |
+| `PlushieMinValue` | `Int32` | `80` | Toil-Head plushie min scrap value. |
 | `PlushieMaxValue` | `Int32` | `250` | Toil-Head plushie max scrap value. |
 
 | Turret Settings | Setting type | Default value | Description |

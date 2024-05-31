@@ -109,8 +109,8 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         SyncedConfigManager configManager = Plugin.ConfigManager;
 
         // Turret Settings
-        lostLOSDuration = configManager.TurretLostLOSDuration;
-        rotationRange = Mathf.Abs(configManager.TurretRotationRange);
+        lostLOSDuration = configManager.TurretLostLOSDuration.Value;
+        rotationRange = Mathf.Abs(configManager.TurretRotationRange.Value);
 
         if (useMantiToilSettings)
         {
@@ -118,12 +118,12 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
 
         // Turret Detection Settings
-        detectionRotation = configManager.TurretDetectionRotation;
-        detectionRotationSpeed = configManager.TurretDetectionRotationSpeed;
+        detectionRotation = configManager.TurretDetectionRotation.Value;
+        detectionRotationSpeed = configManager.TurretDetectionRotationSpeed.Value;
 
         // Turret Charging Settings
-        chargingDuration = configManager.TurretChargingDuration;
-        chargingRotationSpeed = configManager.TurretChargingRotationSpeed;
+        chargingDuration = configManager.TurretChargingDuration.Value;
+        chargingRotationSpeed = configManager.TurretChargingRotationSpeed.Value;
 
         if (useMantiToilSettings)
         {
@@ -131,11 +131,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
 
         // Turret Firing Settings
-        firingRotationSpeed = configManager.TurretFiringRotationSpeed;
+        firingRotationSpeed = configManager.TurretFiringRotationSpeed.Value;
 
         // Turret Berserk Settings
-        berserkDuration = configManager.TurretBerserkDuration;
-        berserkRotationSpeed = configManager.TurretBerserkRotationSpeed;
+        berserkDuration = configManager.TurretBerserkDuration.Value;
+        berserkRotationSpeed = configManager.TurretBerserkRotationSpeed.Value;
 
         rotationSpeed = detectionRotationSpeed;
 

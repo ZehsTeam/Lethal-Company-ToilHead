@@ -100,7 +100,7 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        int maxSpawnCount = Plugin.ConfigManager.MantiToilMaxSpawnCount;
+        int maxSpawnCount = Plugin.ConfigManager.MantiToilMaxSpawnCount.Value;
 
         if (forceMantiToilMaxSpawnCount > -1)
         {
@@ -111,7 +111,7 @@ internal class EnemyAIPatch
         {
             if (mantiToilSpawnCount >= maxSpawnCount) return;
 
-            if (!Utils.RandomPercent(Plugin.ConfigManager.MantiToilSpawnChance))
+            if (!Utils.RandomPercent(Plugin.ConfigManager.MantiToilSpawnChance.Value))
             {
                 return;
             }

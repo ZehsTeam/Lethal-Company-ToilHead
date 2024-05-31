@@ -1,5 +1,6 @@
 ﻿using BepInEx.Configuration;
 using com.github.zehsteam.ToilHead.MonoBehaviours;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -7,232 +8,61 @@ namespace com.github.zehsteam.ToilHead;
 
 public class SyncedConfigManager
 {
-    private SyncedConfigData hostConfigData;
+    public SyncedConfigData hostConfigData;
 
     // General Settings
-    private ConfigEntry<bool> ExtendedLoggingCfg;
-
-    #region ConfigEntries
-    // Toil-Head Settings
-    private ConfigEntry<bool> SpawnToilHeadPlayerRagdollsCfg;
-    private ConfigEntry<bool> RealToilHeadPlayerRagdollsCfg;
-    private ConfigEntry<string> CustomSpawnSettingsCfg;
-    private ConfigEntry<string> OtherSpawnSettingsCfg;
-    private ConfigEntry<string> LiquidationSpawnSettingsCfg;
-    private ConfigEntry<string> EmbrionSpawnSettingsCfg;
-    private ConfigEntry<string> ArtificeSpawnSettingsCfg;
-    private ConfigEntry<string> TitanSpawnSettingsCfg;
-    private ConfigEntry<string> DineSpawnSettingsCfg;
-    private ConfigEntry<string> RendSpawnSettingsCfg;
-    private ConfigEntry<string> AdamanceSpawnSettingsCfg;
-    private ConfigEntry<string> MarchSpawnSettingsCfg;
-    private ConfigEntry<string> OffenseSpawnSettingsCfg;
-    private ConfigEntry<string> VowSpawnSettingsCfg;
-    private ConfigEntry<string> AssuranceSpawnSettingsCfg;
-    private ConfigEntry<string> ExperimentationSpawnSettingsCfg;
-
-    // Manti-Toil Settings
-    private ConfigEntry<int> MantiToilMaxSpawnCountCfg;
-    private ConfigEntry<int> MantiToilSpawnChanceCfg;
-
-    // Plushie Settings
-    private ConfigEntry<int> PlushieSpawnWeightCfg;
-    private ConfigEntry<bool> PlushieSpawnAllMoonsCfg;
-    private ConfigEntry<string> PlushieMoonSpawnListCfg;
-    private ConfigEntry<int> PlushieCarryWeightCfg;
-    private ConfigEntry<int> PlushieMinValueCfg;
-    private ConfigEntry<int> PlushieMaxValueCfg;
-
-    // Turret Settings
-    private ConfigEntry<float> TurretLostLOSDurationCfg;
-    private ConfigEntry<float> TurretRotationRangeCfg;
-    private ConfigEntry<float> TurretCodeAccessCooldownDurationCfg;
-
-    // Turret Detection Settings
-    private ConfigEntry<bool> TurretDetectionRotationCfg;
-    private ConfigEntry<float> TurretDetectionRotationSpeedCfg;
-
-    // Turret Charging Settings
-    private ConfigEntry<float> TurretChargingDurationCfg;
-    private ConfigEntry<float> TurretChargingRotationSpeedCfg;
-
-    // Turret Firing Settings
-    private ConfigEntry<float> TurretFiringRotationSpeedCfg;
-
-    // Turret Berserk Settings
-    private ConfigEntry<float> TurretBerserkDurationCfg;
-    private ConfigEntry<float> TurretBerserkRotationSpeedCfg;
-    #endregion
-
-    #region Config Setting Get/Set Properties
-    // General Settings
-    internal bool ExtendedLogging { get { return ExtendedLoggingCfg.Value; } set { ExtendedLoggingCfg.Value = value; } }
+    public ExtendedConfigEntry<bool> EnableConfiguration;
+    public ExtendedConfigEntry<bool> ExtendedLogging;
 
     // Toil-Head Settings
-    internal bool SpawnToilHeadPlayerRagdolls { get { return SpawnToilHeadPlayerRagdollsCfg.Value; } set { SpawnToilHeadPlayerRagdollsCfg.Value = value; } }
-    internal bool RealToilHeadPlayerRagdolls { get { return RealToilHeadPlayerRagdollsCfg.Value; } set { RealToilHeadPlayerRagdollsCfg.Value = value; } }
-    internal string CustomSpawnSettings { get { return CustomSpawnSettingsCfg.Value; } set { CustomSpawnSettingsCfg.Value = value; } }
-    internal string OtherSpawnSettings { get { return OtherSpawnSettingsCfg.Value; } set { OtherSpawnSettingsCfg.Value = value; } }
-    internal string LiquidationSpawnSettings { get { return LiquidationSpawnSettingsCfg.Value; } set { LiquidationSpawnSettingsCfg.Value = value; } }
-    internal string EmbrionSpawnSettings { get { return EmbrionSpawnSettingsCfg.Value; } set { EmbrionSpawnSettingsCfg.Value = value; } }
-    internal string ArtificeSpawnSettings { get { return ArtificeSpawnSettingsCfg.Value; } set { ArtificeSpawnSettingsCfg.Value = value; } }
-    internal string TitanSpawnSettings { get { return TitanSpawnSettingsCfg.Value; } set { TitanSpawnSettingsCfg.Value = value; } }
-    internal string DineSpawnSettings { get { return DineSpawnSettingsCfg.Value; } set { DineSpawnSettingsCfg.Value = value; } }
-    internal string RendSpawnSettings { get { return RendSpawnSettingsCfg.Value; } set { RendSpawnSettingsCfg.Value = value; } }
-    internal string AdamanceSpawnSettings { get { return AdamanceSpawnSettingsCfg.Value; } set { AdamanceSpawnSettingsCfg.Value = value; } }
-    internal string MarchSpawnSettings { get { return MarchSpawnSettingsCfg.Value; } set { MarchSpawnSettingsCfg.Value = value; } }
-    internal string OffenseSpawnSettings { get { return OffenseSpawnSettingsCfg.Value; } set { OffenseSpawnSettingsCfg.Value = value; } }
-    internal string VowSpawnSettings { get { return VowSpawnSettingsCfg.Value; } set { VowSpawnSettingsCfg.Value = value; } }
-    internal string AssuranceSpawnSettings { get { return AssuranceSpawnSettingsCfg.Value; } set { AssuranceSpawnSettingsCfg.Value = value; } }
-    internal string ExperimentationSpawnSettings { get { return ExperimentationSpawnSettingsCfg.Value; } set { ExperimentationSpawnSettingsCfg.Value = value; } }
+    public ExtendedConfigEntry<bool> SpawnToilHeadPlayerRagdolls;
+    public ExtendedConfigEntry<bool> RealToilHeadPlayerRagdolls;
+    public ExtendedConfigEntry<string> CustomSpawnSettings;
+    public ExtendedConfigEntry<string> OtherSpawnSettings;
+    public ExtendedConfigEntry<string> LiquidationSpawnSettings;
+    public ExtendedConfigEntry<string> EmbrionSpawnSettings;
+    public ExtendedConfigEntry<string> ArtificeSpawnSettings;
+    public ExtendedConfigEntry<string> TitanSpawnSettings;
+    public ExtendedConfigEntry<string> DineSpawnSettings;
+    public ExtendedConfigEntry<string> RendSpawnSettings;
+    public ExtendedConfigEntry<string> AdamanceSpawnSettings;
+    public ExtendedConfigEntry<string> MarchSpawnSettings;
+    public ExtendedConfigEntry<string> OffenseSpawnSettings;
+    public ExtendedConfigEntry<string> VowSpawnSettings;
+    public ExtendedConfigEntry<string> AssuranceSpawnSettings;
+    public ExtendedConfigEntry<string> ExperimentationSpawnSettings;
 
     // Manti-Toil Settings
-    internal int MantiToilMaxSpawnCount { get { return MantiToilMaxSpawnCountCfg.Value; } set { MantiToilMaxSpawnCountCfg.Value = value; } }
-    internal int MantiToilSpawnChance { get { return MantiToilSpawnChanceCfg.Value; } set { MantiToilSpawnChanceCfg.Value = value; } }
+    public ExtendedConfigEntry<int> MantiToilMaxSpawnCount;
+    public ExtendedConfigEntry<int> MantiToilSpawnChance;
 
     // Plushie Settings
-    internal int PlushieSpawnWeight { get { return PlushieSpawnWeightCfg.Value; } set { PlushieSpawnWeightCfg.Value = value; } }
-    internal bool PlushieSpawnAllMoons { get { return PlushieSpawnAllMoonsCfg.Value; } set { PlushieSpawnAllMoonsCfg.Value = value; } }
-    internal string PlushieMoonSpawnList { get { return PlushieMoonSpawnListCfg.Value; } set { PlushieMoonSpawnListCfg.Value = value; } }
-    internal int PlushieCarryWeight { get { return PlushieCarryWeightCfg.Value; } set { PlushieCarryWeightCfg.Value = value; } }
-    internal int PlushieMinValue { get { return PlushieMinValueCfg.Value; } set { PlushieMinValueCfg.Value = value; } }
-    internal int PlushieMaxValue { get { return PlushieMaxValueCfg.Value; } set { PlushieMaxValueCfg.Value = value; } }
+    public ExtendedConfigEntry<int> PlushieSpawnWeight;
+    public ExtendedConfigEntry<bool> PlushieSpawnAllMoons;
+    public ExtendedConfigEntry<string> PlushieMoonSpawnList;
+    public ExtendedConfigEntry<int> PlushieCarryWeight;
+    public ExtendedConfigEntry<int> PlushieMinValue;
+    public ExtendedConfigEntry<int> PlushieMaxValue;
 
     // Turret Settings
-    internal float TurretLostLOSDuration
-    {
-        get
-        {
-            return hostConfigData == null ? TurretLostLOSDurationCfg.Value : hostConfigData.turretLostLOSDuration;
-        }
-        set
-        {
-            TurretLostLOSDurationCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
-
-    internal float TurretRotationRange
-    {
-        get
-        {
-            return hostConfigData == null ? TurretRotationRangeCfg.Value : hostConfigData.turretRotationRange;
-        }
-        set
-        {
-            TurretRotationRangeCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
-
-    internal float TurretCodeAccessCooldownDuration
-    {
-        get
-        {
-            return hostConfigData == null ? TurretCodeAccessCooldownDurationCfg.Value : hostConfigData.turretCodeAccessCooldownDuration;
-        }
-        set
-        {
-            TurretCodeAccessCooldownDurationCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
+    public ExtendedConfigEntry<float> TurretLostLOSDuration;
+    public ExtendedConfigEntry<float> TurretRotationRange;
+    public ExtendedConfigEntry<float> TurretCodeAccessCooldownDuration;
 
     // Turret Detection Settings
-    internal bool TurretDetectionRotation
-    {
-        get
-        {
-            return hostConfigData == null ? TurretDetectionRotationCfg.Value : hostConfigData.turretDetectionRotation;
-        }
-        set
-        {
-            TurretDetectionRotationCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
-
-    internal float TurretDetectionRotationSpeed
-    {
-        get
-        {
-            return hostConfigData == null ? TurretDetectionRotationSpeedCfg.Value : hostConfigData.turretDetectionRotationSpeed;
-        }
-        set
-        {
-            TurretDetectionRotationSpeedCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
+    public ExtendedConfigEntry<bool> TurretDetectionRotation;
+    public ExtendedConfigEntry<float> TurretDetectionRotationSpeed;
 
     // Turret Charging Settings
-    internal float TurretChargingDuration
-    {
-        get
-        {
-            return hostConfigData == null ? TurretChargingDurationCfg.Value : hostConfigData.turretChargingDuration;
-        }
-        set
-        {
-            TurretChargingDurationCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
-
-    internal float TurretChargingRotationSpeed
-    {
-        get
-        {
-            return hostConfigData == null ? TurretChargingRotationSpeedCfg.Value : hostConfigData.turretChargingRotationSpeed;
-        }
-        set
-        {
-            TurretChargingRotationSpeedCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
+    public ExtendedConfigEntry<float> TurretChargingDuration;
+    public ExtendedConfigEntry<float> TurretChargingRotationSpeed;
 
     // Turret Firing Settings
-    internal float TurretFiringRotationSpeed
-    {
-        get
-        {
-            return hostConfigData == null ? TurretFiringRotationSpeedCfg.Value : hostConfigData.turretFiringRotationSpeed;
-        }
-        set
-        {
-            TurretFiringRotationSpeedCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
+    public ExtendedConfigEntry<float> TurretFiringRotationSpeed;
 
     // Turret Berserk Settings
-    internal float TurretBerserkDuration
-    {
-        get
-        {
-            return hostConfigData == null ? TurretBerserkDurationCfg.Value : hostConfigData.turretBerserkDuration;
-        }
-        set
-        {
-            TurretBerserkDurationCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
-
-    internal float TurretBerserkRotationSpeed
-    {
-        get
-        {
-            return hostConfigData == null ? TurretBerserkRotationSpeedCfg.Value : hostConfigData.turretBerserkRotationSpeed;
-        }
-        set
-        {
-            TurretBerserkRotationSpeedCfg.Value = value;
-            SyncedConfigsChanged();
-        }
-    }
-    #endregion
+    public ExtendedConfigEntry<float> TurretBerserkDuration;
+    public ExtendedConfigEntry<float> TurretBerserkRotationSpeed;
 
     public SyncedConfigManager()
     {
@@ -242,207 +72,99 @@ public class SyncedConfigManager
 
     private void BindConfigs()
     {
-        ConfigFile config = Plugin.Instance.Config;
+        // General Settings
+        EnableConfiguration = new("General Settings", "EnableConfiguration", defaultValue: false, "Enable if you want to use custom set config setting values. If disabled, the default config setting values will be used.");
+        ExtendedLogging = new("General Settings", "ExtendedLogging", defaultValue: false, "Enable extended logging.");
 
-        ExtendedLoggingCfg = config.Bind(
-            new ConfigDefinition("General Settings", "ExtendedLogging"),
-            false,
-            new ConfigDescription("Enable extended logging.")
-        );
-
-        #region Toil-Head Settings
         // Toil-Head Settings
-        SpawnToilHeadPlayerRagdollsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "SpawnToilHeadPlayerRagdolls"),
-            true,
-            new ConfigDescription("If enabled, will spawn a Toil-Head player ragdoll when a player dies to a Toil-Head in any way.")
-        );
-        RealToilHeadPlayerRagdollsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "RealToilHeadPlayerRagdolls"),
-            true,
-            new ConfigDescription("If enabled, will spawn a real turret on the Toil-Head player ragdoll.")
-        );
-        CustomSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "CustomSpawnSettings"),
-            $"57 Asteroid-13:2:30,523 Ooblterra:3:80,",
-            new ConfigDescription(GetCustomSpawnSettingsDescription())
-        );
-        OtherSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "OtherSpawnSettings"),
-            $"1,30",
-            new ConfigDescription(GetOtherSpawnSettingsDescription())
-        );
-        LiquidationSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "LiquidationSpawnSettings"),
-            $"1,30",
-            new ConfigDescription(GetSpawnSettingsDescription("44-Liquidation"))
-        );
-        EmbrionSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "EmbrionSpawnSettings"),
-            $"1,20",
-            new ConfigDescription(GetSpawnSettingsDescription("5-Embrion"))
-        );
-        ArtificeSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "ArtificeSpawnSettings"),
-            $"2,70",
-            new ConfigDescription(GetSpawnSettingsDescription("68-Artifice"))
-        );
-        TitanSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "TitanSpawnSettings"),
-            $"2,50",
-            new ConfigDescription(GetSpawnSettingsDescription("8-Titan"))
-        );
-        DineSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "DineSpawnSettings"),
-            $"1,45",
-            new ConfigDescription(GetSpawnSettingsDescription("7-Dine"))
-        );
-        RendSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "RendSpawnSettings"),
-            $"1,40",
-            new ConfigDescription(GetSpawnSettingsDescription("85-Rend"))
-        );
-        AdamanceSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "AdamanceSpawnSettings"),
-            $"1,30",
-            new ConfigDescription(GetSpawnSettingsDescription("20-Adamance"))
-        );
-        MarchSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "MarchSpawnSettings"),
-            $"1,20",
-            new ConfigDescription(GetSpawnSettingsDescription("61-March"))
-        );
-        OffenseSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "OffenseSpawnSettings"),
-            $"1,20",
-            new ConfigDescription(GetSpawnSettingsDescription("21-Offense"))
-        );
-        VowSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "VowSpawnSettings"),
-            $"1,20",
-            new ConfigDescription(GetSpawnSettingsDescription("56-Vow"))
-        );
-        AssuranceSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "AssuranceSpawnSettings"),
-            $"1,20",
-            new ConfigDescription(GetSpawnSettingsDescription("220-Assurance"))
-        );
-        ExperimentationSpawnSettingsCfg = config.Bind(
-            new ConfigDefinition("Toil-Head Settings", "ExperimentationSpawnSettings"),
-            $"1,10",
-            new ConfigDescription(GetSpawnSettingsDescription("41-Experimentation"))
-        );
-        #endregion
+        SpawnToilHeadPlayerRagdolls = new("Toil-Head Settings", "SpawnToilHeadPlayerRagdolls", defaultValue: true, "If enabled, will spawn a Toil-Head player ragdoll when a player dies to a Toil-Head in any way.", useEnableConfiguration: true);
+        RealToilHeadPlayerRagdolls = new("Toil-Head Settings", "RealToilHeadPlayerRagdolls", defaultValue: true, "If enabled, will spawn a real turret on the Toil-Head player ragdoll.", useEnableConfiguration: true);
+        CustomSpawnSettings = new("Toil-Head Settings", "CustomSpawnSettings", defaultValue: "57 Asteroid-13:2:30,523 Ooblterra:3:80,", GetOtherSpawnSettingsDescription(), useEnableConfiguration: true);
+        OtherSpawnSettings = new("Toil-Head Settings", "OtherSpawnSettings", defaultValue: "1,30", GetOtherSpawnSettingsDescription(), useEnableConfiguration: true);
+        LiquidationSpawnSettings = new("Toil-Head Settings", "LiquidationSpawnSettings", defaultValue: "1,30", GetSpawnSettingsDescription("44-Liquidation"), useEnableConfiguration: true);
+        EmbrionSpawnSettings = new("Toil-Head Settings", "EmbrionSpawnSettings", defaultValue: "1, 20", GetSpawnSettingsDescription("5-Embrion"), useEnableConfiguration: true);
+        ArtificeSpawnSettings = new("Toil-Head Settings", "ArtificeSpawnSettings", defaultValue: "2,70", GetSpawnSettingsDescription("68-Artifice"), useEnableConfiguration: true);
+        TitanSpawnSettings = new("Toil-Head Settings", "TitanSpawnSettings", defaultValue: "2,50", GetSpawnSettingsDescription("8-Titan"), useEnableConfiguration: true);
+        DineSpawnSettings = new("Toil-Head Settings", "DineSpawnSettings", defaultValue: "1,45", GetSpawnSettingsDescription("7-Dine"), useEnableConfiguration: true);
+        RendSpawnSettings = new("Toil-Head Settings", "RendSpawnSettings", defaultValue: "1,40", GetSpawnSettingsDescription("85-Rend"), useEnableConfiguration: true);
+        AdamanceSpawnSettings = new("Toil-Head Settings", "AdamanceSpawnSettings", defaultValue: "1,30", GetSpawnSettingsDescription("20-Adamance"), useEnableConfiguration: true);
+        MarchSpawnSettings = new("Toil-Head Settings", "MarchSpawnSettings", defaultValue: "1,20", GetSpawnSettingsDescription("61-March"), useEnableConfiguration: true);
+        OffenseSpawnSettings = new("Toil-Head Settings", "OffenseSpawnSettings", defaultValue: "1,20", GetSpawnSettingsDescription("21-Offense"), useEnableConfiguration: true);
+        VowSpawnSettings = new("Toil-Head Settings", "VowSpawnSettings", defaultValue: "1,20", GetSpawnSettingsDescription("56-Vow"), useEnableConfiguration: true);
+        AssuranceSpawnSettings = new("Toil-Head Settings", "AssuranceSpawnSettings", defaultValue: "1,20", GetSpawnSettingsDescription("220-Assurance"), useEnableConfiguration: true);
+        ExperimentationSpawnSettings = new("Toil-Head Settings", "ExperimentationSpawnSettings", defaultValue: "1,10", GetSpawnSettingsDescription("41-Experimentation"), useEnableConfiguration: true);
 
-        #region Manti-Toil Settings
-        MantiToilMaxSpawnCountCfg = config.Bind(
-            new ConfigDefinition("Manti-Toil Settings", "MantiToilMaxSpawnCount"),
-            5,
-            new ConfigDescription("Manti-Toil max spawn count.")
-        );
-        MantiToilSpawnChanceCfg = config.Bind(
-            new ConfigDefinition("Manti-Toil Settings", "MantiToilSpawnChance"),
-            50,
-            new ConfigDescription("The percent chance a Manticoil turns into a Manti-Toil.")
-        );
-        #endregion
+        // Manti-Toil Settings
+        MantiToilMaxSpawnCount = new("Manti-Toil Settings", "MantiToilMaxSpawnCount", defaultValue: 5, "Manti-Toil max spawn count.", useEnableConfiguration: true);
+        MantiToilSpawnChance = new("Manti-Toil Settings", "MantiToilSpawnChance", defaultValue: 50, "The percent chance a Manticoil turns into a Manti-Toil.", useEnableConfiguration: true);
 
-        #region Plushie Settings
         // Plushie Settings
-        PlushieSpawnWeightCfg = config.Bind(
-            new ConfigDefinition("Plushie Settings", "PlushieSpawnWeight"),
-            10,
-            new ConfigDescription("Toil-Head plushie spawn chance weight. (Higher = more common)")
-        );
-        PlushieSpawnAllMoonsCfg = config.Bind(
-            new ConfigDefinition("Plushie Settings", "PlushieSpawnAllMoons"),
-            true,
-            new ConfigDescription("If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list.")
-        );
-        PlushieMoonSpawnListCfg = config.Bind(
-            new ConfigDefinition("Plushie Settings", "PlushieMoonSpawnList"),
-            "Experimentation, Assurance, Vow, Offense, March, Rend, Dine, Titan",
-            new ConfigDescription("The list of moons the Toil-Head plushie will spawn on.\n(Experimentation, Assurance, Vow, Offense, March, Rend, Dine, Titan)\nOnly works if PlushieSpawnAllMoons is false.")
-        );
-        PlushieCarryWeightCfg = config.Bind(
-            new ConfigDefinition("Plushie Settings", "PlushieCarryWeight"),
-            4,
-            new ConfigDescription("Toil-Head plushie carry weight in pounds.")
-        );
-        PlushieMinValueCfg = config.Bind(
-            new ConfigDefinition("Plushie Settings", "PlushieMinValue"),
-            150,
-            new ConfigDescription("Toil-Head plushie min scrap value.")
-        );
-        PlushieMaxValueCfg = config.Bind(
-            new ConfigDefinition("Plushie Settings", "PlushieMaxValue"),
-            250,
-            new ConfigDescription("Toil-Head plushie max scrap value.")
-        );
-        #endregion
+        PlushieSpawnWeight = new("Plushie Settings", "PlushieSpawnWeight", defaultValue: 10, "Toil-Head plushie spawn chance weight.", useEnableConfiguration: true);
+        PlushieSpawnAllMoons = new("Plushie Settings", "PlushieSpawnAllMoons", defaultValue: true, "If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list.", useEnableConfiguration: true);
+        PlushieMoonSpawnList = new("Plushie Settings", "PlushieMoonSpawnList", defaultValue: "Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion", "The list of moons the Toil-Head plushie will spawn on.\nCurrently only works for vanilla moons.\nOnly works if PlushieSpawnAllMoons is false.", useEnableConfiguration: true);
+        PlushieCarryWeight = new("Plushie Settings", "PlushieCarryWeight", defaultValue: 6, "Toil-Head plushie carry weight in pounds.", useEnableConfiguration: true);
+        PlushieMinValue = new("Plushie Settings", "PlushieMinValue", defaultValue: 80, "Toil-Head plushie min scrap value.", useEnableConfiguration: true);
+        PlushieMaxValue = new("Plushie Settings", "PlushieMaxValue", defaultValue: 250, "Toil-Head plushie max scrap value.", useEnableConfiguration: true);
 
-        #region All Turret Settings
         // Turret Settings
-        TurretLostLOSDurationCfg = config.Bind(
-            new ConfigDefinition("Turret Settings", "TurretLostLOSDuration"),
-            0.75f,
-            new ConfigDescription("The duration until the turret loses the target player when not in line of sight.\nVanilla Turret Default value: 2")
-        );
-        TurretRotationRangeCfg = config.Bind(
-            new ConfigDefinition("Turret Settings", "TurretRotationRange"),
-            75f,
-            new ConfigDescription("The rotation range of the turret in degrees.\nVanilla Turret Default value: 75",
-            new AcceptableValueRange<float>(0f, 360f))
-        );
-        TurretCodeAccessCooldownDurationCfg = config.Bind(
-            new ConfigDefinition("Turret Settings", "TurretCodeAccessCooldownDuration"),
-            7f,
-            new ConfigDescription("The duration of the turret being disabled from the terminal in seconds.\nVanilla Turret Default value: 7")
-        );
+        TurretLostLOSDuration = new("Turret Settings", "TurretLostLOSDuration", defaultValue: 0.75f, "The duration until the turret loses the target player when not in line of sight.\nVanilla Turret Default value: 2", useEnableConfiguration: true);
+        TurretLostLOSDuration.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretLostLOSDuration.ConfigEntry.Value : hostConfigData.turretLostLOSDuration;
+        };
+        TurretRotationRange = new("Turret Settings", "TurretRotationRange", defaultValue: 75f, "The rotation range of the turret in degrees.\nVanilla Turret Default value: 75", useEnableConfiguration: true);
+        TurretRotationRange.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretRotationRange.ConfigEntry.Value : hostConfigData.turretRotationRange;
+        };
+        TurretCodeAccessCooldownDuration = new("Turret Settings", "TurretCodeAccessCooldownDuration", defaultValue: 7f, "The duration of the turret being disabled from the terminal in seconds.\nVanilla Turret Default value: 7", useEnableConfiguration: true);
+        TurretCodeAccessCooldownDuration.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretCodeAccessCooldownDuration.ConfigEntry.Value : hostConfigData.turretCodeAccessCooldownDuration;
+        };
 
         // Turret Detection Settings
-        TurretDetectionRotationCfg = config.Bind(
-            new ConfigDefinition("Turret Detection Settings", "TurretDetectionRotation"),
-            false,
-            new ConfigDescription("If enabled, the turret will rotate when searching for players.\nVanilla Turret Default value: true")
-        );
-        TurretDetectionRotationSpeedCfg = config.Bind(
-            new ConfigDefinition("Turret Detection Settings", "TurretDetectionRotationSpeed"),
-            28f,
-            new ConfigDescription("The rotation speed of the turret when in detection state.\nVanilla Turret Default value: 28")
-        );
+        TurretDetectionRotation = new("Turret Detection Settings", "TurretDetectionRotation", defaultValue: false, "If enabled, the turret will rotate when searching for players.\nVanilla Turret Default value: true", useEnableConfiguration: true);
+        TurretDetectionRotation.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretDetectionRotation.ConfigEntry.Value : hostConfigData.turretDetectionRotation;
+        };
+        TurretDetectionRotationSpeed = new("Turret Detection Settings", "TurretDetectionRotationSpeed", defaultValue: 28f, "The rotation speed of the turret when in detection state.\nVanilla Turret Default value: 28", useEnableConfiguration: true);
+        TurretDetectionRotationSpeed.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretDetectionRotationSpeed.ConfigEntry.Value : hostConfigData.turretDetectionRotationSpeed;
+        };
 
         // Turret Charging Settings
-        TurretChargingDurationCfg = config.Bind(
-            new ConfigDefinition("Turret Charging Settings", "TurretChargingDuration"),
-            2f,
-            new ConfigDescription("The duration of the turret charging state.\nVanilla Turret Default value: 1.5")
-        );
-        TurretChargingRotationSpeedCfg = config.Bind(
-            new ConfigDefinition("Turret Charging Settings", "TurretChargingRotationSpeed"),
-            95f,
-            new ConfigDescription("The rotation speed of the turret when in charging state.\nVanilla Turret Default value: 95")
-        );
+        TurretChargingDuration = new("Turret Charging Settings", "TurretChargingDuration", defaultValue: 2f, "The duration of the turret charging state.\nVanilla Turret Default value: 1.5", useEnableConfiguration: true);
+        TurretChargingDuration.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretChargingDuration.ConfigEntry.Value : hostConfigData.turretChargingDuration;
+        };
+        TurretChargingRotationSpeed = new("Turret Charging Settings", "TurretChargingRotationSpeed", defaultValue: 95f, "The rotation speed of the turret when in charging state.\nVanilla Turret Default value: 95", useEnableConfiguration: true);
+        TurretChargingRotationSpeed.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretChargingRotationSpeed.ConfigEntry.Value : hostConfigData.turretChargingRotationSpeed;
+        };
 
         // Turret Firing Settings
-        TurretFiringRotationSpeedCfg = config.Bind(
-            new ConfigDefinition("Turret Firing Settings", "TurretFiringRotationSpeed"),
-            95f,
-            new ConfigDescription("The rotation speed of the turret when in firing state.\nVanilla Turret Default value: 95")
-        );
+        TurretFiringRotationSpeed = new("Turret Firing Settings", "TurretFiringRotationSpeed", defaultValue: 95f, "The rotation speed of the turret when in firing state.\nVanilla Turret Default value: 95", useEnableConfiguration: true);
+        TurretFiringRotationSpeed.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretFiringRotationSpeed.ConfigEntry.Value : hostConfigData.turretFiringRotationSpeed;
+        };
 
         // Turret Berserk Settings
-        TurretBerserkDurationCfg = config.Bind(
-            new ConfigDefinition("Turret Berserk Settings", "TurretBerserkDuration"),
-            9f,
-            new ConfigDescription("The duration of the turret berserk state.\nVanilla Turret Default value: 9")
-        );
-        TurretBerserkRotationSpeedCfg = config.Bind(
-            new ConfigDefinition("Turret Berserk Settings", "TurretBerserkRotationSpeed"),
-            77f,
-            new ConfigDescription("The rotation speed of the turret when in berserk state.\nVanilla Turret Default value: 77")
-        );
-        #endregion
+        TurretBerserkDuration = new("Turret Berserk Settings", "TurretBerserkDuration", defaultValue: 9f, "The duration of the turret berserk state.\nVanilla Turret Default value: 9", useEnableConfiguration: true);
+        TurretBerserkDuration.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretBerserkDuration.ConfigEntry.Value : hostConfigData.turretBerserkDuration;
+        };
+        TurretBerserkRotationSpeed = new("Turret Berserk Settings", "TurretBerserkRotationSpeed", defaultValue: 77f, "The rotation speed of the turret when in berserk state.\nVanilla Turret Default value: 77", useEnableConfiguration: true);
+        TurretBerserkRotationSpeed.GetValue = () =>
+        {
+            return hostConfigData == null ? TurretBerserkRotationSpeed.ConfigEntry.Value : hostConfigData.turretBerserkRotationSpeed;
+        };
     }
 
     private string GetSpawnSettingsDescription(string planetName)
@@ -495,5 +217,60 @@ public class SyncedConfigManager
         if (!Plugin.IsHostOrServer) return;
 
         PluginNetworkBehaviour.Instance.SendConfigToPlayerClientRpc(new SyncedConfigData(this));
+    }
+}
+
+public class ExtendedConfigEntry<T>
+{
+    public ConfigEntry<T> ConfigEntry;
+    public Func<T> GetValue;
+    public Action<T> SetValue;
+
+    public T DefaultValue => (T)ConfigEntry.DefaultValue;
+    public T Value { get { return GetValue(); } set { SetValue(value); } }
+
+    public bool UseEnableConfiguration = false;
+
+    public ExtendedConfigEntry(string section, string key, T defaultValue, string description, bool useEnableConfiguration = false)
+    {
+        ConfigEntry = Plugin.Instance.Config.Bind(section, key, defaultValue, description);
+        UseEnableConfiguration = useEnableConfiguration;
+        Initialize();
+    }
+
+    public ExtendedConfigEntry(string section, string key, T defaultValue, ConfigDescription configDescription = null, bool useEnableConfiguration = false)
+    {
+        ConfigEntry = Plugin.Instance.Config.Bind(section, key, defaultValue, configDescription);
+        UseEnableConfiguration = useEnableConfiguration;
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        if (GetValue == null)
+        {
+            GetValue = () =>
+            {
+                if (UseEnableConfiguration && !Plugin.ConfigManager.EnableConfiguration.Value)
+                {
+                    return DefaultValue;
+                }
+
+                return ConfigEntry.Value;
+            };
+        }
+
+        if (SetValue == null)
+        {
+            SetValue = (T value) =>
+            {
+                ConfigEntry.Value = value;
+            };
+        }
+    }
+
+    public void ResetToDefault()
+    {
+        ConfigEntry.Value = (T)ConfigEntry.DefaultValue;
     }
 }

@@ -89,12 +89,12 @@ internal class Plugin : BaseUnityPlugin
 
     private void RegisterScrapItems()
     {
-        int iRarity = ConfigManager.PlushieSpawnWeight;
-        bool spawnAllMoons = ConfigManager.PlushieSpawnAllMoons;
-        string moonSpawnList = ConfigManager.PlushieMoonSpawnList;
-        int carryWeight = ConfigManager.PlushieCarryWeight;
-        int minValue = ConfigManager.PlushieMinValue;
-        int maxValue = ConfigManager.PlushieMaxValue;
+        int iRarity = ConfigManager.PlushieSpawnWeight.Value;
+        bool spawnAllMoons = ConfigManager.PlushieSpawnAllMoons.Value;
+        string moonSpawnList = ConfigManager.PlushieMoonSpawnList.Value;
+        int carryWeight = ConfigManager.PlushieCarryWeight.Value;
+        int minValue = ConfigManager.PlushieMinValue.Value;
+        int maxValue = ConfigManager.PlushieMaxValue.Value;
 
         try
         {
@@ -208,7 +208,7 @@ internal class Plugin : BaseUnityPlugin
             return;
         }
 
-        if (!ConfigManager.SpawnToilHeadPlayerRagdolls) return;
+        if (!ConfigManager.SpawnToilHeadPlayerRagdolls.Value) return;
 
         StartOfRound.Instance.StartCoroutine(SetToilHeadPlayerRagdollOnServer(playerId));
     }
@@ -263,7 +263,7 @@ internal class Plugin : BaseUnityPlugin
             yield break;
         }
 
-        bool realTurret = ConfigManager.RealToilHeadPlayerRagdolls;
+        bool realTurret = ConfigManager.RealToilHeadPlayerRagdolls.Value;
 
         if (realTurret)
         {
@@ -448,7 +448,7 @@ internal class Plugin : BaseUnityPlugin
 
     public void LogInfoExtended(object data)
     {
-        if (ConfigManager.ExtendedLogging)
+        if (ConfigManager.ExtendedLogging.Value)
         {
             logger.LogInfo(data);
         }
@@ -456,7 +456,7 @@ internal class Plugin : BaseUnityPlugin
 
     public void LogWarningExtended(object data)
     {
-        if (ConfigManager.ExtendedLogging)
+        if (ConfigManager.ExtendedLogging.Value)
         {
             logger.LogWarning(data);
         }

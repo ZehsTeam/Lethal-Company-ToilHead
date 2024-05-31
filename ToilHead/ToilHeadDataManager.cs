@@ -12,30 +12,30 @@ internal class ToilHeadDataManager
     public static void Initialize()
     {
         dataList = [
-            new ToilHeadData("44 Liquidation", new ToilHeadConfigData(Plugin.ConfigManager.LiquidationSpawnSettings)),
-            new ToilHeadData("5 Embrion", new ToilHeadConfigData(Plugin.ConfigManager.EmbrionSpawnSettings)),
-            new ToilHeadData("68 Artifice", new ToilHeadConfigData(Plugin.ConfigManager.ArtificeSpawnSettings)),
-            new ToilHeadData("8 Titan", new ToilHeadConfigData(Plugin.ConfigManager.TitanSpawnSettings)),
-            new ToilHeadData("7 Dine", new ToilHeadConfigData(Plugin.ConfigManager.DineSpawnSettings)),
-            new ToilHeadData("85 Rend", new ToilHeadConfigData(Plugin.ConfigManager.RendSpawnSettings)),
-            new ToilHeadData("20 Adamance", new ToilHeadConfigData(Plugin.ConfigManager.AdamanceSpawnSettings)),
-            new ToilHeadData("61 March", new ToilHeadConfigData(Plugin.ConfigManager.MarchSpawnSettings)),
-            new ToilHeadData("21 Offense", new ToilHeadConfigData(Plugin.ConfigManager.OffenseSpawnSettings)),
-            new ToilHeadData("56 Vow", new ToilHeadConfigData(Plugin.ConfigManager.VowSpawnSettings)),
-            new ToilHeadData("220 Assurance", new ToilHeadConfigData(Plugin.ConfigManager.AssuranceSpawnSettings)),
-            new ToilHeadData("41 Experimentation", new ToilHeadConfigData(Plugin.ConfigManager.ExperimentationSpawnSettings)),
+            new ToilHeadData("44 Liquidation", new ToilHeadConfigData(Plugin.ConfigManager.LiquidationSpawnSettings.Value)),
+            new ToilHeadData("5 Embrion", new ToilHeadConfigData(Plugin.ConfigManager.EmbrionSpawnSettings.Value)),
+            new ToilHeadData("68 Artifice", new ToilHeadConfigData(Plugin.ConfigManager.ArtificeSpawnSettings.Value)),
+            new ToilHeadData("8 Titan", new ToilHeadConfigData(Plugin.ConfigManager.TitanSpawnSettings.Value)),
+            new ToilHeadData("7 Dine", new ToilHeadConfigData(Plugin.ConfigManager.DineSpawnSettings.Value)),
+            new ToilHeadData("85 Rend", new ToilHeadConfigData(Plugin.ConfigManager.RendSpawnSettings.Value)),
+            new ToilHeadData("20 Adamance", new ToilHeadConfigData(Plugin.ConfigManager.AdamanceSpawnSettings.Value)),
+            new ToilHeadData("61 March", new ToilHeadConfigData(Plugin.ConfigManager.MarchSpawnSettings.Value)),
+            new ToilHeadData("21 Offense", new ToilHeadConfigData(Plugin.ConfigManager.OffenseSpawnSettings.Value)),
+            new ToilHeadData("56 Vow", new ToilHeadConfigData(Plugin.ConfigManager.VowSpawnSettings.Value)),
+            new ToilHeadData("220 Assurance", new ToilHeadConfigData(Plugin.ConfigManager.AssuranceSpawnSettings.Value)),
+            new ToilHeadData("41 Experimentation", new ToilHeadConfigData(Plugin.ConfigManager.ExperimentationSpawnSettings.Value)),
         ];
 
         RegisterCustomSpawnSettings();
 
-        otherData = new ToilHeadData("", new ToilHeadConfigData(Plugin.ConfigManager.OtherSpawnSettings));
+        otherData = new ToilHeadData("", new ToilHeadConfigData(Plugin.ConfigManager.OtherSpawnSettings.Value));
 
         Plugin.logger.LogInfo("Finished initializing ToilHeadDataManager.");
     }
 
     private static void RegisterCustomSpawnSettings()
     {
-        foreach (var entry in Plugin.ConfigManager.CustomSpawnSettings.Split(","))
+        foreach (var entry in Plugin.ConfigManager.CustomSpawnSettings.Value.Split(","))
         {
             if (string.IsNullOrWhiteSpace(entry)) continue;
 

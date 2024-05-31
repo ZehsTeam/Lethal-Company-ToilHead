@@ -57,12 +57,12 @@ public class Api
     /// <summary>
     /// Manti-Toil max spawn count.
     /// </summary>
-    public static int MantiToilMaxSpawnCount => Plugin.ConfigManager.MantiToilMaxSpawnCount;
+    public static int MantiToilMaxSpawnCount => Plugin.ConfigManager.MantiToilMaxSpawnCount.Value;
 
     /// <summary>
     /// Manti-Toil spawn chance.
     /// </summary>
-    public static int MantiToilSpawnChance => Plugin.ConfigManager.MantiToilSpawnChance;
+    public static int MantiToilSpawnChance => Plugin.ConfigManager.MantiToilSpawnChance.Value;
 
     /// <summary>
     /// Manti-Toil spawn count.

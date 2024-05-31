@@ -32,7 +32,7 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
     {
         InitializeValues();
 
-        codeAccessCooldownTimer = Plugin.ConfigManager.TurretCodeAccessCooldownDuration;
+        codeAccessCooldownTimer = Plugin.ConfigManager.TurretCodeAccessCooldownDuration.Value;
     }
 
     public void InitializeValues()

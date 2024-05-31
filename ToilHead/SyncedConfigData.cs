@@ -31,24 +31,24 @@ public class SyncedConfigData : INetworkSerializable
     public SyncedConfigData(SyncedConfigManager configManager)
     {
         // Turret Settings
-        turretLostLOSDuration = configManager.TurretLostLOSDuration;
-        turretRotationRange = configManager.TurretRotationRange;
-        turretCodeAccessCooldownDuration = configManager.TurretCodeAccessCooldownDuration;
+        turretLostLOSDuration = configManager.TurretLostLOSDuration.Value;
+        turretRotationRange = configManager.TurretRotationRange.Value;
+        turretCodeAccessCooldownDuration = configManager.TurretCodeAccessCooldownDuration.Value;
 
         // Turret Detection Settings
-        turretDetectionRotation = configManager.TurretDetectionRotation;
-        turretDetectionRotationSpeed = configManager.TurretDetectionRotationSpeed;
+        turretDetectionRotation = configManager.TurretDetectionRotation.Value;
+        turretDetectionRotationSpeed = configManager.TurretDetectionRotationSpeed.Value;
 
         // Turret Charging Settings
-        turretChargingDuration = configManager.TurretChargingDuration;
-        turretChargingRotationSpeed = configManager.TurretChargingRotationSpeed;
+        turretChargingDuration = configManager.TurretChargingDuration.Value;
+        turretChargingRotationSpeed = configManager.TurretChargingRotationSpeed.Value;
 
         // Turret Firing Settings
-        turretFiringRotationSpeed = configManager.TurretFiringRotationSpeed;
+        turretFiringRotationSpeed = configManager.TurretFiringRotationSpeed.Value;
 
         // Turret Berserk Settings
-        turretBerserkDuration = configManager.TurretBerserkDuration;
-        turretBerserkRotationSpeed = configManager.TurretBerserkRotationSpeed;
+        turretBerserkDuration = configManager.TurretBerserkDuration.Value;
+        turretBerserkRotationSpeed = configManager.TurretBerserkRotationSpeed.Value;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
