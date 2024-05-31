@@ -58,11 +58,12 @@ internal class ScrapHelper
         vanillaMoonLevelTypePair.Add("Vow", LevelTypes.VowLevel);
         vanillaMoonLevelTypePair.Add("Offense", LevelTypes.OffenseLevel);
         vanillaMoonLevelTypePair.Add("March", LevelTypes.MarchLevel);
+        vanillaMoonLevelTypePair.Add("Adamance", LevelTypes.AdamanceLevel);
         vanillaMoonLevelTypePair.Add("Rend", LevelTypes.RendLevel);
         vanillaMoonLevelTypePair.Add("Dine", LevelTypes.DineLevel);
         vanillaMoonLevelTypePair.Add("Titan", LevelTypes.TitanLevel);
-
-        //List<string> levelOverrides = [];
+        vanillaMoonLevelTypePair.Add("Artifice", LevelTypes.ArtificeLevel);
+        vanillaMoonLevelTypePair.Add("Embrion", LevelTypes.EmbrionLevel);
 
         foreach (var moon in moonSpawnList.Split(',').Select(_ => GetFormattedSting(_.Trim())))
         {
@@ -72,19 +73,7 @@ internal class ScrapHelper
                 Plugin.logger.LogInfo($"Registered \"{item.itemName}\" scrap item on moon \"{moon}\" with {iRarity} rarity.");
                 continue;
             }
-
-            //levelOverrides.Add(moon);
         }
-
-        //if (levelOverrides.Count > 0)
-        //{
-        //    LethalLib.Modules.Items.RegisterScrap(item, iRarity, LevelTypes.Modded, levelOverrides.ToArray());
-        //}
-
-        //foreach (var moon in levelOverrides)
-        //{
-        //    Plugin.logger.LogInfo($"Registered \"{item.itemName}\" scrap item on moon \"{moon}\" with {iRarity} rarity.");
-        //}
     }
 
     private static string GetFormattedSting(string value)

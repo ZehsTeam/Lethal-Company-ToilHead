@@ -141,10 +141,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         if (useMantiToilSettings)
         {
-            LOSRange = 40;
-            LOSDistance = 50;
-            LOSVerticalRays = 5;
-            LOSXRotationOffsetStart = -10;
+            LOSVerticalRays = 6;
         }
     }
 

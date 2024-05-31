@@ -4,37 +4,37 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-
+    
     <AssemblyName>com.github.zehsteam.$(MSBuildProjectName)</AssemblyName> <!-- PLUGIN_GUID -->
     <Product>$(MSBuildProjectName)</Product>                               <!-- PLUGIN_NAME -->
-    <Version>1.4.0</Version>                                               <!-- PLUGIN_VERSION -->
+    <Version>1.4.1</Version>                                               <!-- PLUGIN_VERSION -->
     <Description>CoilHeads can sometimes spawn with a turret on their head. Highly Configurable.</Description>
-
+    
     <RootNamespace>com.github.zehsteam.$(MSBuildProjectName)</RootNamespace>
-
+    
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
       https://nuget.bepinex.dev/v3/index.json;
       https://nuget.samboy.dev/v3/index.json;
     </RestoreAdditionalProjectSources>
   </PropertyGroup>
-
+  
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
     </ItemGroup>
   </Target>
-
+  
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <None Include="..\..\..\..\Lethal Company Modding\Unity Projects\LethalCompanyAssetBundles\AssetBundles\toilhead_assets" Link="toilhead_assets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.4.*" />
@@ -59,7 +59,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>embedded</DebugType>
   </PropertyGroup>
-
+  
 	<ItemGroup>
 		<Reference Include="0Harmony">                      <HintPath>$(BepInTools)\0Harmony.dll</HintPath>                          </Reference>
 		<Reference Include="BepInEx">                       <HintPath>$(BepInTools)\BepInEx.dll</HintPath>                           </Reference>
@@ -78,11 +78,11 @@
     
     <Reference Include="LethalLib">                     <HintPath>$(PluginsFolder)\LethalLib\LethalLib.dll</HintPath>            </Reference>
 	</ItemGroup>
-
+  
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
     <Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
   </Target>
-
+  
   <Target Name="CopyToPluginsFolder" AfterTargets="PostBuildEvent" DependsOnTargets="NetcodePatch">
     <Copy DestinationFolder="$(PluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
     <Copy DestinationFolder="$(PluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetDir)\toilhead_assets" />
