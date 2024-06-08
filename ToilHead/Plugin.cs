@@ -106,7 +106,7 @@ internal class Plugin : BaseUnityPlugin
         }
     }
     
-    #region Coil-Head Enemy
+    #region Toil-Head
     public bool SetToilHeadOnServer(EnemyAI enemyAI)
     {
         if (!IsHostOrServer) return false;
@@ -170,6 +170,8 @@ internal class Plugin : BaseUnityPlugin
 
         try
         {
+            enemyNetworkObject.GetComponentInChildren<ScanNodeProperties>().headerText = "Toil-head";
+
             Transform turretTransform = enemyNetworkObject.transform.Find("ToilHeadTurretContainer(Clone)");
             Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
             Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).Find("Head");
@@ -194,7 +196,7 @@ internal class Plugin : BaseUnityPlugin
     }
     #endregion
 
-    #region Player Ragdoll
+    #region Toiled Player Ragdoll
     public void SetToilHeadPlayerRagdoll(PlayerControllerB playerScript)
     {
         SetToilHeadPlayerRagdoll((int)playerScript.playerClientId);
@@ -217,7 +219,7 @@ internal class Plugin : BaseUnityPlugin
     {
         if (!IsHostOrServer) yield break;
 
-        PlayerControllerB playerScript = Utils.GetPlayerScript(playerId);
+        PlayerControllerB playerScript = PlayerUtils.GetPlayerScript(playerId);
 
         if (playerScript == null)
         {
@@ -406,6 +408,8 @@ internal class Plugin : BaseUnityPlugin
 
         try
         {
+            enemyNetworkObject.GetComponentInChildren<ScanNodeProperties>().headerText = "Manti-toil";
+
             Transform turretTransform = enemyNetworkObject.transform.Find("ToilHeadTurretContainer(Clone)");
             Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
             Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetChild(0);
@@ -434,11 +438,113 @@ internal class Plugin : BaseUnityPlugin
     }
     #endregion
 
+    #region Toil-Slayer
+    public bool SetToilSlayerOnServer(EnemyAI enemyAI)
+    {
+        if (!IsHostOrServer) return false;
+
+        if (enemyAI == null)
+        {
+            logger.LogError("Error: Failed to set Toil-Slayer on server. EnemyAI is null.");
+            return false;
+        }
+
+        NetworkObject enemyNetworkObject = enemyAI.GetComponent<NetworkObject>();
+
+        if (!Utils.IsSpring(enemyAI))
+        {
+            logger.LogError($"Error: Failed to set Toil-Slayer on server. Enemy is not a Coil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return false;
+        }
+
+        if (Utils.IsToilHead(enemyAI))
+        {
+            logger.LogWarning($"Warning: Failed to set Toil-Slayer on server. Enemy is already a Toil-Head/Toil-Slayer. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return false;
+        }
+
+        SpawnMiniGunTurretOnServer(enemyAI.transform);
+        PluginNetworkBehaviour.Instance.SetToilSlayerClientRpc(enemyNetworkObject);
+        SetToilSlayerOnLocalClient(enemyNetworkObject);
+
+        LogInfoExtended($"Spawned Toil-Slayer. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+
+        return true;
+    }
+
+    public void SetToilSlayerOnLocalClient(NetworkObject enemyNetworkObject)
+    {
+        if (enemyNetworkObject == null)
+        {
+            logger.LogError($"Error: Failed to set Toil-Slayer on local client. Enemy NetworkObject is null.");
+            return;
+        }
+
+        if (enemyNetworkObject.TryGetComponent(out EnemyAI enemyAI))
+        {
+            if (!Utils.IsSpring(enemyAI))
+            {
+                logger.LogError($"Error: Failed to set Toil-Slayer on local client. Enemy \"{enemyNetworkObject.gameObject.name}\" is not a Coil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+                return;
+            }
+
+            if (EnemyAIPatch.enemyTurretPairs.ContainsKey(enemyNetworkObject))
+            {
+                logger.LogWarning($"Warning: Failed to set Toil-Slayer on local client. Enemy is already a Toil-Head/Toil-Slayer. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+                return;
+            }
+        }
+        else
+        {
+            logger.LogError($"Error: Failed to set Toil-Slayer on local client. Could not find EnemyAI. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return;
+        }
+
+        try
+        {
+            enemyNetworkObject.GetComponentInChildren<ScanNodeProperties>().headerText = "Toil-slayer";
+
+            Transform turretTransform = enemyNetworkObject.transform.Find("MiniGunTurretContainer(Clone)");
+            Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
+            Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).Find("Head");
+
+            turretTransform.localPosition = Vector3.zero;
+            turretTransform.localRotation = Quaternion.identity;
+
+            Utils.DisableColliders(turretTransform.gameObject, keepScanNodeEnabled: true);
+
+            ParentToTransformBehaviour behaviour = enemyHeadTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+            behaviour.SetTargetAndParent(syncToHeadTransform, enemyHeadTransform);
+            behaviour.SetPositionOffset(new Vector3(0f, 0.425f, -0.02f));
+            behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
+
+            EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
+            EnemyAIPatch.toilHeadSpawnCount++;
+        }
+        catch (System.Exception e)
+        {
+            logger.LogError($"Error: Failed to set Toil-Slayer on local client. (NetworkObject: {enemyNetworkObject.NetworkObjectId})\n\n{e}");
+        }
+    }
+    #endregion
+
     private NetworkObject SpawnTurretOnServer(Transform parentTransform)
     {
         if (!IsHostOrServer) return null;
 
         GameObject turretObject = Object.Instantiate(Content.turretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
+        NetworkObject enemyNetworkObject = turretObject.GetComponent<NetworkObject>();
+        enemyNetworkObject.Spawn(destroyWithScene: true);
+        turretObject.transform.SetParent(parentTransform);
+
+        return enemyNetworkObject;
+    }
+
+    private NetworkObject SpawnMiniGunTurretOnServer(Transform parentTransform)
+    {
+        if (!IsHostOrServer) return null;
+
+        GameObject turretObject = Object.Instantiate(Content.miniGunTurretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
         NetworkObject enemyNetworkObject = turretObject.GetComponent<NetworkObject>();
         enemyNetworkObject.Spawn(destroyWithScene: true);
         turretObject.transform.SetParent(parentTransform);

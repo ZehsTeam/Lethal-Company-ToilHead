@@ -26,14 +26,16 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     [Header("Other")]
     [Space(3f)]
+    public bool isMinigun = false;
     public ParticleSystem bulletParticles = null;
     public Animator turretAnimator = null;
+    public float rotationRange = 75f;
+    public float chargingDelay = 0.5f;
     [HideInInspector] public bool turretActive = true;
     [HideInInspector] public TurretMode turretMode = TurretMode.Detection;
     [HideInInspector] public PlayerControllerB targetPlayerWithRotation;
     [HideInInspector] public float targetRotation;
     [HideInInspector] public float rotationSpeed = 28f;
-    [HideInInspector] public float rotationRange = 75f;
 
     [Header("Transforms")]
     [Space(3f)]
@@ -70,6 +72,8 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     private bool rotatingClockwise;
     private float berserkTimer;
     private bool enteringBerserkMode;
+    private float chargingTimer = 0f;
+    private bool playedChargingSFX = false;
     #endregion
 
     #region Custom Variables
@@ -117,6 +121,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             lostLOSDuration = 5f;
         }
 
+        if (isMinigun)
+        {
+            lostLOSDuration = 3f;
+        }
+
         // Turret Detection Settings
         detectionRotation = configManager.TurretDetectionRotation.Value;
         detectionRotationSpeed = configManager.TurretDetectionRotationSpeed.Value;
@@ -127,21 +136,46 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         if (useMantiToilSettings)
         {
-            chargingDuration = 1.5f;
+            chargingDuration = 2.5f;
+        }
+
+        if (isMinigun)
+        {
+            chargingDuration = detectPlayerSFX.length + chargingDelay + chargingSFX.length;
+            chargingRotationSpeed *= 0.5f;
         }
 
         // Turret Firing Settings
         firingRotationSpeed = configManager.TurretFiringRotationSpeed.Value;
 
+        if (isMinigun)
+        {
+            firingRotationSpeed *= 0.5f;
+        }
+
         // Turret Berserk Settings
         berserkDuration = configManager.TurretBerserkDuration.Value;
         berserkRotationSpeed = configManager.TurretBerserkRotationSpeed.Value;
+
+        if (isMinigun)
+        {
+            berserkDuration *= 2f;
+            berserkRotationSpeed *= 0.5f;
+        }
 
         rotationSpeed = detectionRotationSpeed;
 
         if (useMantiToilSettings)
         {
             LOSVerticalRays = 6;
+        }
+
+        if (isMinigun && !IsOnEnemy())
+        {
+            LOSRange = 30f;
+            LOSVerticalRays = 3;
+            LOSXRotationOffsetStart = -5f;
+            LOSXRotationOffsetAmountPerRay = 5f;
         }
     }
 
@@ -234,7 +268,10 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             bulletParticles.Stop(withChildren: true, ParticleSystemStopBehavior.StopEmitting);
             rotationSpeed = detectionRotationSpeed;
             rotatingSmoothly = true;
-            turretAnimator.SetInteger("TurretMode", 0);
+            if (turretAnimator != null)
+            {
+                turretAnimator.SetInteger("TurretMode", 0);
+            }
             turretInterval = Random.Range(0f, 0.15f);
         }
         if (!IsServer)
@@ -280,8 +317,23 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             rotationSpeed = chargingRotationSpeed;
             rotatingSmoothly = false;
             lostLOSTimer = 0f;
-            turretAnimator.SetInteger("TurretMode", 1);
+            if (turretAnimator != null)
+            {
+                turretAnimator.SetInteger("TurretMode", 1);
+            }
+            chargingTimer = 0f;
+            playedChargingSFX = false;
         }
+
+        if (isMinigun && chargingTimer > detectPlayerSFX.length && !playedChargingSFX)
+        {
+            mainAudio.PlayOneShot(chargingSFX);
+            WalkieTalkie.TransmitOneShotAudio(mainAudio, chargingSFX);
+            playedChargingSFX = true;
+        }
+
+        chargingTimer += Time.deltaTime;
+
         if (!IsServer)
         {
             return;
@@ -328,11 +380,14 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             rotationSpeed = firingRotationSpeed;
             rotatingSmoothly = false;
             lostLOSTimer = 0f;
-            turretAnimator.SetInteger("TurretMode", 2);
+            if (turretAnimator != null)
+            {
+                turretAnimator.SetInteger("TurretMode", 2);
+            }
         }
         if (turretInterval >= 0.21f)
         {
-            PlayerControllerB localPlayerScript = Utils.GetLocalPlayerScript();
+            PlayerControllerB localPlayerScript = PlayerUtils.GetLocalPlayerScript();
 
             turretInterval = 0f;
             if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == localPlayerScript)
@@ -365,7 +420,10 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (turretModeLastFrame != TurretMode.Berserk)
         {
             turretModeLastFrame = TurretMode.Berserk;
-            turretAnimator.SetInteger("TurretMode", 1);
+            if (turretAnimator != null)
+            {
+                turretAnimator.SetInteger("TurretMode", 1);
+            }
             berserkTimer = 1.3f;
             berserkAudio.Play();
             rotationSpeed = berserkRotationSpeed;
@@ -383,7 +441,10 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 enteringBerserkMode = false;
                 rotatingClockwise = true;
                 berserkTimer = berserkDuration;
-                turretAnimator.SetInteger("TurretMode", 2);
+                if (turretAnimator != null)
+                {
+                    turretAnimator.SetInteger("TurretMode", 2);
+                }
                 mainAudio.clip = firingSFX;
                 mainAudio.Play();
                 farAudio.clip = firingFarSFX;
@@ -400,7 +461,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
         if (turretInterval >= 0.21f)
         {
-            PlayerControllerB localPlayerScript = Utils.GetLocalPlayerScript();
+            PlayerControllerB localPlayerScript = PlayerUtils.GetLocalPlayerScript();
 
             turretInterval = 0f;
             if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == localPlayerScript)
@@ -691,7 +752,10 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (turretActive == enabled) return;
 
         turretActive = enabled;
-        turretAnimator.SetBool("turretActive", turretActive);
+        if (turretAnimator != null)
+        {
+            turretAnimator.SetBool("turretActive", turretActive);
+        }
 
         if (enabled)
         {
@@ -735,6 +799,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         behaviour.SetCodeTo(codeIndex);
     }
     #endregion
+
+    private bool IsOnEnemy()
+    {
+        return transform.parent.GetComponent<EnemyAI>() != null;
+    }
 
     #region Debugging
     private void OnDrawGizmosSelected()

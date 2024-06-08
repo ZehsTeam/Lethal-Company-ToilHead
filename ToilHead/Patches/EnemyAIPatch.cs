@@ -87,13 +87,29 @@ internal class EnemyAIPatch
         {
             if (toilHeadSpawnCount >= maxSpawnCount) return;
 
-            if (!Utils.RandomPercent(currentToilHeadConfigData.spawnChance))
+            int spawnChance = currentToilHeadConfigData.spawnChance;
+
+            if (spawnChance < 75 && PlayerUtils.HasPlayerTakerst())
+            {
+                spawnChance = 75;
+            }
+
+            if (!Utils.RandomPercent(spawnChance))
             {
                 return;
             }
         }
 
-        Plugin.Instance.SetToilHeadOnServer(enemyAI);
+        int toilSlayerSpawnChance = PlayerUtils.HasPlayerTakerst() ? 30 : 10;
+
+        if (Utils.RandomPercent(toilSlayerSpawnChance))
+        {
+            Plugin.Instance.SetToilHeadOnServer(enemyAI);
+        }
+        else
+        {
+            Plugin.Instance.SetToilSlayerOnServer(enemyAI);
+        }
     }
 
     private static void ManticoilStart(EnemyAI enemyAI)

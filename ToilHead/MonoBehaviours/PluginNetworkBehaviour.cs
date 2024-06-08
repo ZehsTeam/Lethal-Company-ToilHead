@@ -52,6 +52,22 @@ public class PluginNetworkBehaviour : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    public void SetToilSlayerClientRpc(NetworkObjectReference enemyReference)
+    {
+        if (IsHost || IsServer) return;
+
+        if (enemyReference.TryGet(out NetworkObject targetObject))
+        {
+            Plugin.Instance.SetToilSlayerOnLocalClient(targetObject);
+        }
+        else
+        {
+            // Target not found on server, likely because it already has been destroyed/despawned.
+            Plugin.Instance.SetToilSlayerOnLocalClient(null);
+        }
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void SetToilHeadPlayerRagdollServerRpc(int fromPlayerId)
     {

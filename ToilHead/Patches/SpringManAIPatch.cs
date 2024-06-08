@@ -15,7 +15,7 @@ internal class SpringManAIPatch
 
         if (other.gameObject.TryGetComponent(out PlayerControllerB playerScript))
         {
-            if (playerScript != Utils.GetLocalPlayerScript()) return;
+            if (playerScript != PlayerUtils.GetLocalPlayerScript()) return;
             if (!playerScript.isPlayerDead) return;
 
             Plugin.Instance.SetToilHeadPlayerRagdoll(playerScript);

@@ -1,5 +1,4 @@
 ﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
-using GameNetcodeStuff;
 using System.Collections;
 using UnityEngine;
 
@@ -61,28 +60,6 @@ public class Utils
     public static ToilHeadTurretBehaviour GetToilHeadTurretBehaviour(EnemyAI enemyAI)
     {
         return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>();
-    }
-
-    public static int GetLocalPlayerId()
-    {
-        return (int)GetLocalPlayerScript().playerClientId;
-    }
-
-    public static PlayerControllerB GetPlayerScript(int playerId)
-    {
-        try
-        {
-            return StartOfRound.Instance.allPlayerScripts[playerId];
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    public static PlayerControllerB GetLocalPlayerScript()
-    {
-        return GameNetworkManager.Instance.localPlayerController;
     }
 
     public static IEnumerator WaitUntil(System.Func<bool> predicate, float maxDuration = 5f, int iterationsPerSecond = 10)

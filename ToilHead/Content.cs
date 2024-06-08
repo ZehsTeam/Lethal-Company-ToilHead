@@ -11,6 +11,7 @@ internal class Content
     // Turrets
     public static GameObject turretPrefab;
     public static GameObject turretPropPrefab;
+    public static GameObject miniGunTurretPrefab;
 
     // Toil-Head Plushie
     public static Item toilHeadPlush;
@@ -35,7 +36,8 @@ internal class Content
             // Turrets
             turretPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretContainer");
             turretPropPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretProp");
-
+            miniGunTurretPrefab = assetBundle.LoadAsset<GameObject>("MiniGunTurretContainer");
+            
             // Toil-Head Plushie
             toilHeadPlush = assetBundle.LoadAsset<Item>("ToilHeadPlush");
 
