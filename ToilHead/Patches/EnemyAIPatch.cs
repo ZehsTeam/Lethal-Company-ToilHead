@@ -89,18 +89,13 @@ internal class EnemyAIPatch
 
             int spawnChance = currentToilHeadConfigData.spawnChance;
 
-            if (spawnChance < 75 && PlayerUtils.HasPlayerTakerst())
-            {
-                spawnChance = 75;
-            }
-
             if (!Utils.RandomPercent(spawnChance))
             {
                 return;
             }
         }
 
-        int toilSlayerSpawnChance = PlayerUtils.HasPlayerTakerst() ? 30 : 10;
+        int toilSlayerSpawnChance = 10;
 
         if (Utils.RandomPercent(toilSlayerSpawnChance))
         {
@@ -117,6 +112,13 @@ internal class EnemyAIPatch
         if (!Plugin.IsHostOrServer) return;
 
         int maxSpawnCount = Plugin.ConfigManager.MantiToilMaxSpawnCount.Value;
+        int spawnChance = Plugin.ConfigManager.MantiToilSpawnChance.Value;
+
+        if (StartOfRound.Instance.currentLevel.PlanetName == "69 Toilation")
+        {
+            maxSpawnCount = 20;
+            spawnChance = 90;
+        }
 
         if (forceMantiToilMaxSpawnCount > -1)
         {
@@ -127,7 +129,7 @@ internal class EnemyAIPatch
         {
             if (mantiToilSpawnCount >= maxSpawnCount) return;
 
-            if (!Utils.RandomPercent(Plugin.ConfigManager.MantiToilSpawnChance.Value))
+            if (!Utils.RandomPercent(spawnChance))
             {
                 return;
             }

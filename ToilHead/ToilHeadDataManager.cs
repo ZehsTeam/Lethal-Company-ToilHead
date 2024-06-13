@@ -24,6 +24,7 @@ internal class ToilHeadDataManager
             new ToilHeadData("56 Vow", new ToilHeadConfigData(Plugin.ConfigManager.VowSpawnSettings.Value)),
             new ToilHeadData("220 Assurance", new ToilHeadConfigData(Plugin.ConfigManager.AssuranceSpawnSettings.Value)),
             new ToilHeadData("41 Experimentation", new ToilHeadConfigData(Plugin.ConfigManager.ExperimentationSpawnSettings.Value)),
+            new ToilHeadData("69 Toilation", new ToilHeadConfigData("6,75")),
         ];
 
         RegisterCustomSpawnSettings();

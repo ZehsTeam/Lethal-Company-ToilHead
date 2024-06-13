@@ -7,7 +7,7 @@
     
     <AssemblyName>com.github.zehsteam.$(MSBuildProjectName)</AssemblyName> <!-- PLUGIN_GUID -->
     <Product>$(MSBuildProjectName)</Product>                               <!-- PLUGIN_NAME -->
-    <Version>1.4.3</Version>                                               <!-- PLUGIN_VERSION -->
+    <Version>1.5.0</Version>                                               <!-- PLUGIN_VERSION -->
     <Description>CoilHeads can sometimes spawn with a turret on their head. Highly Configurable.</Description>
     
     <RootNamespace>com.github.zehsteam.$(MSBuildProjectName)</RootNamespace>
@@ -76,7 +76,7 @@
 		<Reference Include="Unity.TextMeshPro">             <HintPath>$(AssembliesPath)\Unity.TextMeshPro.dll</HintPath>             </Reference>
 		<Reference Include="UnityEngine.UI">                <HintPath>$(AssembliesPath)\UnityEngine.UI.dll</HintPath>                </Reference>
     
-    <Reference Include="LethalLib">                     <HintPath>$(PluginsFolder)\LethalLib\LethalLib.dll</HintPath>            </Reference>
+    <Reference Include="LethalLib">               <HintPath>$(PluginsFolder)\_OtherMods\Evaisa-LethalLib\LethalLib.dll</HintPath></Reference>
 	</ItemGroup>
   
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
