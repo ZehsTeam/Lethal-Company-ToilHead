@@ -10,6 +10,7 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 
 ## Mod Compatibility
 **This mod is compatible with:**
+* [Toilation](https://thunderstore.io/c/lethal-company/p/Zehs/Toilation/) - *A new Toil-Head moon :3*
 * [Asteroid13](https://thunderstore.io/c/lethal-company/p/Magic_Wesley/Asteroid13/) - *Adds some secrets*
 * [CoilHeadStare](https://thunderstore.io/c/lethal-company/p/TwinDimensionalProductions/CoilHeadStare/) - *If you want to die harder :3*
 * [ghostCodes](https://thunderstore.io/c/lethal-company/p/darmuh/ghostCodes/) - *Adds extra functionality*
