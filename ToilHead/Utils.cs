@@ -52,6 +52,14 @@ public class Utils
         return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
     }
 
+    public static bool IsTurretHead(EnemyAI enemyAI)
+    {
+        if (IsToilHead(enemyAI)) return true;
+        if (IsMantiToil(enemyAI)) return true;
+
+        return false;
+    }
+
     public static bool IsToilHeadPlayerRagdoll(GameObject gameObject)
     {
         return gameObject.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
@@ -78,5 +86,19 @@ public class Utils
             yield return new WaitForSeconds(timePerIteration);
             timer += Time.deltaTime;
         }
+    }
+
+    public static bool IsOnToilation()
+    {
+        if (StartOfRound.Instance == null) return false;
+
+        string planetName = StartOfRound.Instance.currentLevel.PlanetName;
+
+        if (planetName == "69 Toilation" || planetName.Contains("Toilation", System.StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
     }
 }

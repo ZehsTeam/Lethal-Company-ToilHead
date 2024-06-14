@@ -19,6 +19,10 @@ internal class EnemyAIPatch
     public static bool forceMantiToilSpawns = false;
     public static int forceMantiToilMaxSpawnCount = -1;
 
+    public static int toilSlayerSpawnCount = 0;
+    public static bool forceToilSlayerSpawns = false;
+    public static int forceToilSlayerMaxSpawnCount = -1;
+
     public static ToilHeadConfigData currentToilHeadConfigData => ToilHeadDataManager.GetDataForCurrentLevel().configData;
 
     public static void Reset()
@@ -32,6 +36,10 @@ internal class EnemyAIPatch
         mantiToilSpawnCount = 0;
         forceMantiToilSpawns = false;
         forceMantiToilMaxSpawnCount = -1;
+
+        toilSlayerSpawnCount = 0;
+        forceToilSlayerSpawns = false;
+        forceToilSlayerMaxSpawnCount = -1;
     }
 
     public static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
@@ -52,7 +60,7 @@ internal class EnemyAIPatch
 
         enemyTurretPairs.Clear();
 
-        Plugin.logger.LogInfo($"Finished despawning all Toil-Head/Manti-Toil turrets.");
+        Plugin.logger.LogInfo($"Finished despawning all Turret-Head turrets.");
     }
 
     [HarmonyPatch("Start")]
@@ -76,47 +84,79 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
+        if (!TrySpawnToilSlayer(enemyAI))
+        {
+            TrySpawnToilHead(enemyAI);
+        }
+    }
+
+    private static bool TrySpawnToilHead(EnemyAI enemyAI)
+    {
         int maxSpawnCount = currentToilHeadConfigData.maxSpawnCount;
+        int spawnChance = currentToilHeadConfigData.spawnChance;
+
+        if (Utils.IsOnToilation())
+        {
+            maxSpawnCount = 8;
+            spawnChance = 80;
+        }
 
         if (forceToilHeadMaxSpawnCount > -1)
         {
             maxSpawnCount = forceToilHeadMaxSpawnCount;
         }
- 
+
         if (!forceToilHeadSpawns)
         {
-            if (toilHeadSpawnCount >= maxSpawnCount) return;
-
-            int spawnChance = currentToilHeadConfigData.spawnChance;
-
-            if (!Utils.RandomPercent(spawnChance))
-            {
-                return;
-            }
+            if (toilHeadSpawnCount >= maxSpawnCount) return false;
+            if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
-        int toilSlayerSpawnChance = 10;
+        Plugin.Instance.SetToilHeadOnServer(enemyAI);
+        return true;
+    }
 
-        if (Utils.RandomPercent(toilSlayerSpawnChance))
+    private static bool TrySpawnToilSlayer(EnemyAI enemyAI)
+    {
+        int maxSpawnCount = Plugin.ConfigManager.ToilSlayerMaxSpawnCount.Value;
+        int spawnChance = Plugin.ConfigManager.ToilSlayerSpawnChance.Value;
+
+        if (Utils.IsOnToilation())
         {
-            Plugin.Instance.SetToilHeadOnServer(enemyAI);
+            maxSpawnCount = 2;
+            spawnChance = 10;
         }
-        else
+
+        if (forceToilSlayerMaxSpawnCount > -1)
         {
-            Plugin.Instance.SetToilSlayerOnServer(enemyAI);
+            maxSpawnCount = forceToilSlayerMaxSpawnCount;
         }
+
+        if (!forceToilSlayerSpawns)
+        {
+            if (toilSlayerSpawnCount >= maxSpawnCount) return false;
+            if (!Utils.RandomPercent(spawnChance)) return false;
+        }
+
+        Plugin.Instance.SetToilSlayerOnServer(enemyAI);
+        return true;
     }
 
     private static void ManticoilStart(EnemyAI enemyAI)
     {
         if (!Plugin.IsHostOrServer) return;
 
+        TrySpawnMantiToil(enemyAI);
+    }
+
+    private static bool TrySpawnMantiToil(EnemyAI enemyAI)
+    {
         int maxSpawnCount = Plugin.ConfigManager.MantiToilMaxSpawnCount.Value;
         int spawnChance = Plugin.ConfigManager.MantiToilSpawnChance.Value;
 
-        if (StartOfRound.Instance.currentLevel.PlanetName == "69 Toilation")
+        if (Utils.IsOnToilation())
         {
-            maxSpawnCount = 20;
+            maxSpawnCount = 50;
             spawnChance = 90;
         }
 
@@ -127,15 +167,12 @@ internal class EnemyAIPatch
 
         if (!forceMantiToilSpawns)
         {
-            if (mantiToilSpawnCount >= maxSpawnCount) return;
-
-            if (!Utils.RandomPercent(spawnChance))
-            {
-                return;
-            }
+            if (mantiToilSpawnCount >= maxSpawnCount) return false;
+            if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
         Plugin.Instance.SetMantiToilOnServer(enemyAI);
+        return true;
     }
 
     [HarmonyPatch("HitEnemyServerRpc")]
@@ -144,7 +181,7 @@ internal class EnemyAIPatch
     {
         if (playerWhoHit == -1) return;
 
-        if (Utils.IsToilHead(__instance))
+        if (Utils.IsTurretHead(__instance))
         {
             TurretHeadOnHitEnemyOnServer(__instance);
         }
@@ -160,17 +197,18 @@ internal class EnemyAIPatch
         behaviour.EnterBerserkModeClientRpc();
     }
 
-    [HarmonyPatch("OnDestroy")]
+    [HarmonyPatch("KillEnemy")]
     [HarmonyPrefix]
-    static void OnDestroyPatch(ref EnemyAI __instance)
+    static void KillEnemyPatch(ref EnemyAI __instance, bool destroy)
     {
-        if (Utils.IsSpring(__instance))
-        {
-            TurretHeadOnDestroy(__instance);
-        }
+        if (!Plugin.IsHostOrServer) return;
+        if (!Utils.IsTurretHead(__instance)) return;
+        if (!destroy) return;
+
+        DespawnTurret(__instance);
     }
 
-    private static void TurretHeadOnDestroy(EnemyAI enemyAI)
+    private static void DespawnTurret(EnemyAI enemyAI)
     {
         if (!Plugin.IsHostOrServer) return;
 
@@ -191,7 +229,7 @@ internal class EnemyAIPatch
             turretNetworkObject.Despawn();
             enemyTurretPairs.Remove(enemyNetworkObject);
 
-            Plugin.logger.LogInfo($"Despawned Toil-Head/Manti-Toil turret (NetworkObjectId: {turretNetworkObject.NetworkObjectId}).");
+            Plugin.logger.LogInfo($"Despawned Turret-Head turret (NetworkObjectId: {turretNetworkObject.NetworkObjectId}).");
         }
     }
 }

@@ -91,4 +91,42 @@ public class Api
     {
         return Plugin.Instance.SetMantiToilOnServer(enemyAI);
     }
+
+    /// <summary>
+    /// Toil-Slayer max spawn count.
+    /// </summary>
+    public static int ToilSlayerMaxSpawnCount => Plugin.ConfigManager.ToilSlayerMaxSpawnCount.Value;
+
+    /// <summary>
+    /// Toil-Slayer spawn chance.
+    /// </summary>
+    public static int ToilSlayerSpawnChance => Plugin.ConfigManager.ToilSlayerSpawnChance.Value;
+
+    /// <summary>
+    /// Toil-Slayer spawn count.
+    /// </summary>
+    public static int toilSlayerSpawnCount => EnemyAIPatch.toilSlayerSpawnCount;
+
+    /// <summary>
+    /// If enabled, will force any spawned Coil-Heads to become Toil-Slayers.
+    /// This will get reset automatically when the day ends.
+    /// </summary>
+    public static bool forceToilSlayerSpawns { get { return EnemyAIPatch.forceToilSlayerSpawns; } set { EnemyAIPatch.forceToilSlayerSpawns = value; } }
+
+    /// <summary>
+    /// If set to any value above -1, will temporarily override the Toil-Slayer max spawn count.
+    /// This will get reset automatically when the day ends.
+    /// </summary>
+    public static int forceToilSlayerMaxSpawnCount { get { return EnemyAIPatch.forceToilSlayerMaxSpawnCount; } set { EnemyAIPatch.forceToilSlayerMaxSpawnCount = value; } }
+
+    /// <summary>
+    /// This must only be called on the Host/Server.
+    /// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".
+    /// </summary>
+    /// <param name="enemyAI">Coil-Head "Spring" EnemyAI instance.</param>
+    /// <returns>True if successful.</returns>
+    public static bool SetToilSlayerOnServer(EnemyAI enemyAI)
+    {
+        return Plugin.Instance.SetToilSlayerOnServer(enemyAI);
+    }
 }

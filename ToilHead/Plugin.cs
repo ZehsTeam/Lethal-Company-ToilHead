@@ -519,7 +519,7 @@ internal class Plugin : BaseUnityPlugin
             behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
 
             EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
-            EnemyAIPatch.toilHeadSpawnCount++;
+            EnemyAIPatch.toilSlayerSpawnCount++;
         }
         catch (System.Exception e)
         {

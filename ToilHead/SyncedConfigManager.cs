@@ -36,6 +36,10 @@ public class SyncedConfigManager
     public ExtendedConfigEntry<int> MantiToilMaxSpawnCount;
     public ExtendedConfigEntry<int> MantiToilSpawnChance;
 
+    // Toil-Slayer Settings
+    public ExtendedConfigEntry<int> ToilSlayerMaxSpawnCount;
+    public ExtendedConfigEntry<int> ToilSlayerSpawnChance;
+
     // Plushie Settings
     public ExtendedConfigEntry<int> PlushieSpawnWeight;
     public ExtendedConfigEntry<bool> PlushieSpawnAllMoons;
@@ -97,6 +101,10 @@ public class SyncedConfigManager
         // Manti-Toil Settings
         MantiToilMaxSpawnCount = new("Manti-Toil Settings", "MantiToilMaxSpawnCount", defaultValue: 5, "Manti-Toil max spawn count.", useEnableConfiguration: true);
         MantiToilSpawnChance = new("Manti-Toil Settings", "MantiToilSpawnChance", defaultValue: 50, "The percent chance a Manticoil turns into a Manti-Toil.", useEnableConfiguration: true);
+
+        // Toil-Slayer Settings
+        ToilSlayerMaxSpawnCount = new("Toil-Slayer Settings", "ToilSlayerMaxSpawnCount", defaultValue: 1, "Toil-Slayer max spawn count.", useEnableConfiguration: true);
+        ToilSlayerSpawnChance = new("Toil-Slayer Settings", "ToilSlayerSpawnChance", defaultValue: 10, "The percent chance a Coil-Head turns into a Toil-Slayer.", useEnableConfiguration: true);
 
         // Plushie Settings
         PlushieSpawnWeight = new("Plushie Settings", "PlushieSpawnWeight", defaultValue: 10, "Toil-Head plushie spawn chance weight.", useEnableConfiguration: true);
