@@ -98,73 +98,73 @@ public class SyncedConfigManager
         ToilSlayerSpawnSettingsMoonList = new("Toil-Slayer Settings", "ToilSlayerSpawnSettingsMoonList", defaultValue: toilSlayerSpawnSettingsMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-Slayer"));
 
         // Player Ragdoll Settings
-        SpawnToilHeadPlayerRagdolls = new("Player Ragdoll Settings", "SpawnToilHeadPlayerRagdolls", defaultValue: true, "If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way.", useEnableConfiguration: true);
-        SpawnRealToilHeadPlayerRagdolls = new("Player Ragdoll Settings", "SpawnRealToilHeadPlayerRagdolls", defaultValue: true, "If enabled, will spawn a real turret on the Toiled player ragdoll.", useEnableConfiguration: true);
+        SpawnToilHeadPlayerRagdolls = new("Player Ragdoll Settings", "SpawnToilHeadPlayerRagdolls", defaultValue: true, "If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way.");
+        SpawnRealToilHeadPlayerRagdolls = new("Player Ragdoll Settings", "SpawnRealToilHeadPlayerRagdolls", defaultValue: true, "If enabled, will spawn a real turret on the Toiled player ragdoll.");
 
         // Toil-Head Plushie Settings
-        ToilHeadPlushieSpawnWeight = new("Toil-Head Plushie Settings", "SpawnWeight", defaultValue: 10, "Toil-Head plushie spawn chance weight.", useEnableConfiguration: true);
-        ToilHeadPlushieSpawnAllMoons = new("Toil-Head Plushie Settings", "SpawnAllMoons", defaultValue: true, "If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list.", useEnableConfiguration: true);
-        ToilHeadPlushieMoonSpawnList = new("Toil-Head Plushie Settings", "MoonSpawnList", defaultValue: "Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion", "The list of moons the Toil-Head plushie will spawn on.\nCurrently only works for vanilla moons.\nOnly works if PlushieSpawnAllMoons is false.", useEnableConfiguration: true);
-        ToilHeadPlushieCarryWeight = new("Toil-Head Plushie Settings", "CarryWeight", defaultValue: 6, "Toil-Head plushie carry weight in pounds.", useEnableConfiguration: true);
-        ToilHeadPlushieMinValue = new("Toil-Head Plushie Settings", "MinValue", defaultValue: 80, "Toil-Head plushie min scrap value.", useEnableConfiguration: true);
-        ToilHeadPlushieMaxValue = new("Toil-Head Plushie Settings", "MaxValue", defaultValue: 250, "Toil-Head plushie max scrap value.", useEnableConfiguration: true);
+        ToilHeadPlushieSpawnWeight = new("Toil-Head Plushie Settings", "SpawnWeight", defaultValue: 10, "Toil-Head plushie spawn chance weight.");
+        ToilHeadPlushieSpawnAllMoons = new("Toil-Head Plushie Settings", "SpawnAllMoons", defaultValue: true, "If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list.");
+        ToilHeadPlushieMoonSpawnList = new("Toil-Head Plushie Settings", "MoonSpawnList", defaultValue: "Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion", "The list of moons the Toil-Head plushie will spawn on.\nCurrently only works for vanilla moons.\nOnly works if PlushieSpawnAllMoons is false.");
+        ToilHeadPlushieCarryWeight = new("Toil-Head Plushie Settings", "CarryWeight", defaultValue: 6, "Toil-Head plushie carry weight in pounds.");
+        ToilHeadPlushieMinValue = new("Toil-Head Plushie Settings", "MinValue", defaultValue: 80, "Toil-Head plushie min scrap value.");
+        ToilHeadPlushieMaxValue = new("Toil-Head Plushie Settings", "MaxValue", defaultValue: 250, "Toil-Head plushie max scrap value.");
 
         #region Turret Settings
         // Turret Settings
-        TurretLostLOSDuration = new("Turret Settings", "LostLOSDuration", defaultValue: 0.75f, "The duration until the turret loses the target player when not in line of sight.\nVanilla Turret Default value: 2", useEnableConfiguration: true);
+        TurretLostLOSDuration = new("Turret Settings", "LostLOSDuration", defaultValue: 0.75f, "The duration until the turret loses the target player when not in line of sight.\nVanilla Turret Default value: 2");
         TurretLostLOSDuration.GetValue = () =>
         {
             return HostConfigData == null ? TurretLostLOSDuration.ConfigEntry.Value : HostConfigData.TurretLostLOSDuration;
         };
-        TurretRotationRange = new("Turret Settings", "RotationRange", defaultValue: 75f, "The rotation range of the turret in degrees.\nVanilla Turret Default value: 75", useEnableConfiguration: true);
+        TurretRotationRange = new("Turret Settings", "RotationRange", defaultValue: 75f, "The rotation range of the turret in degrees.\nVanilla Turret Default value: 75");
         TurretRotationRange.GetValue = () =>
         {
             return HostConfigData == null ? TurretRotationRange.ConfigEntry.Value : HostConfigData.TurretRotationRange;
         };
-        TurretCodeAccessCooldownDuration = new("Turret Settings", "CodeAccessCooldownDuration", defaultValue: 7f, "The duration of the turret being disabled from the terminal in seconds.\nVanilla Turret Default value: 7", useEnableConfiguration: true);
+        TurretCodeAccessCooldownDuration = new("Turret Settings", "CodeAccessCooldownDuration", defaultValue: 7f, "The duration of the turret being disabled from the terminal in seconds.\nVanilla Turret Default value: 7");
         TurretCodeAccessCooldownDuration.GetValue = () =>
         {
             return HostConfigData == null ? TurretCodeAccessCooldownDuration.ConfigEntry.Value : HostConfigData.TurretCodeAccessCooldownDuration;
         };
 
         // Turret Detection Settings
-        TurretDetectionRotation = new("Turret Detection Settings", "Rotation", defaultValue: false, "If enabled, the turret will rotate when searching for players.\nVanilla Turret Default value: true", useEnableConfiguration: true);
+        TurretDetectionRotation = new("Turret Detection Settings", "Rotation", defaultValue: false, "If enabled, the turret will rotate when searching for players.\nVanilla Turret Default value: true");
         TurretDetectionRotation.GetValue = () =>
         {
             return HostConfigData == null ? TurretDetectionRotation.ConfigEntry.Value : HostConfigData.TurretDetectionRotation;
         };
-        TurretDetectionRotationSpeed = new("Turret Detection Settings", "RotationSpeed", defaultValue: 28f, "The rotation speed of the turret when in detection state.\nVanilla Turret Default value: 28", useEnableConfiguration: true);
+        TurretDetectionRotationSpeed = new("Turret Detection Settings", "RotationSpeed", defaultValue: 28f, "The rotation speed of the turret when in detection state.\nVanilla Turret Default value: 28");
         TurretDetectionRotationSpeed.GetValue = () =>
         {
             return HostConfigData == null ? TurretDetectionRotationSpeed.ConfigEntry.Value : HostConfigData.TurretDetectionRotationSpeed;
         };
 
         // Turret Charging Settings
-        TurretChargingDuration = new("Turret Charging Settings", "ChargingDuration", defaultValue: 2f, "The duration of the turret charging state.\nVanilla Turret Default value: 1.5", useEnableConfiguration: true);
+        TurretChargingDuration = new("Turret Charging Settings", "ChargingDuration", defaultValue: 2f, "The duration of the turret charging state.\nVanilla Turret Default value: 1.5");
         TurretChargingDuration.GetValue = () =>
         {
             return HostConfigData == null ? TurretChargingDuration.ConfigEntry.Value : HostConfigData.TurretChargingDuration;
         };
-        TurretChargingRotationSpeed = new("Turret Charging Settings", "RotationSpeed", defaultValue: 95f, "The rotation speed of the turret when in charging state.\nVanilla Turret Default value: 95", useEnableConfiguration: true);
+        TurretChargingRotationSpeed = new("Turret Charging Settings", "RotationSpeed", defaultValue: 95f, "The rotation speed of the turret when in charging state.\nVanilla Turret Default value: 95");
         TurretChargingRotationSpeed.GetValue = () =>
         {
             return HostConfigData == null ? TurretChargingRotationSpeed.ConfigEntry.Value : HostConfigData.TurretChargingRotationSpeed;
         };
 
         // Turret Firing Settings
-        TurretFiringRotationSpeed = new("Turret Firing Settings", "RotationSpeed", defaultValue: 95f, "The rotation speed of the turret when in firing state.\nVanilla Turret Default value: 95", useEnableConfiguration: true);
+        TurretFiringRotationSpeed = new("Turret Firing Settings", "RotationSpeed", defaultValue: 95f, "The rotation speed of the turret when in firing state.\nVanilla Turret Default value: 95");
         TurretFiringRotationSpeed.GetValue = () =>
         {
             return HostConfigData == null ? TurretFiringRotationSpeed.ConfigEntry.Value : HostConfigData.TurretFiringRotationSpeed;
         };
 
         // Turret Berserk Settings
-        TurretBerserkDuration = new("Turret Berserk Settings", "BerserkDuration", defaultValue: 9f, "The duration of the turret berserk state.\nVanilla Turret Default value: 9", useEnableConfiguration: true);
+        TurretBerserkDuration = new("Turret Berserk Settings", "BerserkDuration", defaultValue: 9f, "The duration of the turret berserk state.\nVanilla Turret Default value: 9");
         TurretBerserkDuration.GetValue = () =>
         {
             return HostConfigData == null ? TurretBerserkDuration.ConfigEntry.Value : HostConfigData.TurretBerserkDuration;
         };
-        TurretBerserkRotationSpeed = new("Turret Berserk Settings", "RotationSpeed", defaultValue: 77f, "The rotation speed of the turret when in berserk state.\nVanilla Turret Default value: 77", useEnableConfiguration: true);
+        TurretBerserkRotationSpeed = new("Turret Berserk Settings", "RotationSpeed", defaultValue: 77f, "The rotation speed of the turret when in berserk state.\nVanilla Turret Default value: 77");
         TurretBerserkRotationSpeed.GetValue = () =>
         {
             return HostConfigData == null ? TurretBerserkRotationSpeed.ConfigEntry.Value : HostConfigData.TurretBerserkRotationSpeed;
