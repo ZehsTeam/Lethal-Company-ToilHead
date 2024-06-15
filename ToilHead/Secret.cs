@@ -16,14 +16,14 @@ internal class Secret
 
     public static void SpawnAsteroid13Secrets()
     {
-        if (Content.turretPropPrefab == null)
+        if (Content.TurretPropPrefab == null)
         {
             Plugin.Instance.LogWarningExtended("Warning: Failed to spawn Asteroid13 secrets. turretPropPrefab is null.");
             return;
         }
 
         // Turret
-        Vector3 scale = Content.turretPropPrefab.transform.localScale * 1.3f;
+        Vector3 scale = Content.TurretPropPrefab.transform.localScale * 1.3f;
 
         // Turret -> coilheadstuck_model
         Vector3 position = new Vector3(0f, 3.031f, -0.464f);
@@ -89,12 +89,12 @@ internal class Secret
 
     private static void SpawnTurretProp(string parentName, Vector3 positionOffset, Vector3 rotationOffset)
     {
-        SpawnTurretProp(parentName, positionOffset, rotationOffset, Content.turretPropPrefab.transform.localScale);
+        SpawnTurretProp(parentName, positionOffset, rotationOffset, Content.TurretPropPrefab.transform.localScale);
     }
 
     private static void SpawnTurretProp(string parentName, Vector3 positionOffset, Vector3 rotationOffset, Vector3 scale)
     {
-        if (Content.turretPropPrefab == null)
+        if (Content.TurretPropPrefab == null)
         {
             Plugin.Instance.LogWarningExtended("Warning: Failed to Instantiate turretPropPrefab. turretPropPrefab is null.");
             return;
@@ -108,7 +108,7 @@ internal class Secret
             return;
         }
 
-        Transform turretTransform = Object.Instantiate(Content.turretPropPrefab, Vector3.zero, Quaternion.identity, parentObject.transform).transform;
+        Transform turretTransform = Object.Instantiate(Content.TurretPropPrefab, Vector3.zero, Quaternion.identity, parentObject.transform).transform;
 
         turretTransform.localScale = scale;
 

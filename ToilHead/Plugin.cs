@@ -41,7 +41,7 @@ internal class Plugin : BaseUnityPlugin
 
         ConfigManager = new SyncedConfigManager();
 
-        ToilHeadDataManager.Initialize();
+        SpawnDataManager.Initialize();
         Content.Load();
         EnemyAIPatch.Reset();
 
@@ -89,16 +89,16 @@ internal class Plugin : BaseUnityPlugin
 
     private void RegisterScrapItems()
     {
-        int iRarity = ConfigManager.PlushieSpawnWeight.Value;
-        bool spawnAllMoons = ConfigManager.PlushieSpawnAllMoons.Value;
-        string moonSpawnList = ConfigManager.PlushieMoonSpawnList.Value;
-        int carryWeight = ConfigManager.PlushieCarryWeight.Value;
-        int minValue = ConfigManager.PlushieMinValue.Value;
-        int maxValue = ConfigManager.PlushieMaxValue.Value;
+        int iRarity = ConfigManager.ToilHeadPlushieSpawnWeight.Value;
+        bool spawnAllMoons = ConfigManager.ToilHeadPlushieSpawnAllMoons.Value;
+        string moonSpawnList = ConfigManager.ToilHeadPlushieMoonSpawnList.Value;
+        int carryWeight = ConfigManager.ToilHeadPlushieCarryWeight.Value;
+        int minValue = ConfigManager.ToilHeadPlushieMinValue.Value;
+        int maxValue = ConfigManager.ToilHeadPlushieMaxValue.Value;
 
         try
         {
-            ScrapHelper.RegisterScrap(Content.toilHeadPlush, iRarity, spawnAllMoons, moonSpawnList, twoHanded: false, carryWeight,  minValue, maxValue);
+            ScrapHelper.RegisterScrap(Content.ToilHeadPlush, iRarity, spawnAllMoons, moonSpawnList, twoHanded: false, carryWeight,  minValue, maxValue);
         }
         catch (System.Exception e)
         {
@@ -156,7 +156,7 @@ internal class Plugin : BaseUnityPlugin
                 return;
             }
 
-            if (EnemyAIPatch.enemyTurretPairs.ContainsKey(enemyNetworkObject))
+            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyNetworkObject))
             {
                 logger.LogWarning($"Warning: Failed to set Toil-Head on local client. Enemy is already a Toil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
                 return;
@@ -187,7 +187,7 @@ internal class Plugin : BaseUnityPlugin
             behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
 
             EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
-            EnemyAIPatch.toilHeadSpawnCount++;
+            EnemyAIPatch.ToilHeadSpawnCount++;
         }
         catch (System.Exception e)
         {
@@ -265,7 +265,7 @@ internal class Plugin : BaseUnityPlugin
             yield break;
         }
 
-        bool realTurret = ConfigManager.RealToilHeadPlayerRagdolls.Value;
+        bool realTurret = ConfigManager.SpawnRealToilHeadPlayerRagdolls.Value;
 
         if (realTurret)
         {
@@ -325,7 +325,7 @@ internal class Plugin : BaseUnityPlugin
     {
         try
         {
-            Transform turretTransform = Object.Instantiate(Content.turretPropPrefab, Vector3.zero, Quaternion.identity, ragdollNetworkObject.transform).transform;
+            Transform turretTransform = Object.Instantiate(Content.TurretPropPrefab, Vector3.zero, Quaternion.identity, ragdollNetworkObject.transform).transform;
             Transform springTransform = ragdollNetworkObject.transform.parent.GetChild(0).Find("spine.004").Find("SpringContainer").Find("SpringMetarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0);
 
             turretTransform.localPosition = Vector3.zero;
@@ -394,7 +394,7 @@ internal class Plugin : BaseUnityPlugin
                 return;
             }
 
-            if (EnemyAIPatch.enemyTurretPairs.ContainsKey(enemyNetworkObject))
+            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyNetworkObject))
             {
                 logger.LogWarning($"Warning: Failed to set Manti-Toil on local client. Enemy is already a Manti-Toil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
                 return;
@@ -429,7 +429,7 @@ internal class Plugin : BaseUnityPlugin
             toilHeadTurretBehaviour.useMantiToilSettings = true;
 
             EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
-            EnemyAIPatch.mantiToilSpawnCount++;
+            EnemyAIPatch.MantiToilSpawnCount++;
         }
         catch (System.Exception e)
         {
@@ -488,7 +488,7 @@ internal class Plugin : BaseUnityPlugin
                 return;
             }
 
-            if (EnemyAIPatch.enemyTurretPairs.ContainsKey(enemyNetworkObject))
+            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyNetworkObject))
             {
                 logger.LogWarning($"Warning: Failed to set Toil-Slayer on local client. Enemy is already a Toil-Head/Toil-Slayer. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
                 return;
@@ -519,7 +519,7 @@ internal class Plugin : BaseUnityPlugin
             behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
 
             EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
-            EnemyAIPatch.toilSlayerSpawnCount++;
+            EnemyAIPatch.ToilSlayerSpawnCount++;
         }
         catch (System.Exception e)
         {
@@ -532,7 +532,7 @@ internal class Plugin : BaseUnityPlugin
     {
         if (!IsHostOrServer) return null;
 
-        GameObject turretObject = Object.Instantiate(Content.turretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
+        GameObject turretObject = Object.Instantiate(Content.TurretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
         NetworkObject enemyNetworkObject = turretObject.GetComponent<NetworkObject>();
         enemyNetworkObject.Spawn(destroyWithScene: true);
         turretObject.transform.SetParent(parentTransform);
@@ -544,7 +544,7 @@ internal class Plugin : BaseUnityPlugin
     {
         if (!IsHostOrServer) return null;
 
-        GameObject turretObject = Object.Instantiate(Content.miniGunTurretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
+        GameObject turretObject = Object.Instantiate(Content.MiniGunTurretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
         NetworkObject enemyNetworkObject = turretObject.GetComponent<NetworkObject>();
         enemyNetworkObject.Spawn(destroyWithScene: true);
         turretObject.transform.SetParent(parentTransform);

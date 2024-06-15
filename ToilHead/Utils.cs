@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class Utils
 {
     public static bool RandomPercent(int percent)
@@ -88,13 +89,18 @@ public class Utils
         }
     }
 
-    public static bool IsOnToilation()
+    public static bool IsCurrentMoonToilation()
     {
         if (StartOfRound.Instance == null) return false;
 
         string planetName = StartOfRound.Instance.currentLevel.PlanetName;
 
-        if (planetName == "69 Toilation" || planetName.Contains("Toilation", System.StringComparison.OrdinalIgnoreCase))
+        if (planetName.Equals("69 Toilation", System.StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (planetName.Contains("Toilation", System.StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }

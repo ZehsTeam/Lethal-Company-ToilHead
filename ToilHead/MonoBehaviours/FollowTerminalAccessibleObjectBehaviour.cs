@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace com.github.zehsteam.ToilHead.MonoBehaviours;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
 {
     [HideInInspector] public string objectCode;

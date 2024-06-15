@@ -6,15 +6,15 @@ namespace com.github.zehsteam.ToilHead;
 internal class Content
 {
     // NetworkHandler
-    public static GameObject networkHandlerPrefab;
+    public static GameObject NetworkHandlerPrefab;
 
     // Turrets
-    public static GameObject turretPrefab;
-    public static GameObject turretPropPrefab;
-    public static GameObject miniGunTurretPrefab;
+    public static GameObject TurretPrefab;
+    public static GameObject TurretPropPrefab;
+    public static GameObject MiniGunTurretPrefab;
 
     // Toil-Head Plushie
-    public static Item toilHeadPlush;
+    public static Item ToilHeadPlush;
 
     public static void Load()
     {
@@ -30,16 +30,16 @@ internal class Content
             AssetBundle assetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
 
             // NetworkHandler
-            networkHandlerPrefab = assetBundle.LoadAsset<GameObject>("NetworkHandler");
-            networkHandlerPrefab.AddComponent<PluginNetworkBehaviour>();
+            NetworkHandlerPrefab = assetBundle.LoadAsset<GameObject>("NetworkHandler");
+            NetworkHandlerPrefab.AddComponent<PluginNetworkBehaviour>();
 
             // Turrets
-            turretPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretContainer");
-            turretPropPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretProp");
-            miniGunTurretPrefab = assetBundle.LoadAsset<GameObject>("MiniGunTurretContainer");
+            TurretPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretContainer");
+            TurretPropPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretProp");
+            MiniGunTurretPrefab = assetBundle.LoadAsset<GameObject>("MiniGunTurretContainer");
             
             // Toil-Head Plushie
-            toilHeadPlush = assetBundle.LoadAsset<Item>("ToilHeadPlush");
+            ToilHeadPlush = assetBundle.LoadAsset<Item>("ToilHeadPlush");
 
             Plugin.logger.LogInfo("Successfully loaded assets from AssetBundle!");
         }

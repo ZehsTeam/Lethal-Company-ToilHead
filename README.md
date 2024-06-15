@@ -8,9 +8,14 @@
 
 Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) on Thunderstore.
 
+## Toilation (moon)
+Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company/p/Zehs/Toilation/) themed around this mod.
+
+<a href="https://thunderstore.io/c/lethal-company/p/Zehs/Toilation/"><img src="https://i.imgur.com/IDbukjU.png" width="250px"></a>
+
 ## Mod Compatibility
 **This mod is compatible with:**
-* [Toilation](https://thunderstore.io/c/lethal-company/p/Zehs/Toilation/) - *A new Toil-Head moon :3*
+* [Toilation](https://thunderstore.io/c/lethal-company/p/Zehs/Toilation/) - *A new moon themed around this mod :3*
 * [Asteroid13](https://thunderstore.io/c/lethal-company/p/Magic_Wesley/Asteroid13/) - *Adds some secrets*
 * [CoilHeadStare](https://thunderstore.io/c/lethal-company/p/TwinDimensionalProductions/CoilHeadStare/) - *If you want to die harder :3*
 * [ghostCodes](https://thunderstore.io/c/lethal-company/p/darmuh/ghostCodes/) - *Adds extra functionality*
@@ -27,76 +32,72 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 | `EnableConfiguration` | `Boolean` | `false` | Enable if you want to use custom set config setting values. If disabled, the default config setting values will be used. |
 | `ExtendedLogging` | `Boolean` | `false` | Enable extended logging. |
 
-| Toil-Head Settings | Setting type | Default value | Description |
+| Toilation Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `SpawnToilHeadPlayerRagdolls` | `Boolean` | `true` | If enabled, will spawn a Toil-Head player ragdoll when a player dies to a Toil-Head in any way. |
-| `RealToilHeadPlayerRagdolls` | `Boolean` | `true` | If enabled, will spawn a real turret on the Toil-Head player ragdoll. |
+|  |  | `<MaxSpawnCount>:<SpawnChance>` |  |
+| `ToilHeadSpawnSettings` | `String` | `6:75` | Toil-Head spawn settings for 69-Toilation. |
+| `MantiToilSpawnSettings` | `String` | `50:90` | Manti-Toil spawn settings for 69-Toilation. |
+| `ToilSlayerSpawnSettings` | `String` | `2:10` | Toil-Slayer spawn settings for 69-Toilation. |
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-|  |  | `PlanetName:MaxSpawnCount:SpawnChance,` |  |
-| `CustomSpawnSettings` | `String` | `57 Asteroid-13:2:30,523 Ooblterra:3:80,` | Toil-Head spawn settings for modded moons. |
-
-| Toil-Head Settings | Setting type | Default value | Description |
-| ----------- | ----------- | ----------- | ----------- |
-|  |  | `MaxSpawnCount,SpawnChance` |  |
-| `OtherSpawnSettings` | `String` | `1,30` | Toil-Head default spawn settings for modded moons. |
-| `LiquidationSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for 44-Liquidation. |
-| `EmbrionSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 5-Embrion. |
-| `ArtificeSpawnSettings` | `String` | `2,70` | Toil-Head spawn settings for 68-Artifice. |
-| `TitanSpawnSettings` | `String` | `2,50` | Toil-Head spawn settings for 8-Titan. |
-| `DineSpawnSettings` | `String` | `1,45` | Toil-Head spawn settings for 7-Dine. |
-| `RendSpawnSettings` | `String` | `1,40` | Toil-Head spawn settings for 85-Rend. |
-| `AdamanceSpawnSettings` | `String` | `1,30` | Toil-Head spawn settings for 20-Adamance. |
-| `MarchSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 61-March. |
-| `OffenseSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 21-Offense. |
-| `VowSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 56-Vow. |
-| `AssuranceSpawnSettings` | `String` | `1,20` | Toil-Head spawn settings for 220-Assurance. |
-| `ExperimentationSpawnSettings` | `String` | `1,10` | Toil-Head spawn settings for 41-Experimentation. |
+|  |  | `<MaxSpawnCount>:<SpawnChance>` |  |
+| `ToilHeadDefaultSpawnSettings` | `String` | `1:30` | Toil-Head default spawn settings for all moons. |
+|  |  | `<PlanetName>:<MaxSpawnCount>:<SpawnChance>` | Separate each entry with a comma. |
+| `ToilHeadSpawnSettingsMoonList` | `String` | `41 Experimentation:1:10, 220 Assurance:1:20, 56 Vow:1:20, 21 Offense:1:20, 61 March:1:20, 20 Adamance:1:30, 85 Rend:1:40, 7 Dine:1:45, 8 Titan:1:50, 68 Artifice:2:70, 5 Embrion:1:30, 57 Asteroid-13:2:30, 523 Ooblterra:2:70` | Toil-Head spawn settings list for moons. |
 
 | Manti-Toil Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `MantiToilMaxSpawnCount` | `Int32` | `5` | Manti-Toil max spawn count. |
-| `MantiToilSpawnChance` | `Int32` | `50` | The percent chance a Manticoil turns into a Manti-Toil. |
+|  |  | `<MaxSpawnCount>:<SpawnChance>` |  |
+| `MantiToilDefaultSpawnSettings` | `String` | `5:50` | Manti-Toil default spawn settings for all moons. |
+|  |  | `<PlanetName>:<MaxSpawnCount>:<SpawnChance>` | Separate each entry with a comma. |
+| `MantiToilSpawnSettingsMoonList` | `String` | `20 Adamance:5:60, 85 Rend:5:60, 7 Dine:5:65, 8 Titan:5:70, 68 Artifice:8:75` | Manti-Toil spawn settings list for moons. |
 
 | Toil-Slayer Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `ToilSlayerMaxSpawnCount` | `Int32` | `1` | Toil-Slayer max spawn count. |
-| `ToilSlayerSpawnChance` | `Int32` | `10` | The percent chance a Coil-Head turns into a Toil-Slayer. |
+|  |  | `<MaxSpawnCount>:<SpawnChance>` |  |
+| `ToilSlayerDefaultSpawnSettings` | `String` | `1:10` | Toil-Slayer default spawn settings for all moons. |
+|  |  | `<PlanetName>:<MaxSpawnCount>:<SpawnChance>` | Separate each entry with a comma. |
+| `ToilSlayerSpawnSettingsMoonList` | `String` | `20 Adamance:1:15, 85 Rend:1:15, 7 Dine:1:15, 8 Titan:1:20, 68 Artifice:1:20, 57 Asteroid-13:1:15, 523 Ooblterra:1:25` | Toil-Slayer spawn settings list for moons. |
 
-| Plushie Settings | Setting type | Default value | Description |
+| Player Ragdoll Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `PlushieSpawnWeight` | `Int32` | `10` | Toil-Head plushie spawn chance weight. |
-| `PlushieSpawnAllMoons` | `Boolean` | `true` | If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list. |
-| `PlushieMoonSpawnList` | `String` | `Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion` | The list of moons the Toil-Head plushie will spawn on. |
-| `PlushieCarryWeight` | `Int32` | `6` | Toil-Head plushie carry weight in pounds. |
-| `PlushieMinValue` | `Int32` | `80` | Toil-Head plushie min scrap value. |
-| `PlushieMaxValue` | `Int32` | `250` | Toil-Head plushie max scrap value. |
+| `SpawnToilHeadPlayerRagdolls` | `Boolean` | `True` | If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way. |
+| `SpawnRealToilHeadPlayerRagdolls` | `Boolean` | `True` | If enabled, will spawn a real turret on the Toiled player ragdoll. |
+
+| Toil-Head Plushie Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
+| `SpawnWeight` | `Int32` | `10` | Toil-Head plushie spawn chance weight. |
+| `SpawnAllMoons` | `Boolean` | `true` | If true, the Toil-Head plushie will spawn on all moons. If false, the Toil-Head plushie will only spawn on moons set in the moons list. |
+| `MoonSpawnList` | `String` | `Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion` | The list of moons the Toil-Head plushie will spawn on. |
+| `CarryWeight` | `Int32` | `6` | Toil-Head plushie carry weight in pounds. |
+| `MinValue` | `Int32` | `80` | Toil-Head plushie min scrap value. |
+| `MaxValue` | `Int32` | `250` | Toil-Head plushie max scrap value. |
 
 | Turret Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `TurretLostLOSDuration` | `Single` | `0.75` | The duration until the turret loses the target player when not in line of sight. |
-| `TurretRotationRange` | `Single` | `75` | The rotation range of the turret in degrees. |
-| `TurretCodeAccessCooldownDuration` | `Single` | `7` | The duration of the turret being disabled from the terminal in seconds. |
+| `LostLOSDuration` | `Single` | `0.75` | The duration until the turret loses the target player when not in line of sight. |
+| `RotationRange` | `Single` | `75` | The rotation range of the turret in degrees. |
+| `CodeAccessCooldownDuration` | `Single` | `7` | The duration of the turret being disabled from the terminal in seconds. |
 
 | Turret Detection Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `TurretDetectionRotation` | `Boolean` | `false` | If enabled, the turret will rotate when searching for players. |
-| `TurretDetectionRotationSpeed` | `Single` | `28` | The rotation speed of the turret when in detection state. |
+| `Rotation` | `Boolean` | `false` | If enabled, the turret will rotate when searching for players. |
+| `RotationSpeed` | `Single` | `28` | The rotation speed of the turret when in detection state. |
 
 | Turret Charging Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `TurretChargingDuration` | `Single` | `2` | The duration of the turret charging state. |
-| `TurretChargingRotationSpeed` | `Single` | `95` | The rotation speed of the turret when in charging state. |
+| `ChargingDuration` | `Single` | `2` | The duration of the turret charging state. |
+| `RotationSpeed` | `Single` | `95` | The rotation speed of the turret when in charging state. |
 
 | Turret Firing Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `TurretFiringRotationSpeed` | `Single` | `95` | The rotation speed of the turret when in firing state. |
+| `RotationSpeed` | `Single` | `95` | The rotation speed of the turret when in firing state. |
 
 | Turret Berserk Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `TurretBerserkDuration` | `Single` | `9` | The duration of the turret berserk state. |
-| `TurretBerserkRotationSpeed` | `Single` | `77` | The rotation speed of the turret when in berserk state. |
+| `BerserkDuration` | `Single` | `9` | The duration of the turret berserk state. |
+| `RotationSpeed` | `Single` | `77` | The rotation speed of the turret when in berserk state. |
 
 </details>
 
@@ -108,19 +109,19 @@ Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) o
 https://github.com/ZehsTeam/Lethal-Company-ToilHead/blob/master/ToilHead/Api.cs
 ```cs
 // This is for all enemy turret pairs.
-public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs { get; }
+public static Dictionary<NetworkObject, NetworkObject> EnemyTurretPairs { get; }
 
 
 // Toil-Head spawn count.
-public static int spawnCount { get; }
+public static int ToilHeadSpawnCount { get; }
 
 // If enabled, will force any spawned Coil-Heads to become Toil-Heads.
 // This will get reset automatically when the day ends.
-public static bool forceSpawns { get; set; }
+public static bool ForceToilHeadSpawns { get; set; }
 
 // If set to any value above -1, will temporarily override the Toil-Head max spawn count.
 // This will get reset automatically when the day ends.
-public static int forceMaxSpawnCount { get; set; }
+public static int ForceToilHeadMaxSpawnCount { get; set; }
 
 // This must only be called on the Host/Server.
 // Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".
@@ -129,15 +130,15 @@ public static bool SetToilHeadOnServer(EnemyAI enemyAI) { }
 
 
 // Manti-Toil spawn count.
-public static int mantiToilSpawnCount { get; }
+public static int MantiToilSpawnCount { get; }
 
 // If enabled, will force any spawned Manticoils to become Manti-Toils.
 // This will get reset automatically when the day ends.
-public static bool forceMantiToilSpawns { get; set; }
+public static bool ForceMantiToilSpawns { get; set; }
 
 // If set to any value above -1, will temporarily override the Manti-Toil max spawn count.
 // This will get reset automatically when the day ends.
-public static int forceMantiToilMaxSpawnCount { get; set; }
+public static int ForceMantiToilMaxSpawnCount { get; set; }
 
 // This must only be called on the Host/Server.
 // Only accepts an EnemyAI instance where the EnemyType.enemyName is "Manticoil".
@@ -146,15 +147,15 @@ public static bool SetMantiToilOnServer(EnemyAI enemyAI) { }
 
 
 // Toil-Slayer spawn count.
-public static int toilSlayerSpawnCount { get; }
+public static int ToilSlayerSpawnCount { get; }
 
 // If enabled, will force any spawned Coil-Heads to become Toil-Slayers.
 // This will get reset automatically when the day ends.
-public static bool forceToilSlayerSpawns { get; set; }
+public static bool ForceToilSlayerSpawns { get; set; }
 
 // If set to any value above -1, will temporarily override the Toil-Slayer max spawn count.
 // This will get reset automatically when the day ends.
-public static int forceToilSlayerMaxSpawnCount { get; set; }
+public static int ForceToilSlayerMaxSpawnCount { get; set; }
 
 // This must only be called on the Host/Server.
 // Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".

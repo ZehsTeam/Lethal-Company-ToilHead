@@ -9,56 +9,54 @@ namespace com.github.zehsteam.ToilHead.Patches;
 [HarmonyPatch(typeof(EnemyAI))]
 internal class EnemyAIPatch
 {
-    public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs = [];
+    public static Dictionary<NetworkObject, NetworkObject> EnemyTurretPairs = [];
 
-    public static int toilHeadSpawnCount = 0;
-    public static bool forceToilHeadSpawns = false;
-    public static int forceToilHeadMaxSpawnCount = -1;
+    public static int ToilHeadSpawnCount = 0;
+    public static bool ForceToilHeadSpawns = false;
+    public static int ForceToilHeadMaxSpawnCount = -1;
 
-    public static int mantiToilSpawnCount = 0;
-    public static bool forceMantiToilSpawns = false;
-    public static int forceMantiToilMaxSpawnCount = -1;
+    public static int MantiToilSpawnCount = 0;
+    public static bool ForceMantiToilSpawns = false;
+    public static int ForceMantiToilMaxSpawnCount = -1;
 
-    public static int toilSlayerSpawnCount = 0;
-    public static bool forceToilSlayerSpawns = false;
-    public static int forceToilSlayerMaxSpawnCount = -1;
-
-    public static ToilHeadConfigData currentToilHeadConfigData => ToilHeadDataManager.GetDataForCurrentLevel().configData;
+    public static int ToilSlayerSpawnCount = 0;
+    public static bool ForceToilSlayerSpawns = false;
+    public static int ForceToilSlayerMaxSpawnCount = -1;
 
     public static void Reset()
     {
-        enemyTurretPairs = [];
+        EnemyTurretPairs = [];
 
-        toilHeadSpawnCount = 0;
-        forceToilHeadSpawns = false;
-        forceToilHeadMaxSpawnCount = -1;
+        ToilHeadSpawnCount = 0;
+        ForceToilHeadSpawns = false;
+        ForceToilHeadMaxSpawnCount = -1;
 
-        mantiToilSpawnCount = 0;
-        forceMantiToilSpawns = false;
-        forceMantiToilMaxSpawnCount = -1;
+        MantiToilSpawnCount = 0;
+        ForceMantiToilSpawns = false;
+        ForceMantiToilMaxSpawnCount = -1;
 
-        toilSlayerSpawnCount = 0;
-        forceToilSlayerSpawns = false;
-        forceToilSlayerMaxSpawnCount = -1;
+        ToilSlayerSpawnCount = 0;
+        ForceToilSlayerSpawns = false;
+        ForceToilSlayerMaxSpawnCount = -1;
     }
 
     public static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
     {
-        enemyTurretPairs.Add(enemyNetworkObject, turretNetworkObject);
+        EnemyTurretPairs.Add(enemyNetworkObject, turretNetworkObject);
     }
 
     public static void DespawnAllTurrets()
     {
         if (!Plugin.IsHostOrServer) return;
 
-        NetworkObject[] enemyNetworkObjects = enemyTurretPairs.Keys.ToArray();
+        NetworkObject[] enemyNetworkObjects = EnemyTurretPairs.Keys.ToArray();
 
         foreach (var enemyNetworkObject in enemyNetworkObjects)
         {
             DespawnTurret(enemyNetworkObject);
         }
 
-        enemyTurretPairs.Clear();
+        EnemyTurretPairs.Clear();
 
         Plugin.logger.LogInfo($"Finished despawning all Turret-Head turrets.");
     }
@@ -92,23 +90,18 @@ internal class EnemyAIPatch
 
     private static bool TrySpawnToilHead(EnemyAI enemyAI)
     {
-        int maxSpawnCount = currentToilHeadConfigData.maxSpawnCount;
-        int spawnChance = currentToilHeadConfigData.spawnChance;
+        SpawnData spawnData = SpawnDataManager.GetToilHeadSpawnDataForCurrentMoon();
+        int maxSpawnCount = spawnData.MaxSpawnCount;
+        int spawnChance = spawnData.SpawnChance;
 
-        if (Utils.IsOnToilation())
+        if (ForceToilHeadMaxSpawnCount > -1)
         {
-            maxSpawnCount = 8;
-            spawnChance = 80;
+            maxSpawnCount = ForceToilHeadMaxSpawnCount;
         }
 
-        if (forceToilHeadMaxSpawnCount > -1)
+        if (!ForceToilHeadSpawns)
         {
-            maxSpawnCount = forceToilHeadMaxSpawnCount;
-        }
-
-        if (!forceToilHeadSpawns)
-        {
-            if (toilHeadSpawnCount >= maxSpawnCount) return false;
+            if (ToilHeadSpawnCount >= maxSpawnCount) return false;
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
@@ -118,23 +111,24 @@ internal class EnemyAIPatch
 
     private static bool TrySpawnToilSlayer(EnemyAI enemyAI)
     {
-        int maxSpawnCount = Plugin.ConfigManager.ToilSlayerMaxSpawnCount.Value;
-        int spawnChance = Plugin.ConfigManager.ToilSlayerSpawnChance.Value;
+        SpawnData spawnData = SpawnDataManager.GetToilSlayerSpawnDataForCurrentMoon();
+        int maxSpawnCount = spawnData.MaxSpawnCount;
+        int spawnChance = spawnData.SpawnChance;
 
-        if (Utils.IsOnToilation())
+        if (Utils.IsCurrentMoonToilation())
         {
             maxSpawnCount = 2;
             spawnChance = 10;
         }
 
-        if (forceToilSlayerMaxSpawnCount > -1)
+        if (ForceToilSlayerMaxSpawnCount > -1)
         {
-            maxSpawnCount = forceToilSlayerMaxSpawnCount;
+            maxSpawnCount = ForceToilSlayerMaxSpawnCount;
         }
 
-        if (!forceToilSlayerSpawns)
+        if (!ForceToilSlayerSpawns)
         {
-            if (toilSlayerSpawnCount >= maxSpawnCount) return false;
+            if (ToilSlayerSpawnCount >= maxSpawnCount) return false;
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
@@ -151,23 +145,18 @@ internal class EnemyAIPatch
 
     private static bool TrySpawnMantiToil(EnemyAI enemyAI)
     {
-        int maxSpawnCount = Plugin.ConfigManager.MantiToilMaxSpawnCount.Value;
-        int spawnChance = Plugin.ConfigManager.MantiToilSpawnChance.Value;
+        SpawnData spawnData = SpawnDataManager.GetMantiToilSpawnDataForCurrentMoon();
+        int maxSpawnCount = spawnData.MaxSpawnCount;
+        int spawnChance = spawnData.SpawnChance;
 
-        if (Utils.IsOnToilation())
+        if (ForceMantiToilMaxSpawnCount > -1)
         {
-            maxSpawnCount = 50;
-            spawnChance = 90;
+            maxSpawnCount = ForceMantiToilMaxSpawnCount;
         }
 
-        if (forceMantiToilMaxSpawnCount > -1)
+        if (!ForceMantiToilSpawns)
         {
-            maxSpawnCount = forceMantiToilMaxSpawnCount;
-        }
-
-        if (!forceMantiToilSpawns)
-        {
-            if (mantiToilSpawnCount >= maxSpawnCount) return false;
+            if (MantiToilSpawnCount >= maxSpawnCount) return false;
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
@@ -222,12 +211,12 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        if (enemyTurretPairs.TryGetValue(enemyNetworkObject, out NetworkObject turretNetworkObject))
+        if (EnemyTurretPairs.TryGetValue(enemyNetworkObject, out NetworkObject turretNetworkObject))
         {
             if (!turretNetworkObject.IsSpawned) return;
 
             turretNetworkObject.Despawn();
-            enemyTurretPairs.Remove(enemyNetworkObject);
+            EnemyTurretPairs.Remove(enemyNetworkObject);
 
             Plugin.logger.LogInfo($"Despawned Turret-Head turret (NetworkObjectId: {turretNetworkObject.NetworkObjectId}).");
         }

@@ -3,74 +3,75 @@ using Unity.Netcode;
 
 namespace com.github.zehsteam.ToilHead;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 [Serializable]
 public class SyncedConfigData : INetworkSerializable
 {
     // Turret Settings
-    public float turretLostLOSDuration;
-    public float turretRotationRange;
-    public float turretCodeAccessCooldownDuration;
+    public float TurretLostLOSDuration;
+    public float TurretRotationRange;
+    public float TurretCodeAccessCooldownDuration;
 
     // Turret Detection Settings
-    public bool turretDetectionRotation;
-    public float turretDetectionRotationSpeed;
+    public bool TurretDetectionRotation;
+    public float TurretDetectionRotationSpeed;
 
     // Turret Charging Settings
-    public float turretChargingDuration;
-    public float turretChargingRotationSpeed;
+    public float TurretChargingDuration;
+    public float TurretChargingRotationSpeed;
 
     // Turret Firing Settings
-    public float turretFiringRotationSpeed;
+    public float TurretFiringRotationSpeed;
 
     // Turret Berserk Settings
-    public float turretBerserkDuration;
-    public float turretBerserkRotationSpeed;
+    public float TurretBerserkDuration;
+    public float TurretBerserkRotationSpeed;
 
     public SyncedConfigData() { }
 
     public SyncedConfigData(SyncedConfigManager configManager)
     {
         // Turret Settings
-        turretLostLOSDuration = configManager.TurretLostLOSDuration.Value;
-        turretRotationRange = configManager.TurretRotationRange.Value;
-        turretCodeAccessCooldownDuration = configManager.TurretCodeAccessCooldownDuration.Value;
+        TurretLostLOSDuration = configManager.TurretLostLOSDuration.Value;
+        TurretRotationRange = configManager.TurretRotationRange.Value;
+        TurretCodeAccessCooldownDuration = configManager.TurretCodeAccessCooldownDuration.Value;
 
         // Turret Detection Settings
-        turretDetectionRotation = configManager.TurretDetectionRotation.Value;
-        turretDetectionRotationSpeed = configManager.TurretDetectionRotationSpeed.Value;
+        TurretDetectionRotation = configManager.TurretDetectionRotation.Value;
+        TurretDetectionRotationSpeed = configManager.TurretDetectionRotationSpeed.Value;
 
         // Turret Charging Settings
-        turretChargingDuration = configManager.TurretChargingDuration.Value;
-        turretChargingRotationSpeed = configManager.TurretChargingRotationSpeed.Value;
+        TurretChargingDuration = configManager.TurretChargingDuration.Value;
+        TurretChargingRotationSpeed = configManager.TurretChargingRotationSpeed.Value;
 
         // Turret Firing Settings
-        turretFiringRotationSpeed = configManager.TurretFiringRotationSpeed.Value;
+        TurretFiringRotationSpeed = configManager.TurretFiringRotationSpeed.Value;
 
         // Turret Berserk Settings
-        turretBerserkDuration = configManager.TurretBerserkDuration.Value;
-        turretBerserkRotationSpeed = configManager.TurretBerserkRotationSpeed.Value;
+        TurretBerserkDuration = configManager.TurretBerserkDuration.Value;
+        TurretBerserkRotationSpeed = configManager.TurretBerserkRotationSpeed.Value;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         // Turret Settings
-        serializer.SerializeValue(ref turretLostLOSDuration);
-        serializer.SerializeValue(ref turretRotationRange);
-        serializer.SerializeValue(ref turretCodeAccessCooldownDuration);
+        serializer.SerializeValue(ref TurretLostLOSDuration);
+        serializer.SerializeValue(ref TurretRotationRange);
+        serializer.SerializeValue(ref TurretCodeAccessCooldownDuration);
 
         // Turret Detection Settings
-        serializer.SerializeValue(ref turretDetectionRotation);
-        serializer.SerializeValue(ref turretDetectionRotationSpeed);
+        serializer.SerializeValue(ref TurretDetectionRotation);
+        serializer.SerializeValue(ref TurretDetectionRotationSpeed);
 
         // Turret Charging Settings
-        serializer.SerializeValue(ref turretChargingDuration);
-        serializer.SerializeValue(ref turretChargingRotationSpeed);
+        serializer.SerializeValue(ref TurretChargingDuration);
+        serializer.SerializeValue(ref TurretChargingRotationSpeed);
 
         // Turret Firing Settings
-        serializer.SerializeValue(ref turretFiringRotationSpeed);
+        serializer.SerializeValue(ref TurretFiringRotationSpeed);
 
         // Turret Berserk Settings
-        serializer.SerializeValue(ref turretBerserkDuration);
-        serializer.SerializeValue(ref turretBerserkRotationSpeed);
+        serializer.SerializeValue(ref TurretBerserkDuration);
+        serializer.SerializeValue(ref TurretBerserkRotationSpeed);
     }
 }
