@@ -9,7 +9,7 @@ namespace com.github.zehsteam.ToilHead.Patches;
 [HarmonyPatch(typeof(EnemyAI))]
 internal class EnemyAIPatch
 {
-    public static Dictionary<NetworkObject, NetworkObject> EnemyTurretPairs = [];
+    public static Dictionary<EnemyAI, ToilHeadTurretBehaviour> EnemyTurretPairs = [];
 
     public static int ToilHeadSpawnCount = 0;
     public static bool ForceToilHeadSpawns = false;
@@ -22,6 +22,10 @@ internal class EnemyAIPatch
     public static int ToilSlayerSpawnCount = 0;
     public static bool ForceToilSlayerSpawns = false;
     public static int ForceToilSlayerMaxSpawnCount = -1;
+
+    public static int MantiSlayerSpawnCount = 0;
+    public static bool ForceMantiSlayerSpawns = false;
+    public static int ForceMantiSlayerMaxSpawnCount = -1;
 
     public static void Reset()
     {
@@ -38,22 +42,26 @@ internal class EnemyAIPatch
         ToilSlayerSpawnCount = 0;
         ForceToilSlayerSpawns = false;
         ForceToilSlayerMaxSpawnCount = -1;
+
+        MantiSlayerSpawnCount = 0;
+        ForceMantiSlayerSpawns = false;
+        ForceMantiSlayerMaxSpawnCount = -1;
     }
 
-    public static void AddEnemyTurretPair(NetworkObject enemyNetworkObject, NetworkObject turretNetworkObject)
+    public static void AddEnemyTurretPair(EnemyAI enemyAI, ToilHeadTurretBehaviour turretScript)
     {
-        EnemyTurretPairs.Add(enemyNetworkObject, turretNetworkObject);
+        EnemyTurretPairs.Add(enemyAI, turretScript);
     }
 
     public static void DespawnAllTurrets()
     {
         if (!Plugin.IsHostOrServer) return;
 
-        NetworkObject[] enemyNetworkObjects = EnemyTurretPairs.Keys.ToArray();
+        ToilHeadTurretBehaviour[] turretScripts = EnemyTurretPairs.Values.ToArray();
 
-        foreach (var enemyNetworkObject in enemyNetworkObjects)
+        foreach (var turretScript in turretScripts)
         {
-            DespawnTurret(enemyNetworkObject);
+            DespawnTurret(turretScript);
         }
 
         EnemyTurretPairs.Clear();
@@ -105,8 +113,7 @@ internal class EnemyAIPatch
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
-        Plugin.Instance.SetToilHeadOnServer(enemyAI);
-        return true;
+        return Plugin.Instance.SetToilHeadOnServer(enemyAI);
     }
 
     private static bool TrySpawnToilSlayer(EnemyAI enemyAI)
@@ -114,12 +121,6 @@ internal class EnemyAIPatch
         SpawnData spawnData = SpawnDataManager.GetToilSlayerSpawnDataForCurrentMoon();
         int maxSpawnCount = spawnData.MaxSpawnCount;
         int spawnChance = spawnData.SpawnChance;
-
-        if (Utils.IsCurrentMoonToilation())
-        {
-            maxSpawnCount = 2;
-            spawnChance = 10;
-        }
 
         if (ForceToilSlayerMaxSpawnCount > -1)
         {
@@ -132,15 +133,17 @@ internal class EnemyAIPatch
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
-        Plugin.Instance.SetToilSlayerOnServer(enemyAI);
-        return true;
+        return Plugin.Instance.SetToilSlayerOnServer(enemyAI);
     }
 
     private static void ManticoilStart(EnemyAI enemyAI)
     {
         if (!Plugin.IsHostOrServer) return;
 
-        TrySpawnMantiToil(enemyAI);
+        if (!TrySpawnMantiSlayer(enemyAI))
+        {
+            TrySpawnMantiToil(enemyAI);
+        }
     }
 
     private static bool TrySpawnMantiToil(EnemyAI enemyAI)
@@ -160,8 +163,27 @@ internal class EnemyAIPatch
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
-        Plugin.Instance.SetMantiToilOnServer(enemyAI);
-        return true;
+        return Plugin.Instance.SetMantiToilOnServer(enemyAI);
+    }
+
+    private static bool TrySpawnMantiSlayer(EnemyAI enemyAI)
+    {
+        SpawnData spawnData = SpawnDataManager.GetMantiSlayerSpawnDataForCurrentMoon();
+        int maxSpawnCount = spawnData.MaxSpawnCount;
+        int spawnChance = spawnData.SpawnChance;
+
+        if (ForceMantiSlayerMaxSpawnCount > -1)
+        {
+            maxSpawnCount = ForceMantiSlayerMaxSpawnCount;
+        }
+
+        if (!ForceMantiSlayerSpawns)
+        {
+            if (MantiSlayerSpawnCount >= maxSpawnCount) return false;
+            if (!Utils.RandomPercent(spawnChance)) return false;
+        }
+
+        return Plugin.Instance.SetMantiSlayerOnServer(enemyAI);
     }
 
     [HarmonyPatch("HitEnemyServerRpc")]
@@ -178,7 +200,7 @@ internal class EnemyAIPatch
 
     private static void TurretHeadOnHitEnemyOnServer(EnemyAI enemyAI)
     {
-        ToilHeadTurretBehaviour behaviour = Utils.GetToilHeadTurretBehaviour(enemyAI);
+        ToilHeadTurretBehaviour behaviour = Utils.GetTurretHeadTurretBehaviour(enemyAI);
         if (behaviour == null) return;
 
         if (!behaviour.turretActive) return;
@@ -201,24 +223,48 @@ internal class EnemyAIPatch
     {
         if (!Plugin.IsHostOrServer) return;
 
-        if (enemyAI.TryGetComponent(out NetworkObject enemyNetworkObject))
+        NetworkObject enemyNetworkObject = enemyAI.GetComponent<NetworkObject>();
+
+        if (enemyNetworkObject == null)
         {
-            DespawnTurret(enemyNetworkObject);
+            Plugin.logger.LogInfo($"Error: Failed to despawn Turret-Head turret. Enemy NetworkObject is null.");
+            return;
+        }
+
+        if (EnemyTurretPairs.TryGetValue(enemyAI, out ToilHeadTurretBehaviour turretScript))
+        {
+            try
+            {
+                DespawnTurret(turretScript);
+                EnemyTurretPairs.Remove(enemyAI);
+
+                Plugin.logger.LogInfo($"Despawned Turret-Head turret (NetworkObjectId: {enemyNetworkObject.NetworkObjectId}).");
+            }
+            catch (System.Exception e)
+            {
+                Plugin.logger.LogInfo($"Error: Failed to despawn Turret-Head turret. (NetworkObjectId: {enemyNetworkObject.NetworkObjectId}).\n\n{e}");
+            }
         }
     }
 
-    private static void DespawnTurret(NetworkObject enemyNetworkObject)
+    private static void DespawnTurret(ToilHeadTurretBehaviour turretScript)
     {
         if (!Plugin.IsHostOrServer) return;
 
-        if (EnemyTurretPairs.TryGetValue(enemyNetworkObject, out NetworkObject turretNetworkObject))
+        NetworkObject turretNetworkObject = turretScript.transform.parent.GetComponent<NetworkObject>();
+
+        if (turretNetworkObject == null)
         {
-            if (!turretNetworkObject.IsSpawned) return;
-
-            turretNetworkObject.Despawn();
-            EnemyTurretPairs.Remove(enemyNetworkObject);
-
-            Plugin.logger.LogInfo($"Despawned Turret-Head turret (NetworkObjectId: {turretNetworkObject.NetworkObjectId}).");
+            Plugin.logger.LogInfo($"Error: Failed to despawn Turret-Head turret. ToilHeadTurretBehaviour NetworkObject is null.");
+            return;
         }
+
+        if (!turretNetworkObject.IsSpawned)
+        {
+            Plugin.logger.LogInfo($"Error: Failed to despawn Turret-Head turret. ToilHeadTurretBehaviour NetworkObject is not spawned.");
+            return;
+        }
+
+        turretNetworkObject.Despawn();
     }
 }

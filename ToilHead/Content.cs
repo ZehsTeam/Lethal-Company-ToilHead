@@ -11,10 +11,12 @@ internal class Content
     // Turrets
     public static GameObject TurretPrefab;
     public static GameObject TurretPropPrefab;
-    public static GameObject MiniGunTurretPrefab;
+    public static GameObject MinigunTurretPrefab;
+    public static GameObject MinigunTurretPropPrefab;
 
-    // Toil-Head Plushie
+    // Plushies
     public static Item ToilHeadPlush;
+    public static Item ToilSlayerPlush;
 
     public static void Load()
     {
@@ -36,10 +38,12 @@ internal class Content
             // Turrets
             TurretPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretContainer");
             TurretPropPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretProp");
-            MiniGunTurretPrefab = assetBundle.LoadAsset<GameObject>("MiniGunTurretContainer");
-            
-            // Toil-Head Plushie
+            MinigunTurretPrefab = assetBundle.LoadAsset<GameObject>("MinigunTurretContainer");
+            MinigunTurretPropPrefab = assetBundle.LoadAsset<GameObject>("MinigunTurretProp");
+
+            // Plushies
             ToilHeadPlush = assetBundle.LoadAsset<Item>("ToilHeadPlush");
+            ToilSlayerPlush = assetBundle.LoadAsset<Item>("ToilSlayerPlush");
 
             Plugin.logger.LogInfo("Successfully loaded assets from AssetBundle!");
         }

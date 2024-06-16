@@ -18,7 +18,12 @@ internal class SpringManAIPatch
             if (playerScript != PlayerUtils.GetLocalPlayerScript()) return;
             if (!playerScript.isPlayerDead) return;
 
-            Plugin.Instance.SetToilHeadPlayerRagdoll(playerScript);
+            Plugin.Instance.SetToilHeadPlayerRagdoll(playerScript, IsToilSlayer(__instance));
         }
+    }
+
+    private static bool IsToilSlayer(SpringManAI springManAI)
+    {
+        return Utils.GetTurretHeadTurretBehaviour(springManAI).isMinigun;
     }
 }

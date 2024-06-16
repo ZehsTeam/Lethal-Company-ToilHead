@@ -18,6 +18,8 @@ public class SyncedConfigManager
     public ExtendedConfigEntry<string> ToilationToilHeadSpawnSettings { get; private set; }
     public ExtendedConfigEntry<string> ToilationMantiToilSpawnSettings { get; private set; }
     public ExtendedConfigEntry<string> ToilationToilSlayerSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilationMantiSlayerSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilationToilPlayerSpawnSettings { get; private set; }
 
     // Toil-Head Settings
     public ExtendedConfigEntry<string> ToilHeadDefaultSpawnSettings { get; private set; }
@@ -31,9 +33,17 @@ public class SyncedConfigManager
     public ExtendedConfigEntry<string> ToilSlayerDefaultSpawnSettings { get; private set; }
     public ExtendedConfigEntry<string> ToilSlayerSpawnSettingsMoonList { get; private set; }
 
+    // Manti-Slayer Settings
+    public ExtendedConfigEntry<string> MantiSlayerDefaultSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> MantiSlayerSpawnSettingsMoonList { get; private set; }
+
+    // Toil-Player Settings
+    public ExtendedConfigEntry<string> ToilPlayerDefaultSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilPlayerSpawnSettingsMoonList { get; private set; }
+
     // Player Ragdoll Settings
-    public ExtendedConfigEntry<bool> SpawnToilHeadPlayerRagdolls { get; private set; }
-    public ExtendedConfigEntry<bool> SpawnRealToilHeadPlayerRagdolls { get; private set; }
+    public ExtendedConfigEntry<bool> SpawnToiledPlayerRagdolls { get; private set; }
+    public ExtendedConfigEntry<bool> SpawnRealToiledPlayerRagdolls { get; private set; }
 
     // Toil-Head Plushie Settings
     public ExtendedConfigEntry<int> ToilHeadPlushieSpawnWeight { get; private set; }
@@ -42,6 +52,14 @@ public class SyncedConfigManager
     public ExtendedConfigEntry<int> ToilHeadPlushieCarryWeight { get; private set; }
     public ExtendedConfigEntry<int> ToilHeadPlushieMinValue { get; private set; }
     public ExtendedConfigEntry<int> ToilHeadPlushieMaxValue { get; private set; }
+
+    // Toil-Slayer Plushie Settings
+    public ExtendedConfigEntry<int> ToilSlayerPlushieSpawnWeight { get; private set; }
+    public ExtendedConfigEntry<bool> ToilSlayerPlushieSpawnAllMoons { get; private set; }
+    public ExtendedConfigEntry<string> ToilSlayerPlushieMoonSpawnList { get; private set; }
+    public ExtendedConfigEntry<int> ToilSlayerPlushieCarryWeight { get; private set; }
+    public ExtendedConfigEntry<int> ToilSlayerPlushieMinValue { get; private set; }
+    public ExtendedConfigEntry<int> ToilSlayerPlushieMaxValue { get; private set; }
 
     #region Turret Settings
     // Turret Settings
@@ -81,7 +99,9 @@ public class SyncedConfigManager
         ToilationToilHeadSpawnSettings = new("Toilation Settings", "ToilHeadSpawnSettings", defaultValue: "6:75", GetDescriptionForMoonSpawnSettings("Toil-Head", "69-Toilation"));
         ToilationMantiToilSpawnSettings = new("Toilation Settings", "MantiToilSpawnSettings", defaultValue: "50:90", GetDescriptionForMoonSpawnSettings("Manti-Toil", "69-Toilation"));
         ToilationToilSlayerSpawnSettings = new("Toilation Settings", "ToilSlayerSpawnSettings", defaultValue: "2:10", GetDescriptionForMoonSpawnSettings("Toil-Slayer", "69-Toilation"));
-
+        ToilationMantiSlayerSpawnSettings = new("Toilation Settings", "MantiSlayerSpawnSettings", defaultValue: "2:10", GetDescriptionForMoonSpawnSettings("Manti-Slayer", "69-Toilation"));
+        ToilationToilPlayerSpawnSettings = new("Toilation Settings", "ToilPlayerSpawnSettings", defaultValue: "1:5", GetDescriptionForMoonSpawnSettings("Toil-Player", "69-Toilation"));
+        
         // Toil-Head Settings
         ToilHeadDefaultSpawnSettings = new("Toil-Head Settings", "ToilHeadDefaultSpawnSettings", defaultValue: "1:30", GetDescriptionForDefaultSpawnSettings("Toil-Head"));
         string toilHeadSpawnSettingMoonListValue = "41 Experimentation:1:10, 220 Assurance:1:20, 56 Vow:1:20, 21 Offense:1:20, 61 March:1:20, 20 Adamance:1:30, 85 Rend:1:40, 7 Dine:1:45, 8 Titan:1:50, 68 Artifice:2:70, 5 Embrion:1:30, 57 Asteroid-13:2:30, 523 Ooblterra:2:70";
@@ -97,9 +117,19 @@ public class SyncedConfigManager
         string toilSlayerSpawnSettingsMoonListValue = "20 Adamance:1:15, 85 Rend:1:15, 7 Dine:1:15, 8 Titan:1:20, 68 Artifice:1:20, 57 Asteroid-13:1:15, 523 Ooblterra:1:25";
         ToilSlayerSpawnSettingsMoonList = new("Toil-Slayer Settings", "ToilSlayerSpawnSettingsMoonList", defaultValue: toilSlayerSpawnSettingsMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-Slayer"));
 
+        // Manti-Slayer Settings
+        MantiSlayerDefaultSpawnSettings = new("Manti-Slayer Settings", "MantiSlayerDefaultSpawnSettings", defaultValue: "1:10", GetDescriptionForDefaultSpawnSettings("Manti-Slayer"));
+        string mantiSlayerSpawnSettingsMoonListValue = "20 Adamance:1:15, 85 Rend:1:15, 7 Dine:1:15, 8 Titan:1:20, 68 Artifice:1:20, 57 Asteroid-13:1:15, 523 Ooblterra:1:25";
+        MantiSlayerSpawnSettingsMoonList = new("Manti-Slayer Settings", "MantiSlayerSpawnSettingsMoonList", defaultValue: mantiSlayerSpawnSettingsMoonListValue, GetDescriptionForMoonSpawnSettingsList("Manti-Slayer"));
+
+        // Toil-Player Settings
+        ToilPlayerDefaultSpawnSettings = new("Toil-Player Settings", "ToilPlayerDefaultSpawnSettings", defaultValue: "1:2", GetDescriptionForDefaultSpawnSettings("Toil-Player"));
+        string toilPlayerSpawnSettingMoonListValue = "85 Rend:1:3, 7 Dine:1:3, 8 Titan:1:4, 68 Artifice:1:4, 57 Asteroid-13:1:3, 523 Ooblterra:1:4";
+        ToilPlayerSpawnSettingsMoonList = new("Toil-Player Settings", "ToilPlayerSpawnSettingsMoonList", defaultValue: toilPlayerSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-Player"));
+
         // Player Ragdoll Settings
-        SpawnToilHeadPlayerRagdolls = new("Player Ragdoll Settings", "SpawnToilHeadPlayerRagdolls", defaultValue: true, "If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way.");
-        SpawnRealToilHeadPlayerRagdolls = new("Player Ragdoll Settings", "SpawnRealToilHeadPlayerRagdolls", defaultValue: true, "If enabled, will spawn a real turret on the Toiled player ragdoll.");
+        SpawnToiledPlayerRagdolls = new("Player Ragdoll Settings", "SpawnToiledPlayerRagdolls", defaultValue: true, "If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way.");
+        SpawnRealToiledPlayerRagdolls = new("Player Ragdoll Settings", "SpawnRealToiledPlayerRagdolls", defaultValue: true, "If enabled, will spawn a real turret on the Toiled player ragdoll.");
 
         // Toil-Head Plushie Settings
         ToilHeadPlushieSpawnWeight = new("Toil-Head Plushie Settings", "SpawnWeight", defaultValue: 10, "Toil-Head plushie spawn chance weight.");
@@ -108,6 +138,14 @@ public class SyncedConfigManager
         ToilHeadPlushieCarryWeight = new("Toil-Head Plushie Settings", "CarryWeight", defaultValue: 6, "Toil-Head plushie carry weight in pounds.");
         ToilHeadPlushieMinValue = new("Toil-Head Plushie Settings", "MinValue", defaultValue: 80, "Toil-Head plushie min scrap value.");
         ToilHeadPlushieMaxValue = new("Toil-Head Plushie Settings", "MaxValue", defaultValue: 250, "Toil-Head plushie max scrap value.");
+
+        // Toil-Slayer Plushie Settings
+        ToilSlayerPlushieSpawnWeight = new("Toil-Slayer Plushie Settings", "SpawnWeight", defaultValue: 5, "Toil-Slayer plushie spawn chance weight.");
+        ToilSlayerPlushieSpawnAllMoons = new("Toil-Slayer Plushie Settings", "SpawnAllMoons", defaultValue: true, "If true, the Toil-Slayer plushie will spawn on all moons. If false, the Toil-Slayer plushie will only spawn on moons set in the moons list.");
+        ToilSlayerPlushieMoonSpawnList = new("Toil-Slayer Plushie Settings", "MoonSpawnList", defaultValue: "Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion", "The list of moons the Toil-Slayer plushie will spawn on.\nCurrently only works for vanilla moons.\nOnly works if PlushieSpawnAllMoons is false.");
+        ToilSlayerPlushieCarryWeight = new("Toil-Slayer Plushie Settings", "CarryWeight", defaultValue: 12, "Toil-Slayer plushie carry weight in pounds.");
+        ToilSlayerPlushieMinValue = new("Toil-Slayer Plushie Settings", "MinValue", defaultValue: 80, "Toil-Slayer plushie min scrap value.");
+        ToilSlayerPlushieMaxValue = new("Toil-Slayer Plushie Settings", "MaxValue", defaultValue: 250, "Toil-Slayer plushie max scrap value.");
 
         #region Turret Settings
         // Turret Settings
@@ -195,7 +233,7 @@ public class SyncedConfigManager
     {
         string description = $"{enemyName} spawn settings list for moons.\n";
         description += "PlanetName:MaxSpawnCount:SpawnChance,\n";
-        description += "<string>:<int>:<int>,";
+        description += "<string>:<int>:<int>";
 
         return description;
     }
@@ -203,8 +241,8 @@ public class SyncedConfigManager
     private string GetDescriptionForDefaultSpawnSettings(string enemyName)
     {
         string description = $"{enemyName} default spawn settings for all moons.\n";
-        description += "PlanetName:MaxSpawnCount:SpawnChance,\n";
-        description += "<string>:<int>:<int>,";
+        description += "MaxSpawnCount:SpawnChance,\n";
+        description += "<int>:<int>";
 
         return description;
     }

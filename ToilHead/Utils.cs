@@ -1,4 +1,5 @@
 ﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
+using GameNetcodeStuff;
 using System.Collections;
 using UnityEngine;
 
@@ -66,9 +67,20 @@ public class Utils
         return gameObject.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
     }
 
-    public static ToilHeadTurretBehaviour GetToilHeadTurretBehaviour(EnemyAI enemyAI)
+    public static bool IsToilPlayer(PlayerControllerB playerScript)
+    {
+        return playerScript.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
+    }
+
+    public static ToilHeadTurretBehaviour GetTurretHeadTurretBehaviour(EnemyAI enemyAI)
     {
         return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>();
+    }
+
+    public static bool TryGetTurretHeadTurretBehaviour(EnemyAI enemyAI, out ToilHeadTurretBehaviour toilHeadTurretBehaviour)
+    {
+        toilHeadTurretBehaviour = enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>();
+        return toilHeadTurretBehaviour != null;
     }
 
     public static IEnumerator WaitUntil(System.Func<bool> predicate, float maxDuration = 5f, int iterationsPerSecond = 10)
@@ -106,5 +118,18 @@ public class Utils
         }
 
         return false;
+    }
+
+    public static void DisableRenderers(GameObject obj)
+    {
+        foreach (var renderer in obj.GetComponentsInChildren<MeshRenderer>())
+        {
+            renderer.enabled = false;
+        }
+
+        foreach (var renderer in obj.GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            renderer.enabled = false;
+        }
     }
 }

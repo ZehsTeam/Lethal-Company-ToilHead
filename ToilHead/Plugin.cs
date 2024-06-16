@@ -36,6 +36,7 @@ internal class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(StartOfRoundPatch));
         harmony.PatchAll(typeof(RoundManagerPatch));
         harmony.PatchAll(typeof(TerminalPatch));
+        harmony.PatchAll(typeof(PlayerControllerBPatch));
         harmony.PatchAll(typeof(EnemyAIPatch));
         harmony.PatchAll(typeof(SpringManAIPatch));
 
@@ -79,26 +80,25 @@ internal class Plugin : BaseUnityPlugin
     public void OnNewLevelLoaded()
     {
         Secret.SpawnSecrets();
+
+        PlayerControllerBPatch.TrySpawnToilPlayersOnServer();
     }
 
     public void OnShipHasLeft()
     {
         EnemyAIPatch.DespawnAllTurrets();
         EnemyAIPatch.Reset();
+
+        PlayerControllerBPatch.DespawnAllTurrets();
+        PlayerControllerBPatch.Reset();
     }
 
     private void RegisterScrapItems()
     {
-        int iRarity = ConfigManager.ToilHeadPlushieSpawnWeight.Value;
-        bool spawnAllMoons = ConfigManager.ToilHeadPlushieSpawnAllMoons.Value;
-        string moonSpawnList = ConfigManager.ToilHeadPlushieMoonSpawnList.Value;
-        int carryWeight = ConfigManager.ToilHeadPlushieCarryWeight.Value;
-        int minValue = ConfigManager.ToilHeadPlushieMinValue.Value;
-        int maxValue = ConfigManager.ToilHeadPlushieMaxValue.Value;
-
         try
         {
-            ScrapHelper.RegisterScrap(Content.ToilHeadPlush, iRarity, spawnAllMoons, moonSpawnList, twoHanded: false, carryWeight,  minValue, maxValue);
+            ScrapHelper.RegisterScrap(Content.ToilHeadPlush, ConfigManager.ToilHeadPlushieSpawnWeight.Value, ConfigManager.ToilHeadPlushieSpawnAllMoons.Value, ConfigManager.ToilHeadPlushieMoonSpawnList.Value, twoHanded: false, ConfigManager.ToilHeadPlushieCarryWeight.Value, ConfigManager.ToilHeadPlushieMinValue.Value, ConfigManager.ToilHeadPlushieMaxValue.Value);
+            ScrapHelper.RegisterScrap(Content.ToilSlayerPlush, ConfigManager.ToilSlayerPlushieSpawnWeight.Value, ConfigManager.ToilSlayerPlushieSpawnAllMoons.Value, ConfigManager.ToilSlayerPlushieMoonSpawnList.Value, twoHanded: false, ConfigManager.ToilSlayerPlushieCarryWeight.Value, ConfigManager.ToilSlayerPlushieMinValue.Value, ConfigManager.ToilSlayerPlushieMaxValue.Value);
         }
         catch (System.Exception e)
         {
@@ -156,7 +156,7 @@ internal class Plugin : BaseUnityPlugin
                 return;
             }
 
-            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyNetworkObject))
+            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyAI))
             {
                 logger.LogWarning($"Warning: Failed to set Toil-Head on local client. Enemy is already a Toil-Head. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
                 return;
@@ -172,7 +172,8 @@ internal class Plugin : BaseUnityPlugin
         {
             enemyNetworkObject.GetComponentInChildren<ScanNodeProperties>().headerText = "Toil-head";
 
-            Transform turretTransform = enemyNetworkObject.transform.Find("ToilHeadTurretContainer(Clone)");
+            Transform turretTransform = enemyNetworkObject.transform.Find($"{Content.TurretPrefab.name}(Clone)");
+            ToilHeadTurretBehaviour turretScript = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
             Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
             Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).Find("Head");
 
@@ -186,7 +187,7 @@ internal class Plugin : BaseUnityPlugin
             behaviour.SetPositionOffset(new Vector3(0f, 0.425f, -0.02f));
             behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
 
-            EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
+            EnemyAIPatch.AddEnemyTurretPair(enemyAI, turretScript);
             EnemyAIPatch.ToilHeadSpawnCount++;
         }
         catch (System.Exception e)
@@ -197,25 +198,25 @@ internal class Plugin : BaseUnityPlugin
     #endregion
 
     #region Toiled Player Ragdoll
-    public void SetToilHeadPlayerRagdoll(PlayerControllerB playerScript)
+    public void SetToilHeadPlayerRagdoll(PlayerControllerB playerScript, bool isSlayer = false)
     {
-        SetToilHeadPlayerRagdoll((int)playerScript.playerClientId);
+        SetToilHeadPlayerRagdoll((int)playerScript.playerClientId , isSlayer);
     }
 
-    public void SetToilHeadPlayerRagdoll(int playerId)
+    public void SetToilHeadPlayerRagdoll(int playerId, bool isSlayer = false)
     {
         if (!IsHostOrServer)
         {
-            PluginNetworkBehaviour.Instance.SetToilHeadPlayerRagdollServerRpc(playerId);
+            PluginNetworkBehaviour.Instance.SetToilHeadPlayerRagdollServerRpc(playerId, isSlayer);
             return;
         }
 
-        if (!ConfigManager.SpawnToilHeadPlayerRagdolls.Value) return;
+        if (!ConfigManager.SpawnToiledPlayerRagdolls.Value) return;
 
-        StartOfRound.Instance.StartCoroutine(SetToilHeadPlayerRagdollOnServer(playerId));
+        StartOfRound.Instance.StartCoroutine(SetToilHeadPlayerRagdollOnServer(playerId, isSlayer));
     }
 
-    private IEnumerator SetToilHeadPlayerRagdollOnServer(int playerId)
+    private IEnumerator SetToilHeadPlayerRagdollOnServer(int playerId, bool isSlayer = false)
     {
         if (!IsHostOrServer) yield break;
 
@@ -223,7 +224,7 @@ internal class Plugin : BaseUnityPlugin
 
         if (playerScript == null)
         {
-            logger.LogError("Error: Failed to set Toil-Head on player ragdoll on server. Could not find PlayerControllerB.");
+            logger.LogError("Error: Failed to set Toiled player ragdoll on server. Could not find PlayerControllerB.");
             yield break;
         }
 
@@ -234,7 +235,7 @@ internal class Plugin : BaseUnityPlugin
 
         if (playerScript.deadBody == null)
         {
-            logger.LogError("Error: Failed to set Toil-Head on player ragdoll on server. Could not find DeadBodyInfo.");
+            logger.LogError("Error: Failed to set Toiled player ragdoll on server. Could not find DeadBodyInfo.");
             yield break;
         }
 
@@ -242,7 +243,7 @@ internal class Plugin : BaseUnityPlugin
 
         if (ragdollObject.name != "PlayerRagdollSpring Variant(Clone)")
         {
-            logger.LogError("Error: Failed to set Toil-Head on player ragdoll on server. Player ragdoll is not of type \"PlayerRagdollSpring Variant\".");
+            logger.LogError("Error: Failed to set Toiled player ragdoll on server. Player ragdoll is not of type \"PlayerRagdollSpring Variant\".");
             yield break;
         }
 
@@ -255,52 +256,60 @@ internal class Plugin : BaseUnityPlugin
 
         if (ragdollNetworkObject == null)
         {
-            logger.LogError($"Error: Failed to set Toil-Head on player ragdoll on server. Could not find NetworkObject.");
+            logger.LogError($"Error: Failed to set Toiled player ragdoll on server. Could not find NetworkObject.");
             yield break;
         }
 
         if (Utils.IsToilHeadPlayerRagdoll(ragdollNetworkObject.gameObject))
         {
-            logger.LogWarning($"Warning: Failed to set Toil-Head on player ragdoll on server. Player ragdoll is already a Toil-Head player ragdoll. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})");
+            logger.LogWarning($"Warning: Failed to set Toiled player ragdoll on server. Player ragdoll is already a Toiled player ragdoll. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})");
             yield break;
         }
 
-        bool realTurret = ConfigManager.SpawnRealToilHeadPlayerRagdolls.Value;
+        bool realTurret = ConfigManager.SpawnRealToiledPlayerRagdolls.Value;
 
         if (realTurret)
         {
-            SpawnTurretOnServer(ragdollNetworkObject.transform);
+            if (isSlayer)
+            {
+                SpawnMinigunTurretOnServer(ragdollNetworkObject.transform);
+            }
+            else
+            {
+                SpawnTurretOnServer(ragdollNetworkObject.transform);
+            }
         }
         
-        SetToilHeadPlayerRagdollOnLocalClient(ragdollNetworkObject, realTurret);
-        PluginNetworkBehaviour.Instance.SetToilHeadPlayerRagdollClientRpc(ragdollNetworkObject, realTurret);
+        SetToilHeadPlayerRagdollOnLocalClient(ragdollNetworkObject, realTurret, isSlayer);
+        PluginNetworkBehaviour.Instance.SetToilHeadPlayerRagdollClientRpc(ragdollNetworkObject, realTurret, isSlayer);
 
-        LogInfoExtended($"Spawned Toil-Head on player ragdoll. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})");
+        LogInfoExtended($"Spawned Toiled player ragdoll. isSlayer? {isSlayer} (NetworkObject: {ragdollNetworkObject.NetworkObjectId})");
     }
 
-    public void SetToilHeadPlayerRagdollOnLocalClient(NetworkObject ragdollNetworkObject, bool realTurret)
+    public void SetToilHeadPlayerRagdollOnLocalClient(NetworkObject ragdollNetworkObject, bool realTurret, bool isSlayer)
     {
         if (ragdollNetworkObject == null)
         {
-            logger.LogError($"Error: Failed to set Toil-Head on player ragdoll on local client. Player ragdoll NetworkObject is null.");
+            logger.LogError($"Error: Failed to set Toiled player ragdoll on local client. Player ragdoll NetworkObject is null.");
             return;
         }
 
         if (realTurret)
         {
-            SetRealToilHeadPlayerRagdollOnLocalClient(ragdollNetworkObject);
+            SetRealToilHeadPlayerRagdollOnLocalClient(ragdollNetworkObject, isSlayer);
         }
         else
         {
-            SetFakeToilHeadPlayerRagdollOnLocalClient(ragdollNetworkObject);
+            SetFakeToilHeadPlayerRagdollOnLocalClient(ragdollNetworkObject, isSlayer);
         }
     }
 
-    private void SetRealToilHeadPlayerRagdollOnLocalClient(NetworkObject ragdollNetworkObject)
+    private void SetRealToilHeadPlayerRagdollOnLocalClient(NetworkObject ragdollNetworkObject, bool isSlayer)
     {
         try
         {
             Transform turretTransform = ragdollNetworkObject.transform.GetChild(0);
+            ToilHeadTurretBehaviour turretScript = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
             Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
             Transform springTransform = ragdollNetworkObject.transform.parent.GetChild(0).Find("spine.004").Find("SpringContainer").Find("SpringMetarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0);
 
@@ -313,19 +322,21 @@ internal class Plugin : BaseUnityPlugin
             behaviour.SetPositionOffset(new Vector3(0f, 0.0213f, 0.006f));
             behaviour.SetRotationOffset(new Vector3(0f, 90f, 0f));
 
-            EnemyAIPatch.AddEnemyTurretPair(ragdollNetworkObject, turretTransform.GetComponent<NetworkObject>());
+            PlayerControllerBPatch.AddPlayerTurretPair(null, turretScript);
         }
         catch (System.Exception e)
         {
-            logger.LogError($"Error: Failed to set Toil-Head on player ragdoll on local client. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})\n\n{e}");
+            logger.LogError($"Error: Failed to set Toiled player ragdoll on local client. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})\n\n{e}");
         }
     }
 
-    private void SetFakeToilHeadPlayerRagdollOnLocalClient(NetworkObject ragdollNetworkObject)
+    private void SetFakeToilHeadPlayerRagdollOnLocalClient(NetworkObject ragdollNetworkObject, bool isSlayer)
     {
         try
         {
-            Transform turretTransform = Object.Instantiate(Content.TurretPropPrefab, Vector3.zero, Quaternion.identity, ragdollNetworkObject.transform).transform;
+            GameObject turretPropPrefab = isSlayer ? Content.MinigunTurretPropPrefab : Content.TurretPropPrefab;
+
+            Transform turretTransform = Object.Instantiate(turretPropPrefab, Vector3.zero, Quaternion.identity, ragdollNetworkObject.transform).transform;
             Transform springTransform = ragdollNetworkObject.transform.parent.GetChild(0).Find("spine.004").Find("SpringContainer").Find("SpringMetarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0);
 
             turretTransform.localPosition = Vector3.zero;
@@ -339,7 +350,7 @@ internal class Plugin : BaseUnityPlugin
         }
         catch (System.Exception e)
         {
-            logger.LogError($"Error: Failed to set Toil-Head on player ragdoll on local client. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})\n\n{e}");
+            logger.LogError($"Error: Failed to set Toiled player ragdoll on local client. (NetworkObject: {ragdollNetworkObject.NetworkObjectId})\n\n{e}");
         }
     }
     #endregion
@@ -394,7 +405,7 @@ internal class Plugin : BaseUnityPlugin
                 return;
             }
 
-            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyNetworkObject))
+            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyAI))
             {
                 logger.LogWarning($"Warning: Failed to set Manti-Toil on local client. Enemy is already a Manti-Toil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
                 return;
@@ -410,7 +421,8 @@ internal class Plugin : BaseUnityPlugin
         {
             enemyNetworkObject.GetComponentInChildren<ScanNodeProperties>().headerText = "Manti-toil";
 
-            Transform turretTransform = enemyNetworkObject.transform.Find("ToilHeadTurretContainer(Clone)");
+            Transform turretTransform = enemyNetworkObject.transform.Find($"{Content.TurretPrefab.name}(Clone)");
+            ToilHeadTurretBehaviour turretScript = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
             Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
             Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetChild(0);
 
@@ -428,7 +440,7 @@ internal class Plugin : BaseUnityPlugin
             ToilHeadTurretBehaviour toilHeadTurretBehaviour = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
             toilHeadTurretBehaviour.useMantiToilSettings = true;
 
-            EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
+            EnemyAIPatch.AddEnemyTurretPair(enemyAI, turretScript);
             EnemyAIPatch.MantiToilSpawnCount++;
         }
         catch (System.Exception e)
@@ -463,7 +475,7 @@ internal class Plugin : BaseUnityPlugin
             return false;
         }
 
-        SpawnMiniGunTurretOnServer(enemyAI.transform);
+        SpawnMinigunTurretOnServer(enemyAI.transform);
         PluginNetworkBehaviour.Instance.SetToilSlayerClientRpc(enemyNetworkObject);
         SetToilSlayerOnLocalClient(enemyNetworkObject);
 
@@ -488,7 +500,7 @@ internal class Plugin : BaseUnityPlugin
                 return;
             }
 
-            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyNetworkObject))
+            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyAI))
             {
                 logger.LogWarning($"Warning: Failed to set Toil-Slayer on local client. Enemy is already a Toil-Head/Toil-Slayer. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
                 return;
@@ -504,7 +516,8 @@ internal class Plugin : BaseUnityPlugin
         {
             enemyNetworkObject.GetComponentInChildren<ScanNodeProperties>().headerText = "Toil-slayer";
 
-            Transform turretTransform = enemyNetworkObject.transform.Find("MiniGunTurretContainer(Clone)");
+            Transform turretTransform = enemyNetworkObject.transform.Find($"{Content.MinigunTurretPrefab.name}(Clone)");
+            ToilHeadTurretBehaviour turretScript = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
             Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
             Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).Find("Head");
 
@@ -518,7 +531,7 @@ internal class Plugin : BaseUnityPlugin
             behaviour.SetPositionOffset(new Vector3(0f, 0.425f, -0.02f));
             behaviour.SetRotationOffset(new Vector3(90f, 0f, 0f));
 
-            EnemyAIPatch.AddEnemyTurretPair(enemyNetworkObject, turretTransform.GetComponent<NetworkObject>());
+            EnemyAIPatch.AddEnemyTurretPair(enemyAI, turretScript);
             EnemyAIPatch.ToilSlayerSpawnCount++;
         }
         catch (System.Exception e)
@@ -528,6 +541,198 @@ internal class Plugin : BaseUnityPlugin
     }
     #endregion
 
+    #region Manti-Slayer
+    public bool SetMantiSlayerOnServer(EnemyAI enemyAI)
+    {
+        if (!IsHostOrServer) return false;
+
+        if (enemyAI == null)
+        {
+            logger.LogError("Error: Failed to set Manti-Slayer on server. EnemyAI is null.");
+            return false;
+        }
+
+        NetworkObject enemyNetworkObject = enemyAI.GetComponent<NetworkObject>();
+
+        if (!Utils.IsManticoil(enemyAI))
+        {
+            logger.LogError($"Error: Failed to set Manti-Slayer on server. Enemy is not a Manticoil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return false;
+        }
+
+        if (Utils.IsMantiToil(enemyAI))
+        {
+            logger.LogWarning($"Warning: Failed to set Manti-Slayer on server. Enemy is already a Manti-Toil/Manti-Slayer. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return false;
+        }
+
+        SpawnMinigunTurretOnServer(enemyAI.transform);
+        PluginNetworkBehaviour.Instance.SetMantiSlayerClientRpc(enemyNetworkObject);
+        SetMantiSlayerOnLocalClient(enemyNetworkObject);
+
+        LogInfoExtended($"Spawned Manti-Slayer. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+
+        return true;
+    }
+
+    public void SetMantiSlayerOnLocalClient(NetworkObject enemyNetworkObject)
+    {
+        if (enemyNetworkObject == null)
+        {
+            logger.LogError($"Error: Failed to set Manti-Slayer on local client. Enemy NetworkObject is null.");
+            return;
+        }
+
+        if (enemyNetworkObject.TryGetComponent(out EnemyAI enemyAI))
+        {
+            if (!Utils.IsManticoil(enemyAI))
+            {
+                logger.LogError($"Error: Failed to set Manti-Slayer on local client. Enemy \"{enemyNetworkObject.gameObject.name}\" is not a Manticoil. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+                return;
+            }
+
+            if (EnemyAIPatch.EnemyTurretPairs.ContainsKey(enemyAI))
+            {
+                logger.LogWarning($"Warning: Failed to set Manti-Slayer on local client. Enemy is already a Manti-Toil/Manti-Slayer. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+                return;
+            }
+        }
+        else
+        {
+            logger.LogError($"Error: Failed to set Manti-Slayer on local client. Could not find EnemyAI. (NetworkObject: {enemyNetworkObject.NetworkObjectId})");
+            return;
+        }
+
+        try
+        {
+            enemyNetworkObject.GetComponentInChildren<ScanNodeProperties>().headerText = "Manti-slayer";
+
+            Transform turretTransform = enemyNetworkObject.transform.Find($"{Content.MinigunTurretPrefab.name}(Clone)");
+            ToilHeadTurretBehaviour turretScript = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
+            Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
+            Transform enemyHeadTransform = enemyNetworkObject.transform.GetChild(0).GetChild(2).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(2).GetChild(0);
+
+            turretTransform.localScale = new Vector3(2.051871f, 2.051871f, 2.051871f);
+            turretTransform.localPosition = Vector3.zero;
+            turretTransform.localRotation = Quaternion.identity;
+
+            Utils.DisableColliders(turretTransform.gameObject, keepScanNodeEnabled: true);
+
+            ParentToTransformBehaviour behaviour = enemyHeadTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+            behaviour.SetTargetAndParent(syncToHeadTransform, enemyHeadTransform);
+            behaviour.SetPositionOffset(new Vector3(0f, 0.12f, -0.025f));
+            behaviour.SetRotationOffset(new Vector3(0f, 0f, 0f));
+
+            ToilHeadTurretBehaviour toilHeadTurretBehaviour = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
+            toilHeadTurretBehaviour.useMantiToilSettings = true;
+
+            EnemyAIPatch.AddEnemyTurretPair(enemyAI, turretScript);
+            EnemyAIPatch.MantiSlayerSpawnCount++;
+        }
+        catch (System.Exception e)
+        {
+            logger.LogError($"Error: Failed to set Manti-Slayer on local client. (NetworkObject: {enemyNetworkObject.NetworkObjectId})\n\n{e}");
+        }
+    }
+    #endregion
+
+    #region Toil-Player
+    public bool SetToilPlayerOnServer(PlayerControllerB playerScript, bool isSlayer = false)
+    {
+        if (!IsHostOrServer) return false;
+
+        if (playerScript == null)
+        {
+            logger.LogError("Error: Failed to set Toil-Player on server. PlayerControllerB is null.");
+            return false;
+        }
+
+        if (playerScript.isPlayerDead)
+        {
+            logger.LogError($"Error: Failed to set Toil-Player on server. Player is already dead. (Player: {playerScript.playerUsername})");
+            return false;
+        }
+
+        NetworkObject playerNetworkObject = playerScript.GetComponent<NetworkObject>();
+
+        if (Utils.IsToilPlayer(playerScript))
+        {
+            logger.LogWarning($"Warning: Failed to set Toil-Player on server. Player is already a Toil-Player. (Player: {playerScript.playerUsername})");
+            return false;
+        }
+
+        if (isSlayer)
+        {
+            SpawnMinigunTurretOnServer(playerScript.transform);
+        }
+        else
+        {
+            SpawnTurretOnServer(playerScript.transform);
+        }
+        
+        PluginNetworkBehaviour.Instance.SetToilPlayerClientRpc(playerNetworkObject, isSlayer);
+        SetToilPlayerOnLocalClient(playerNetworkObject, isSlayer);
+
+        LogInfoExtended($"Spawned Toil-Player. (Player: {playerScript.playerUsername})");
+
+        return true;
+    }
+
+    public void SetToilPlayerOnLocalClient(NetworkObject playerNetworkObject, bool isSlayer)
+    {
+        if (playerNetworkObject == null)
+        {
+            logger.LogError($"Error: Failed to set Toil-Player on local client. Player NetworkObject is null.");
+            return;
+        }
+
+        if (playerNetworkObject.TryGetComponent(out PlayerControllerB playerScript))
+        {
+            if (PlayerControllerBPatch.PlayerTurretPairs.ContainsKey(playerScript))
+            {
+                logger.LogWarning($"Warning: Failed to set Toil-Player on local client. Player is already a Toil-Player. (Player: {playerScript.playerUsername})");
+                return;
+            }
+        }
+        else
+        {
+            logger.LogError($"Error: Failed to set Toil-Player on local client. Could not find PlayerControllerB. (NetworkObject: {playerNetworkObject.NetworkObjectId})");
+            return;
+        }
+
+        try
+        {
+            string turretName = isSlayer ? $"{Content.MinigunTurretPrefab.name}(Clone)" : $"{Content.TurretPrefab.name}(Clone)";
+            Transform turretTransform = playerNetworkObject.transform.Find(turretName);
+            ToilHeadTurretBehaviour turretScript = turretTransform.GetComponentInChildren<ToilHeadTurretBehaviour>();
+            Transform syncToHeadTransform = turretTransform.Find("SyncToHead");
+            Transform playerHeadTransform = playerNetworkObject.transform.Find("ScavengerModel").Find("metarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0).Find("spine.004").Find("HeadPoint");
+
+            turretTransform.localPosition = Vector3.zero;
+            turretTransform.localRotation = Quaternion.identity;
+
+            Utils.DisableColliders(turretTransform.gameObject, keepScanNodeEnabled: true);
+
+            if (PlayerUtils.IsLocalPlayer(playerScript))
+            {
+                Utils.DisableRenderers(turretTransform.gameObject);
+            }
+
+            ParentToTransformBehaviour behaviour = playerHeadTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+            behaviour.SetTargetAndParent(syncToHeadTransform, playerHeadTransform);
+            behaviour.SetPositionOffset(new Vector3(0f, 0.375f, 0f));
+            behaviour.SetRotationOffset(new Vector3(0f, 0f, 0f));
+
+            PlayerControllerBPatch.AddPlayerTurretPair(playerScript, turretScript);
+            PlayerControllerBPatch.ToilPlayerSpawnCount++;
+        }
+        catch (System.Exception e)
+        {
+            logger.LogError($"Error: Failed to set Toil-Player on local client. (Player: {playerScript.playerUsername})\n\n{e}");
+        }
+    }
+    #endregion
+    
     private NetworkObject SpawnTurretOnServer(Transform parentTransform)
     {
         if (!IsHostOrServer) return null;
@@ -540,11 +745,11 @@ internal class Plugin : BaseUnityPlugin
         return enemyNetworkObject;
     }
 
-    private NetworkObject SpawnMiniGunTurretOnServer(Transform parentTransform)
+    private NetworkObject SpawnMinigunTurretOnServer(Transform parentTransform)
     {
         if (!IsHostOrServer) return null;
 
-        GameObject turretObject = Object.Instantiate(Content.MiniGunTurretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
+        GameObject turretObject = Object.Instantiate(Content.MinigunTurretPrefab, Vector3.zero, Quaternion.identity, parentTransform);
         NetworkObject enemyNetworkObject = turretObject.GetComponent<NetworkObject>();
         enemyNetworkObject.Spawn(destroyWithScene: true);
         turretObject.transform.SetParent(parentTransform);

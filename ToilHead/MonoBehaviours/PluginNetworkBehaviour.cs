@@ -69,25 +69,57 @@ public class PluginNetworkBehaviour : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void SetToilHeadPlayerRagdollServerRpc(int fromPlayerId)
+    [ClientRpc]
+    public void SetMantiSlayerClientRpc(NetworkObjectReference enemyReference)
     {
-        Plugin.Instance.SetToilHeadPlayerRagdoll(fromPlayerId);
+        if (IsHost || IsServer) return;
+
+        if (enemyReference.TryGet(out NetworkObject targetObject))
+        {
+            Plugin.Instance.SetMantiSlayerOnLocalClient(targetObject);
+        }
+        else
+        {
+            // Target not found on server, likely because it already has been destroyed/despawned.
+            Plugin.Instance.SetMantiSlayerOnLocalClient(null);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetToilHeadPlayerRagdollServerRpc(int fromPlayerId, bool isSlayer)
+    {
+        Plugin.Instance.SetToilHeadPlayerRagdoll(fromPlayerId, isSlayer);
     }
 
     [ClientRpc]
-    public void SetToilHeadPlayerRagdollClientRpc(NetworkObjectReference ragdollReference, bool realTurret)
+    public void SetToilHeadPlayerRagdollClientRpc(NetworkObjectReference ragdollReference, bool realTurret, bool isSlayer)
     {
         if (IsHost || IsServer) return;
 
         if (ragdollReference.TryGet(out NetworkObject targetObject))
         {
-            Plugin.Instance.SetToilHeadPlayerRagdollOnLocalClient(targetObject, realTurret);
+            Plugin.Instance.SetToilHeadPlayerRagdollOnLocalClient(targetObject, realTurret, isSlayer);
         }
         else
         {
             // Target not found on server, likely because it already has been destroyed/despawned.
-            Plugin.Instance.SetToilHeadPlayerRagdollOnLocalClient(null, realTurret);
+            Plugin.Instance.SetToilHeadPlayerRagdollOnLocalClient(null, realTurret, isSlayer);
+        }
+    }
+
+    [ClientRpc]
+    public void SetToilPlayerClientRpc(NetworkObjectReference playerReference, bool isSlayer)
+    {
+        if (IsHost || IsServer) return;
+
+        if (playerReference.TryGet(out NetworkObject targetObject))
+        {
+            Plugin.Instance.SetToilPlayerOnLocalClient(targetObject, isSlayer);
+        }
+        else
+        {
+            // Target not found on server, likely because it already has been destroyed/despawned.
+            Plugin.Instance.SetToilPlayerOnLocalClient(null, isSlayer);
         }
     }
 }

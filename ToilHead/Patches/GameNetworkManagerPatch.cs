@@ -18,7 +18,7 @@ internal class GameNetworkManagerPatch
     {
         AddNetworkPrefab(Content.NetworkHandlerPrefab);
         AddNetworkPrefab(Content.TurretPrefab);
-        AddNetworkPrefab(Content.MiniGunTurretPrefab);
+        AddNetworkPrefab(Content.MinigunTurretPrefab);
     }
 
     private static void AddNetworkPrefab(GameObject prefab)

@@ -58,23 +58,25 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     public float LOSXRotationOffsetAmountPerRay = 5f;
 
     #region Private Variables
-    private TurretMode turretModeLastFrame;
-    private bool targetingDeadPlayer;
-    private bool rotatingRight;
-    private float switchRotationTimer;
-    private bool hasLineOfSight;
-    private float lostLOSTimer;
-    private RaycastHit hit;
-    private bool wasTargetingPlayerLastFrame;
-    private float turretInterval;
-    private bool rotatingSmoothly = true;
-    private Ray shootRay;
-    private Coroutine fadeBulletAudioCoroutine;
-    private bool rotatingClockwise;
-    private float berserkTimer;
-    private bool enteringBerserkMode;
-    private float chargingTimer = 0f;
-    private bool playedChargingSFX = false;
+    private TurretMode _turretModeLastFrame;
+    private bool _targetingDeadPlayer;
+    private bool _rotatingRight;
+    private float _switchRotationTimer;
+    private bool _hasLineOfSight;
+    private float _lostLOSTimer;
+    private RaycastHit _hit;
+    private bool _wasTargetingPlayerLastFrame;
+    private float _turretInterval;
+    private bool _rotatingSmoothly = true;
+    private Ray _shootRay;
+    private Coroutine _fadeBulletAudioCoroutine;
+    private bool _rotatingClockwise;
+    private float _berserkTimer;
+    private bool _enteringBerserkMode;
+    private float _chargingTimer = 0f;
+    private bool _playedChargingSFX = false;
+    private int _damage = 25;
+    private float _damageRate = 0.21f;
     #endregion
 
     #region Custom Variables
@@ -122,7 +124,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             lostLOSDuration = 5f;
         }
 
-        if (isMinigun)
+        if (isMinigun && !useMantiToilSettings)
         {
             lostLOSDuration = 3f;
         }
@@ -134,11 +136,6 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         // Turret Charging Settings
         chargingDuration = configManager.TurretChargingDuration.Value;
         chargingRotationSpeed = configManager.TurretChargingRotationSpeed.Value;
-
-        if (useMantiToilSettings)
-        {
-            chargingDuration = 2.5f;
-        }
 
         if (isMinigun)
         {
@@ -154,6 +151,9 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             firingRotationSpeed *= 0.5f;
         }
 
+        _damage = isMinigun ? 15 : 25;
+        _damageRate = isMinigun ? 0.105f : 0.21f;
+
         // Turret Berserk Settings
         berserkDuration = configManager.TurretBerserkDuration.Value;
         berserkRotationSpeed = configManager.TurretBerserkRotationSpeed.Value;
@@ -166,7 +166,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         rotationSpeed = detectionRotationSpeed;
 
-        if (useMantiToilSettings)
+        if (useMantiToilSettings && !isMinigun)
         {
             LOSVerticalRays = 6;
         }
@@ -202,7 +202,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     {
         if (!turretActive)
         {
-            wasTargetingPlayerLastFrame = false;
+            _wasTargetingPlayerLastFrame = false;
             turretMode = TurretMode.Detection;
             targetPlayerWithRotation = null;
             return false;
@@ -210,9 +210,9 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         if (targetPlayerWithRotation != null)
         {
-            if (!wasTargetingPlayerLastFrame)
+            if (!_wasTargetingPlayerLastFrame)
             {
-                wasTargetingPlayerLastFrame = true;
+                _wasTargetingPlayerLastFrame = true;
                 if (turretMode == TurretMode.Detection)
                 {
                     turretMode = TurretMode.Charging;
@@ -221,9 +221,9 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             SetTargetToPlayerBody();
             TurnTowardsTargetIfHasLOS();
         }
-        else if (wasTargetingPlayerLastFrame)
+        else if (_wasTargetingPlayerLastFrame)
         {
-            wasTargetingPlayerLastFrame = false;
+            _wasTargetingPlayerLastFrame = false;
             turretMode = TurretMode.Detection;
         }
 
@@ -254,44 +254,44 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     private void TurretModeDetectionLogic()
     {
-        if (turretModeLastFrame != TurretMode.Detection)
+        if (_turretModeLastFrame != TurretMode.Detection)
         {
-            turretModeLastFrame = TurretMode.Detection;
-            rotatingClockwise = false;
+            _turretModeLastFrame = TurretMode.Detection;
+            _rotatingClockwise = false;
             mainAudio.Stop();
             farAudio.Stop();
             berserkAudio.Stop();
-            if (fadeBulletAudioCoroutine != null)
+            if (_fadeBulletAudioCoroutine != null)
             {
-                StopCoroutine(fadeBulletAudioCoroutine);
+                StopCoroutine(_fadeBulletAudioCoroutine);
             }
-            fadeBulletAudioCoroutine = StartCoroutine(FadeBulletAudio());
+            _fadeBulletAudioCoroutine = StartCoroutine(FadeBulletAudio());
             bulletParticles.Stop(withChildren: true, ParticleSystemStopBehavior.StopEmitting);
             rotationSpeed = detectionRotationSpeed;
-            rotatingSmoothly = true;
+            _rotatingSmoothly = true;
             if (turretAnimator != null)
             {
                 turretAnimator.SetInteger("TurretMode", 0);
             }
-            turretInterval = Random.Range(0f, 0.15f);
+            _turretInterval = Random.Range(0f, 0.15f);
         }
         if (!IsServer)
         {
             return;
         }
-        if (switchRotationTimer >= 7f)
+        if (_switchRotationTimer >= 7f)
         {
-            switchRotationTimer = 0f;
-            bool setRotateRight = !rotatingRight;
+            _switchRotationTimer = 0f;
+            bool setRotateRight = !_rotatingRight;
             SwitchRotationClientRpc(setRotateRight);
         }
         else
         {
-            switchRotationTimer += Time.deltaTime;
+            _switchRotationTimer += Time.deltaTime;
         }
-        if (turretInterval >= 0.25f)
+        if (_turretInterval >= 0.25f)
         {
-            turretInterval = 0f;
+            _turretInterval = 0f;
             PlayerControllerB playerControllerB = CheckForPlayersInLineOfSight(angleRangeCheck: true);
             if (playerControllerB != null && !playerControllerB.isPlayerDead)
             {
@@ -302,48 +302,48 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
         else
         {
-            turretInterval += Time.deltaTime;
+            _turretInterval += Time.deltaTime;
         }
     }
 
     private void TurretModeChargingLogic()
     {
-        if (turretModeLastFrame != TurretMode.Charging)
+        if (_turretModeLastFrame != TurretMode.Charging)
         {
-            turretModeLastFrame = TurretMode.Charging;
-            rotatingClockwise = false;
+            _turretModeLastFrame = TurretMode.Charging;
+            _rotatingClockwise = false;
             mainAudio.PlayOneShot(detectPlayerSFX);
             berserkAudio.Stop();
             WalkieTalkie.TransmitOneShotAudio(mainAudio, detectPlayerSFX);
             rotationSpeed = chargingRotationSpeed;
-            rotatingSmoothly = false;
-            lostLOSTimer = 0f;
+            _rotatingSmoothly = false;
+            _lostLOSTimer = 0f;
             if (turretAnimator != null)
             {
                 turretAnimator.SetInteger("TurretMode", 1);
             }
-            chargingTimer = 0f;
-            playedChargingSFX = false;
+            _chargingTimer = 0f;
+            _playedChargingSFX = false;
         }
 
-        if (isMinigun && chargingTimer > detectPlayerSFX.length && !playedChargingSFX)
+        if (isMinigun && _chargingTimer > detectPlayerSFX.length && !_playedChargingSFX)
         {
             mainAudio.PlayOneShot(chargingSFX);
             WalkieTalkie.TransmitOneShotAudio(mainAudio, chargingSFX);
-            playedChargingSFX = true;
+            _playedChargingSFX = true;
         }
 
-        chargingTimer += Time.deltaTime;
+        _chargingTimer += Time.deltaTime;
 
         if (!IsServer)
         {
             return;
         }
-        if (turretInterval >= chargingDuration)
+        if (_turretInterval >= chargingDuration)
         {
-            turretInterval = 0f;
+            _turretInterval = 0f;
             Plugin.logger.LogInfo("Charging timer is up, setting to firing mode.");
-            if (!hasLineOfSight)
+            if (!_hasLineOfSight)
             {
                 Plugin.logger.LogInfo("hasLineOfSight is false");
                 targetPlayerWithRotation = null;
@@ -357,15 +357,15 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
         else
         {
-            turretInterval += Time.deltaTime;
+            _turretInterval += Time.deltaTime;
         }
     }
 
     private void TurretModeFiringLogic()
     {
-        if (turretModeLastFrame != TurretMode.Firing)
+        if (_turretModeLastFrame != TurretMode.Firing)
         {
-            turretModeLastFrame = TurretMode.Firing;
+            _turretModeLastFrame = TurretMode.Firing;
             berserkAudio.Stop();
             mainAudio.clip = firingSFX;
             mainAudio.Play();
@@ -373,75 +373,76 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             farAudio.Play();
             bulletParticles.Play(withChildren: true);
             bulletCollisionAudio.Play();
-            if (fadeBulletAudioCoroutine != null)
+            if (_fadeBulletAudioCoroutine != null)
             {
-                StopCoroutine(fadeBulletAudioCoroutine);
+                StopCoroutine(_fadeBulletAudioCoroutine);
             }
             bulletCollisionAudio.volume = 1f;
             rotationSpeed = firingRotationSpeed;
-            rotatingSmoothly = false;
-            lostLOSTimer = 0f;
+            _rotatingSmoothly = false;
+            _lostLOSTimer = 0f;
             if (turretAnimator != null)
             {
                 turretAnimator.SetInteger("TurretMode", 2);
             }
         }
-        if (turretInterval >= 0.21f)
+
+        if (_turretInterval >= _damageRate)
         {
             PlayerControllerB localPlayerScript = PlayerUtils.GetLocalPlayerScript();
 
-            turretInterval = 0f;
+            _turretInterval = 0f;
             if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == localPlayerScript)
             {
-                if (localPlayerScript.health > 50)
+                if (localPlayerScript.health > _damage)
                 {
-                    localPlayerScript.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots, 2);
+                    localPlayerScript.DamagePlayer(_damage, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots, 2);
                 }
                 else
                 {
                     localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots, 2);
 
-                    Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript);
+                    Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript, isMinigun);
                 }
             }
-            shootRay = new Ray(aimPoint.position, aimPoint.forward);
-            if (Physics.Raycast(shootRay, out hit, 30f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            _shootRay = new Ray(aimPoint.position, aimPoint.forward);
+            if (Physics.Raycast(_shootRay, out _hit, 30f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
-                bulletCollisionAudio.transform.position = shootRay.GetPoint(hit.distance - 0.5f);
+                bulletCollisionAudio.transform.position = _shootRay.GetPoint(_hit.distance - 0.5f);
             }
         }
         else
         {
-            turretInterval += Time.deltaTime;
+            _turretInterval += Time.deltaTime;
         }
     }
 
     private void TurretModeBerserkLogic()
     {
-        if (turretModeLastFrame != TurretMode.Berserk)
+        if (_turretModeLastFrame != TurretMode.Berserk)
         {
-            turretModeLastFrame = TurretMode.Berserk;
+            _turretModeLastFrame = TurretMode.Berserk;
             if (turretAnimator != null)
             {
                 turretAnimator.SetInteger("TurretMode", 1);
             }
-            berserkTimer = 1.3f;
+            _berserkTimer = 1.3f;
             berserkAudio.Play();
             rotationSpeed = berserkRotationSpeed;
-            enteringBerserkMode = true;
-            rotatingSmoothly = true;
-            lostLOSTimer = 0f;
-            wasTargetingPlayerLastFrame = false;
+            _enteringBerserkMode = true;
+            _rotatingSmoothly = true;
+            _lostLOSTimer = 0f;
+            _wasTargetingPlayerLastFrame = false;
             targetPlayerWithRotation = null;
         }
-        if (enteringBerserkMode)
+        if (_enteringBerserkMode)
         {
-            berserkTimer -= Time.deltaTime;
-            if (berserkTimer <= 0f)
+            _berserkTimer -= Time.deltaTime;
+            if (_berserkTimer <= 0f)
             {
-                enteringBerserkMode = false;
-                rotatingClockwise = true;
-                berserkTimer = berserkDuration;
+                _enteringBerserkMode = false;
+                _rotatingClockwise = true;
+                _berserkTimer = berserkDuration;
                 if (turretAnimator != null)
                 {
                     turretAnimator.SetInteger("TurretMode", 2);
@@ -452,46 +453,46 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 farAudio.Play();
                 bulletParticles.Play(withChildren: true);
                 bulletCollisionAudio.Play();
-                if (fadeBulletAudioCoroutine != null)
+                if (_fadeBulletAudioCoroutine != null)
                 {
-                    StopCoroutine(fadeBulletAudioCoroutine);
+                    StopCoroutine(_fadeBulletAudioCoroutine);
                 }
                 bulletCollisionAudio.volume = 1f;
             }
             return;
         }
-        if (turretInterval >= 0.21f)
+        if (_turretInterval >= _damageRate)
         {
             PlayerControllerB localPlayerScript = PlayerUtils.GetLocalPlayerScript();
 
-            turretInterval = 0f;
+            _turretInterval = 0f;
             if (CheckForPlayersInLineOfSight(range: 5, verticalRays: 1) == localPlayerScript)
             {
-                if (localPlayerScript.health > 50)
+                if (localPlayerScript.health > _damage)
                 {
-                    localPlayerScript.DamagePlayer(50, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots, 2);
+                    localPlayerScript.DamagePlayer(_damage, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots, 2);
                 }
                 else
                 {
                     localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots, 2);
 
-                    Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript);
+                    Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript, isMinigun);
                 }
             }
-            shootRay = new Ray(aimPoint.position, aimPoint.forward);
-            if (Physics.Raycast(shootRay, out hit, 30f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
+            _shootRay = new Ray(aimPoint.position, aimPoint.forward);
+            if (Physics.Raycast(_shootRay, out _hit, 30f, StartOfRound.Instance.collidersAndRoomMask, QueryTriggerInteraction.Ignore))
             {
-                bulletCollisionAudio.transform.position = shootRay.GetPoint(hit.distance - 0.5f);
+                bulletCollisionAudio.transform.position = _shootRay.GetPoint(_hit.distance - 0.5f);
             }
         }
         else
         {
-            turretInterval += Time.deltaTime;
+            _turretInterval += Time.deltaTime;
         }
         if (IsServer)
         {
-            berserkTimer -= Time.deltaTime;
-            if (berserkTimer <= 0f || !turretActive)
+            _berserkTimer -= Time.deltaTime;
+            if (_berserkTimer <= 0f || !turretActive)
             {
                 SwitchTurretMode(0);
                 SetToModeClientRpc(0);
@@ -502,14 +503,14 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     private bool RotateTurretRod()
     {
-        if (rotatingClockwise)
+        if (_rotatingClockwise)
         {
             turnTowardsObjectCompass.localEulerAngles = new Vector3(25f, turretRod.localEulerAngles.y - Time.deltaTime * rotationSpeed, 0f);
             turretRod.localRotation = Quaternion.RotateTowards(turretRod.localRotation, turnTowardsObjectCompass.localRotation, rotationSpeed * Time.deltaTime);
             return false;
         }
 
-        if (rotatingSmoothly)
+        if (_rotatingSmoothly)
         {
             if (detectionRotation)
             {
@@ -530,9 +531,9 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     {
         if (targetPlayerWithRotation.isPlayerDead)
         {
-            if (!targetingDeadPlayer)
+            if (!_targetingDeadPlayer)
             {
-                targetingDeadPlayer = true;
+                _targetingDeadPlayer = true;
             }
             if (targetPlayerWithRotation.deadBody != null)
             {
@@ -541,7 +542,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         }
         else
         {
-            targetingDeadPlayer = false;
+            _targetingDeadPlayer = false;
             targetTransform = targetPlayerWithRotation.gameplayCamera.transform;
         }
     }
@@ -549,7 +550,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     private void TurnTowardsTargetIfHasLOS()
     {
         bool flag = true;
-        if (targetingDeadPlayer || Vector3.Angle(targetTransform.position - centerPoint.position, forwardFacingPos.forward) > rotationRange)
+        if (_targetingDeadPlayer || Vector3.Angle(targetTransform.position - centerPoint.position, forwardFacingPos.forward) > rotationRange)
         {
             flag = false;
         }
@@ -560,27 +561,27 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         if (flag)
         {
-            hasLineOfSight = true;
-            lostLOSTimer = 0f;
+            _hasLineOfSight = true;
+            _lostLOSTimer = 0f;
             tempTransform.position = targetTransform.position;
             tempTransform.position -= Vector3.up * 0.15f;
             turnTowardsObjectCompass.LookAt(tempTransform);
             return;
         }
 
-        if (hasLineOfSight)
+        if (_hasLineOfSight)
         {
-            hasLineOfSight = false;
-            lostLOSTimer = 0f;
+            _hasLineOfSight = false;
+            _lostLOSTimer = 0f;
         }
 
         if (!IsServer) return;
 
-        lostLOSTimer += Time.deltaTime;
+        _lostLOSTimer += Time.deltaTime;
 
-        if (lostLOSTimer >= lostLOSDuration)
+        if (_lostLOSTimer >= lostLOSDuration)
         {
-            lostLOSTimer = 0f;
+            _lostLOSTimer = 0f;
             Plugin.logger.LogInfo("LOS timer ended on server. checking for new player target.");
             PlayerControllerB playerControllerB = CheckForPlayersInLineOfSight();
             if (playerControllerB != null)
@@ -644,13 +645,13 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         {
             Vector3 forward = aimPoint.forward;
             forward = Quaternion.Euler(xRotationOffset, yRotationOffset + yRotationAmount * i, 0f) * forward;
-            shootRay = new Ray(aimTurretCenterPoint.position, forward);
+            _shootRay = new Ray(aimTurretCenterPoint.position, forward);
 
-            if (Physics.Raycast(shootRay, out hit, LOSDistance, 1051400, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(_shootRay, out _hit, LOSDistance, 1051400, QueryTriggerInteraction.Ignore))
             {
-                if (hit.transform.CompareTag("Player"))
+                if (_hit.transform.CompareTag("Player"))
                 {
-                    PlayerControllerB component = hit.transform.GetComponent<PlayerControllerB>();
+                    PlayerControllerB component = _hit.transform.GetComponent<PlayerControllerB>();
                     
                     if (component is not null)
                     {
@@ -665,9 +666,9 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                     continue;
                 }
 
-                if ((turretMode == TurretMode.Firing || (turretMode == TurretMode.Berserk && !enteringBerserkMode)) && hit.transform.tag.StartsWith("PlayerRagdoll"))
+                if ((turretMode == TurretMode.Firing || (turretMode == TurretMode.Berserk && !_enteringBerserkMode)) && _hit.transform.tag.StartsWith("PlayerRagdoll"))
                 {
-                    Rigidbody component2 = hit.transform.GetComponent<Rigidbody>();
+                    Rigidbody component2 = _hit.transform.GetComponent<Rigidbody>();
 
                     if (component2 is not null)
                     {
@@ -690,14 +691,14 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     public void SwitchRotationOnInterval(bool setRotateRight)
     {
-        if (rotatingRight)
+        if (_rotatingRight)
         {
-            rotatingRight = false;
+            _rotatingRight = false;
             targetRotation = rotationRange;
         }
         else
         {
-            rotatingRight = true;
+            _rotatingRight = true;
             targetRotation = 0f - rotationRange;
         }
     }

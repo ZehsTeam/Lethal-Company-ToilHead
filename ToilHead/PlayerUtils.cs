@@ -40,6 +40,11 @@ internal class PlayerUtils
     }
     #endregion
 
+    public static bool IsLocalPlayer(PlayerControllerB playerScript)
+    {
+        return playerScript == GetLocalPlayerScript();
+    }
+
     public static int GetLocalPlayerId()
     {
         return (int)GetLocalPlayerScript().playerClientId;

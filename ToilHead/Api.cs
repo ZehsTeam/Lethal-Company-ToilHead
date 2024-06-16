@@ -1,4 +1,6 @@
-﻿using com.github.zehsteam.ToilHead.Patches;
+﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
+using com.github.zehsteam.ToilHead.Patches;
+using GameNetcodeStuff;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -11,7 +13,12 @@ public class Api
     /// <summary>
     /// This is for all enemy turret pairs.
     /// </summary>
-    public static Dictionary<NetworkObject, NetworkObject> EnemyTurretPairs => EnemyAIPatch.EnemyTurretPairs;
+    public static Dictionary<EnemyAI, ToilHeadTurretBehaviour> EnemyTurretPairs => EnemyAIPatch.EnemyTurretPairs;
+
+    /// <summary>
+    /// This is for all player turret pairs.
+    /// </summary>
+    public static Dictionary<PlayerControllerB, ToilHeadTurretBehaviour> PlayerTurretPairs => PlayerControllerBPatch.PlayerTurretPairs;
 
     #region Toil-Head
     /// <summary>
@@ -157,11 +164,105 @@ public class Api
     }
     #endregion
 
+    #region Manti-Slayer
+    /// <summary>
+    /// Manti-Slayer max spawn count.
+    /// </summary>
+    public static int MantiSlayerMaxSpawnCount => SpawnDataManager.GetMantiSlayerSpawnDataForCurrentMoon().MaxSpawnCount;
+
+    /// <summary>
+    /// Manti-Slayer spawn chance.
+    /// </summary>
+    public static int MantiSlayerSpawnChance => SpawnDataManager.GetMantiSlayerSpawnDataForCurrentMoon().SpawnChance;
+
+    /// <summary>
+    /// Manti-Slayer spawn count.
+    /// </summary>
+    public static int MantiSlayerSpawnCount => EnemyAIPatch.MantiSlayerSpawnCount;
+
+    /// <summary>
+    /// If enabled, will force any spawned Manticoils to become Manti-Slayers.
+    /// This will get reset automatically when the day ends.
+    /// </summary>
+    public static bool ForceMantiSlayerSpawns
+    {
+        get { return EnemyAIPatch.ForceMantiSlayerSpawns; }
+        set { EnemyAIPatch.ForceMantiSlayerSpawns = value; }
+    }
+
+    /// <summary>
+    /// If set to any value above -1, will temporarily override the Manti-Slayer max spawn count.
+    /// This will get reset automatically when the day ends.
+    /// </summary>
+    public static int ForceMantiSlayerMaxSpawnCount
+    {
+        get { return EnemyAIPatch.ForceMantiSlayerMaxSpawnCount; }
+        set { EnemyAIPatch.ForceMantiSlayerMaxSpawnCount = value; }
+    }
+
+    /// <summary>
+    /// This must only be called on the Host/Server.
+    /// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Manticoil".
+    /// </summary>
+    /// <param name="enemyAI">Manticoil "Manticoil" EnemyAI instance.</param>
+    /// <returns>True if successful.</returns>
+    public static bool SetMantiSlayerOnServer(EnemyAI enemyAI)
+    {
+        return Plugin.Instance.SetMantiSlayerOnServer(enemyAI);
+    }
+    #endregion
+
+    #region Toil-Player
+    /// <summary>
+    /// Toil-Player max spawn count.
+    /// </summary>
+    public static int ToilPlayerMaxSpawnCount => SpawnDataManager.GetToilPlayerSpawnDataForCurrentMoon().MaxSpawnCount;
+
+    /// <summary>
+    /// Toil-Player spawn chance.
+    /// </summary>
+    public static int ToilPlayerdSpawnChance => SpawnDataManager.GetToilPlayerSpawnDataForCurrentMoon().SpawnChance;
+
+    /// <summary>
+    /// Toil-Player spawn count.
+    /// </summary>
+    public static int ToilPlayerSpawnCount => PlayerControllerBPatch.ToilPlayerSpawnCount;
+
+    /// <summary>
+    /// If enabled, will force all Players to become Toil-Players when the round starts.
+    /// This will get reset automatically when the day ends.
+    /// </summary>
+    public static bool ForceToilPlayerSpawns
+    {
+        get { return PlayerControllerBPatch.ForceToilPlayerSpawns; }
+        set { PlayerControllerBPatch.ForceToilPlayerSpawns = value; }
+    }
+
+    /// <summary>
+    /// If set to any value above -1, will temporarily override the Toil-Player max spawn count.
+    /// This will get reset automatically when the day ends.
+    /// </summary>
+    public static int ForceToilPlayerMaxSpawnCount
+    {
+        get { return PlayerControllerBPatch.ForceToilPlayerMaxSpawnCount; }
+        set { PlayerControllerBPatch.ForceToilPlayerMaxSpawnCount = value; }
+    }
+
+    /// <summary>
+    /// This must only be called on the Host/Server.
+    /// </summary>
+    /// <returns>True if successful.</returns>
+    public static bool SetToilPlayerOnServer(PlayerControllerB playerScript)
+    {
+        return Plugin.Instance.SetToilPlayerOnServer(playerScript);
+    }
+    #endregion
+
 
 
     #region Deprecated
     [Obsolete("enemyTurretPairs is deprecated, please use EnemyTurretPairs instead.", true)]
-    public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs => EnemyAIPatch.EnemyTurretPairs;
+    public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs => [];
 
     #region Toil-Head
     [Obsolete("MaxSpawnCount is deprecated, please use ToilHeadMaxSpawnCount instead.", true)]

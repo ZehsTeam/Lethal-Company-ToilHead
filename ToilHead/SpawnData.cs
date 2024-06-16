@@ -83,9 +83,8 @@ public class MoonSpawnDataList
     {
         ParseValue(value);
     }
-
+    
     public MoonSpawnDataList(string value, SpawnData defaultSpawnData)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         ParseValue(value);
         DefaultSpawnData = defaultSpawnData;
@@ -102,8 +101,7 @@ public class MoonSpawnDataList
             List.Add(new MoonSpawnData(item));
         }
     }
-
-    #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    
     public SpawnData GetSpawnDataForCurrentMoon()
     {
         if (StartOfRound.Instance == null) return DefaultSpawnData;
