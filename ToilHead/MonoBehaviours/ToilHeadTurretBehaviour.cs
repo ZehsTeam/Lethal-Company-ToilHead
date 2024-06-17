@@ -1,4 +1,5 @@
-﻿using GameNetcodeStuff;
+﻿using com.github.zehsteam.ToilHead.Patches;
+using GameNetcodeStuff;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -652,7 +653,9 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 if (_hit.transform.CompareTag("Player"))
                 {
                     PlayerControllerB component = _hit.transform.GetComponent<PlayerControllerB>();
-                    
+
+                    if (PlayerControllerBPatch.IsToilPlayer(component)) return null;
+
                     if (component is not null)
                     {
                         if (angleRangeCheck && Vector3.Angle(component.transform.position + Vector3.up * 1.75f - centerPoint.position, forwardFacingPos.forward) > rotationRange)

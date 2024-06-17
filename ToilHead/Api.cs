@@ -160,7 +160,7 @@ public class Api
     /// <returns>True if successful.</returns>
     public static bool SetToilSlayerOnServer(EnemyAI enemyAI)
     {
-        return Plugin.Instance.SetToilSlayerOnServer(enemyAI);
+        return Plugin.Instance.SetToilHeadOnServer(enemyAI, isSlayer: true);
     }
     #endregion
 
@@ -208,7 +208,7 @@ public class Api
     /// <returns>True if successful.</returns>
     public static bool SetMantiSlayerOnServer(EnemyAI enemyAI)
     {
-        return Plugin.Instance.SetMantiSlayerOnServer(enemyAI);
+        return Plugin.Instance.SetMantiToilOnServer(enemyAI, isSlayer: true);
     }
     #endregion
 
@@ -252,9 +252,9 @@ public class Api
     /// This must only be called on the Host/Server.
     /// </summary>
     /// <returns>True if successful.</returns>
-    public static bool SetToilPlayerOnServer(PlayerControllerB playerScript)
+    public static bool SetToilPlayerOnServer(PlayerControllerB playerScript, bool isSlayer = false)
     {
-        return Plugin.Instance.SetToilPlayerOnServer(playerScript);
+        return Plugin.Instance.SetToilPlayerOnServer(playerScript, isSlayer);
     }
     #endregion
 

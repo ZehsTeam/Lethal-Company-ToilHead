@@ -38,6 +38,8 @@ Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company
 | `ToilHeadSpawnSettings` | `String` | `6:75` | Toil-Head spawn settings for 69-Toilation. |
 | `MantiToilSpawnSettings` | `String` | `50:90` | Manti-Toil spawn settings for 69-Toilation. |
 | `ToilSlayerSpawnSettings` | `String` | `2:10` | Toil-Slayer spawn settings for 69-Toilation. |
+| `MantiSlayerSpawnSettings` | `String` | `2:10` | Manti-Slayer spawn settings for 69-Toilation. |
+| `ToilPlayerSpawnSettings` | `String` | `1:5` | Toil-Player spawn settings for 69-Toilation. |
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -60,10 +62,24 @@ Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company
 |  |  | `<PlanetName>:<MaxSpawnCount>:<SpawnChance>` | Separate each entry with a comma. |
 | `ToilSlayerSpawnSettingsMoonList` | `String` | `20 Adamance:1:15, 85 Rend:1:15, 7 Dine:1:15, 8 Titan:1:20, 68 Artifice:1:20, 57 Asteroid-13:1:15, 523 Ooblterra:1:25` | Toil-Slayer spawn settings list for moons. |
 
+| Manti-Slayer Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
+|  |  | `<MaxSpawnCount>:<SpawnChance>` |  |
+| `MantiSlayerDefaultSpawnSettings` | `String` | `1:10` | Manti-Slayer default spawn settings for all moons. |
+|  |  | `<PlanetName>:<MaxSpawnCount>:<SpawnChance>` | Separate each entry with a comma. |
+| `MantiSlayerSpawnSettingsMoonList` | `String` | `20 Adamance:1:15, 85 Rend:1:15, 7 Dine:1:15, 8 Titan:1:20, 68 Artifice:1:20, 57 Asteroid-13:1:15, 523 Ooblterra:1:25` | Manti-Slayer spawn settings list for moons. |
+
+| Toil-Player Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
+|  |  | `<MaxSpawnCount>:<SpawnChance>` |  |
+| `ToilPlayerDefaultSpawnSettings` | `String` | `1:2` | Toil-Player default spawn settings for all moons. |
+|  |  | `<PlanetName>:<MaxSpawnCount>:<SpawnChance>` | Separate each entry with a comma. |
+| `ToilPlayerSpawnSettingsMoonList` | `String` | `85 Rend:1:3, 7 Dine:1:3, 8 Titan:1:4, 68 Artifice:1:4, 57 Asteroid-13:1:3, 523 Ooblterra:1:4` | Toil-Player spawn settings list for moons. |
+
 | Player Ragdoll Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| `SpawnToilHeadPlayerRagdolls` | `Boolean` | `True` | If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way. |
-| `SpawnRealToilHeadPlayerRagdolls` | `Boolean` | `True` | If enabled, will spawn a real turret on the Toiled player ragdoll. |
+| `SpawnToiledPlayerRagdolls` | `Boolean` | `True` | If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way. |
+| `SpawnRealToiledPlayerRagdolls` | `Boolean` | `True` | If enabled, will spawn a real turret on the Toiled player ragdoll. |
 
 | Toil-Head Plushie Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -73,6 +89,15 @@ Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company
 | `CarryWeight` | `Int32` | `6` | Toil-Head plushie carry weight in pounds. |
 | `MinValue` | `Int32` | `80` | Toil-Head plushie min scrap value. |
 | `MaxValue` | `Int32` | `250` | Toil-Head plushie max scrap value. |
+
+| Toil-Slayer Plushie Settings | Setting type | Default value | Description |
+| ----------- | ----------- | ----------- | ----------- |
+| `SpawnWeight` | `Int32` | `5` | Toil-Slayer plushie spawn chance weight. |
+| `SpawnAllMoons` | `Boolean` | `true` | If true, the Toil-Slayer plushie will spawn on all moons. If false, the Toil-Slayer plushie will only spawn on moons set in the moons list. |
+| `MoonSpawnList` | `String` | `Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion` | The list of moons the Toil-Slayer plushie will spawn on. |
+| `CarryWeight` | `Int32` | `12` | Toil-Slayer plushie carry weight in pounds. |
+| `MinValue` | `Int32` | `80` | Toil-Slayer plushie min scrap value. |
+| `MaxValue` | `Int32` | `250` | Toil-Slayer plushie max scrap value. |
 
 | Turret Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -110,6 +135,9 @@ https://github.com/ZehsTeam/Lethal-Company-ToilHead/blob/master/ToilHead/Api.cs
 ```cs
 // This is for all enemy turret pairs.
 public static Dictionary<NetworkObject, NetworkObject> EnemyTurretPairs { get; }
+
+// This is for all player turret pairs.
+public static Dictionary<PlayerControllerB, ToilHeadTurretBehaviour> PlayerTurretPairs { get; }
 
 
 // Toil-Head spawn count.
@@ -161,6 +189,39 @@ public static int ForceToilSlayerMaxSpawnCount { get; set; }
 // Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".
 // Returns true if successful.
 public static bool SetToilSlayerOnServer(EnemyAI enemyAI) { }
+
+
+// Manti-Slayer spawn count.
+public static int MantiSlayerSpawnCount { get; }
+
+// If enabled, will force any spawned Manticoils to become Manti-Slayers.
+// This will get reset automatically when the day ends.
+public static bool ForceMantiSlayerSpawns { get; set; }
+
+// If set to any value above -1, will temporarily override the Manti-Slayer max spawn count.
+// This will get reset automatically when the day ends.
+public static int ForceMantiSlayerMaxSpawnCount { get; set; }
+
+// This must only be called on the Host/Server.
+// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Manticoil".
+// Returns true if successful.
+public static bool SetMantiSlayerOnServer(EnemyAI enemyAI) { }
+
+
+// Toil-Player spawn count.
+public static int ToilPlayerSpawnCount { get; }
+
+// If enabled, will force all Players to become Toil-Players when the round starts.
+// This will get reset automatically when the day ends.
+public static bool ForceToilPlayerSpawns { get; set; }
+
+// If set to any value above -1, will temporarily override the Toil-Player max spawn count.
+// This will get reset automatically when the day ends.
+public static int ForceToilPlayerMaxSpawnCount { get; set; }
+
+// This must only be called on the Host/Server.
+// Returns true if successful.
+public static bool SetToilPlayerOnServer(PlayerControllerB playerScript) { }
 ```
 
 </details>

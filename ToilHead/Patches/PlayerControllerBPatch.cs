@@ -79,9 +79,9 @@ internal class PlayerControllerBPatch
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
-        Plugin.Instance.LogInfoExtended($"\n\n\n\n\n\nSetToilPlayerOnServer({playerScript.playerUsername});\n\n\n\n\n");
+        bool isSlayer = Utils.RandomPercent(5);
 
-        return Plugin.Instance.SetToilPlayerOnServer(playerScript);
+        return Plugin.Instance.SetToilPlayerOnServer(playerScript, isSlayer);
     }
 
     [HarmonyPatch("KillPlayerServerRpc")]
@@ -139,5 +139,12 @@ internal class PlayerControllerBPatch
         }
 
         turretNetworkObject.Despawn();
+    }
+
+    public static bool IsToilPlayer(PlayerControllerB playerScript)
+    {
+        if (playerScript == null) return false;
+
+        return PlayerTurretPairs.ContainsKey(playerScript);
     }
 }

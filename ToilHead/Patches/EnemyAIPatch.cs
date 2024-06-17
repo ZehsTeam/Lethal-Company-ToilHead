@@ -133,7 +133,7 @@ internal class EnemyAIPatch
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
-        return Plugin.Instance.SetToilSlayerOnServer(enemyAI);
+        return Plugin.Instance.SetToilHeadOnServer(enemyAI, isSlayer: true);
     }
 
     private static void ManticoilStart(EnemyAI enemyAI)
@@ -183,7 +183,7 @@ internal class EnemyAIPatch
             if (!Utils.RandomPercent(spawnChance)) return false;
         }
 
-        return Plugin.Instance.SetMantiSlayerOnServer(enemyAI);
+        return Plugin.Instance.SetMantiToilOnServer(enemyAI, isSlayer: true);
     }
 
     [HarmonyPatch("HitEnemyServerRpc")]

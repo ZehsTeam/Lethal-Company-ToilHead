@@ -22,66 +22,34 @@ public class PluginNetworkBehaviour : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SetToilHeadClientRpc(NetworkObjectReference enemyReference)
+    public void SetToilHeadClientRpc(NetworkObjectReference enemyReference, bool isSlayer)
     {
         if (IsHost || IsServer) return;
 
         if (enemyReference.TryGet(out NetworkObject targetObject))
         {
-            Plugin.Instance.SetToilHeadOnLocalClient(targetObject);
+            Plugin.Instance.SetToilHeadOnLocalClient(targetObject, isSlayer);
         }
         else
         {
             // Target not found on server, likely because it already has been destroyed/despawned.
-            Plugin.Instance.SetToilHeadOnLocalClient(null);
+            Plugin.Instance.SetToilHeadOnLocalClient(null, isSlayer);
         }
     }
 
     [ClientRpc]
-    public void SetMantiToilClientRpc(NetworkObjectReference enemyReference)
+    public void SetMantiToilClientRpc(NetworkObjectReference enemyReference, bool isSlayer)
     {
         if (IsHost || IsServer) return;
 
         if (enemyReference.TryGet(out NetworkObject targetObject))
         {
-            Plugin.Instance.SetMantiToilOnLocalClient(targetObject);
+            Plugin.Instance.SetMantiToilOnLocalClient(targetObject, isSlayer);
         }
         else
         {
             // Target not found on server, likely because it already has been destroyed/despawned.
-            Plugin.Instance.SetMantiToilOnLocalClient(null);
-        }
-    }
-
-    [ClientRpc]
-    public void SetToilSlayerClientRpc(NetworkObjectReference enemyReference)
-    {
-        if (IsHost || IsServer) return;
-
-        if (enemyReference.TryGet(out NetworkObject targetObject))
-        {
-            Plugin.Instance.SetToilSlayerOnLocalClient(targetObject);
-        }
-        else
-        {
-            // Target not found on server, likely because it already has been destroyed/despawned.
-            Plugin.Instance.SetToilSlayerOnLocalClient(null);
-        }
-    }
-
-    [ClientRpc]
-    public void SetMantiSlayerClientRpc(NetworkObjectReference enemyReference)
-    {
-        if (IsHost || IsServer) return;
-
-        if (enemyReference.TryGet(out NetworkObject targetObject))
-        {
-            Plugin.Instance.SetMantiSlayerOnLocalClient(targetObject);
-        }
-        else
-        {
-            // Target not found on server, likely because it already has been destroyed/despawned.
-            Plugin.Instance.SetMantiSlayerOnLocalClient(null);
+            Plugin.Instance.SetMantiToilOnLocalClient(null, isSlayer);
         }
     }
 
