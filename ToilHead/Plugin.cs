@@ -5,6 +5,7 @@ using com.github.zehsteam.ToilHead.Patches;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
@@ -88,11 +89,13 @@ internal class Plugin : BaseUnityPlugin
 
     public void OnShipHasLeft()
     {
-        EnemyAIPatch.DespawnAllTurrets();
+        EnemyAIPatch.DespawnAllTurretsOnServer();
         EnemyAIPatch.Reset();
 
-        PlayerControllerBPatch.DespawnAllTurrets();
+        PlayerControllerBPatch.DespawnAllTurretsOnServer();
         PlayerControllerBPatch.Reset();
+
+        ForceDespawnAllTurretHeadTurretsOnServer();
     }
 
     private void RegisterScrapItems()
@@ -530,7 +533,7 @@ internal class Plugin : BaseUnityPlugin
             behaviour.SetPositionOffset(new Vector3(0f, 0.0213f, 0.006f));
             behaviour.SetRotationOffset(new Vector3(0f, 90f, 0f));
 
-            PlayerControllerBPatch.AddPlayerTurretPair(null, turretScript);
+            PlayerControllerBPatch.AddDeadBodyTurret(turretScript);
 
             LogInfoExtended($"Initialized real Toiled player ragdoll on local client. isSlayer? {isSlayer} (NetworkObject: {ragdollNetworkObject.NetworkObjectId})");
         }
@@ -582,6 +585,34 @@ internal class Plugin : BaseUnityPlugin
     private string GetTurretPrefabName(bool isSlayer)
     {
         return isSlayer ? Content.MinigunTurretPrefab.name : Content.TurretPrefab.name;
+    }
+
+    private void ForceDespawnAllTurretHeadTurretsOnServer()
+    {
+        if (!IsHostOrServer) return;
+
+        try
+        {
+            foreach (var obj in FindObjectsByType<ToilHeadTurretBehaviour>(FindObjectsSortMode.None).Select(_ => _.transform.parent))
+            {
+                if (obj.TryGetComponent(out NetworkObject turretNetworkObject))
+                {
+                    if (!turretNetworkObject.IsSpawned) return;
+
+                    turretNetworkObject.Despawn();
+
+                    LogInfoExtended("Force despawned Turret-Head turret.");
+                }
+                else
+                {
+                    logger.LogError($"Error: Failed to force despawn Turret-Head turret. NetworkObject is null.");
+                }
+            }
+        }
+        catch (System.Exception e)
+        {
+            logger.LogError($"Error: Failed to force despawn all Turret-Head turrets.\n\n{e}");
+        }
     }
 
     public void LogInfoExtended(object data)

@@ -10,7 +10,8 @@ namespace com.github.zehsteam.ToilHead.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
 internal class PlayerControllerBPatch
 {
-    public static Dictionary<PlayerControllerB, ToilHeadTurretBehaviour> PlayerTurretPairs = [];
+    public static Dictionary<PlayerControllerB, ToilHeadTurretBehaviour> PlayerTurretPairs { get; private set; } = [];
+    public static List<ToilHeadTurretBehaviour> DeadBodyTurrets { get; private set; } = [];
 
     public static int ToilPlayerSpawnCount = 0;
     public static bool ForceToilPlayerSpawns = false;
@@ -19,6 +20,7 @@ internal class PlayerControllerBPatch
     public static void Reset()
     {
         PlayerTurretPairs = [];
+        DeadBodyTurrets = [];
 
         ToilPlayerSpawnCount = 0;
         ForceToilPlayerSpawns = false;
@@ -30,11 +32,19 @@ internal class PlayerControllerBPatch
         PlayerTurretPairs.Add(playerScript, turretScript);
     }
 
-    public static void DespawnAllTurrets()
+    public static void AddDeadBodyTurret(ToilHeadTurretBehaviour turretScript)
+    {
+        DeadBodyTurrets.Add(turretScript);
+    }
+
+    public static void DespawnAllTurretsOnServer()
     {
         if (!Plugin.IsHostOrServer) return;
 
-        ToilHeadTurretBehaviour[] turretScripts = PlayerTurretPairs.Values.ToArray();
+        List<ToilHeadTurretBehaviour> turretScripts = [
+            .. PlayerTurretPairs.Values.ToList(),
+            .. DeadBodyTurrets
+        ];
 
         foreach (var turretScript in turretScripts)
         {
@@ -42,15 +52,17 @@ internal class PlayerControllerBPatch
         }
 
         PlayerTurretPairs.Clear();
+        DeadBodyTurrets.Clear();
 
-        Plugin.logger.LogInfo($"Finished despawning all Toil-Player turrets.");
+        Plugin.Instance.LogInfoExtended($"Finished despawning all Toil-Player/Toiled turrets.");
     }
 
     public static void TrySpawnToilPlayersOnServer()
     {
         if (!Plugin.IsHostOrServer) return;
-
         if (GameNetworkManager.Instance.connectedPlayers == 1) return;
+        if (StartOfRound.Instance == null) return;
+        if (!StartOfRound.Instance.currentLevel.spawnEnemiesAndScrap) return;
 
         Plugin.Instance.LogInfoExtended("Trying to spawn Toil-Players.");
 
@@ -111,11 +123,11 @@ internal class PlayerControllerBPatch
                 DespawnTurret(turretScript);
                 PlayerTurretPairs.Remove(playerScript);
 
-                Plugin.logger.LogInfo($"Despawned \"{playerScript.playerUsername}\" Toil-Player turret.");
+                Plugin.Instance.LogInfoExtended($"Despawned \"{playerScript.playerUsername}\" Toil-Player turret.");
             }
             catch (System.Exception e)
             {
-                Plugin.logger.LogInfo($"Error: Failed to despawn \"{playerScript.playerUsername}\" Toil-Player turret.\n\n{e}");
+                Plugin.logger.LogError($"Error: Failed to despawn \"{playerScript.playerUsername}\" Toil-Player turret.\n\n{e}");
             }
         }
     }
@@ -128,13 +140,13 @@ internal class PlayerControllerBPatch
 
         if (turretNetworkObject == null)
         {
-            Plugin.logger.LogInfo($"Error: Failed to despawn Toil-Player turret. ToilHeadTurretBehaviour NetworkObject is null.");
+            Plugin.logger.LogError($"Error: Failed to despawn Toil-Player/Toiled turret. NetworkObject is null.");
             return;
         }
 
         if (!turretNetworkObject.IsSpawned)
         {
-            Plugin.logger.LogInfo($"Error: Failed to despawn Toil-Player turret. ToilHeadTurretBehaviour NetworkObject is not spawned.");
+            Plugin.logger.LogError($"Error: Failed to despawn Toil-Player/Toiled turret. NetworkObject is not spawned.");
             return;
         }
 

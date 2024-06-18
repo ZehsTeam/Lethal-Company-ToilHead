@@ -72,14 +72,14 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
                 StartCoroutine(countCodeAccessCooldown());
             }
 
-            Plugin.logger.LogInfo("calling terminal function for code : " + objectCode + "; object name: " + gameObject.name);
+            Plugin.Instance.LogInfoExtended("calling terminal function for code : " + objectCode + "; object name: " + gameObject.name);
         }
     }
 
     public void TerminalCodeCooldownReached()
     {
         terminalCodeCooldownEvent.Invoke(null);
-        Plugin.logger.LogInfo("cooldown reached for object with code : " + objectCode + "; object name: " + gameObject.name);
+        Plugin.Instance.LogInfoExtended("cooldown reached for object with code : " + objectCode + "; object name: " + gameObject.name);
     }
 
     private IEnumerator countCodeAccessCooldown()

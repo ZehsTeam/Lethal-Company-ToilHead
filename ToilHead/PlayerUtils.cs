@@ -4,42 +4,6 @@ namespace com.github.zehsteam.ToilHead;
 
 internal class PlayerUtils
 {
-    #region Player "Takerst"
-    public static bool HasPlayerTakerst()
-    {
-        return HasPlayerTakerst(out PlayerControllerB _);
-    }
-
-    public static bool HasPlayerTakerst(out PlayerControllerB targetPlayerScript)
-    {
-        targetPlayerScript = null;
-
-        foreach (var playerScript in StartOfRound.Instance.allPlayerScripts)
-        {
-            if (IsPlayerTakerst(playerScript))
-            {
-                targetPlayerScript = playerScript;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static bool IsLocalPlayerTakerst()
-    {
-        return IsPlayerTakerst(GetLocalPlayerScript());
-    }
-
-    public static bool IsPlayerTakerst(PlayerControllerB playerScript)
-    {
-        if (playerScript.playerUsername == "Takerst") return true;
-        if (playerScript.playerSteamId == 76561197980238122) return true;
-
-        return false;
-    }
-    #endregion
-
     public static bool IsLocalPlayer(PlayerControllerB playerScript)
     {
         return playerScript == GetLocalPlayerScript();

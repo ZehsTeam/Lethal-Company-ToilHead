@@ -9,7 +9,7 @@ namespace com.github.zehsteam.ToilHead.Patches;
 [HarmonyPatch(typeof(EnemyAI))]
 internal class EnemyAIPatch
 {
-    public static Dictionary<EnemyAI, ToilHeadTurretBehaviour> EnemyTurretPairs = [];
+    public static Dictionary<EnemyAI, ToilHeadTurretBehaviour> EnemyTurretPairs { get; private set; } = [];
 
     public static int ToilHeadSpawnCount = 0;
     public static bool ForceToilHeadSpawns = false;
@@ -53,7 +53,7 @@ internal class EnemyAIPatch
         EnemyTurretPairs.Add(enemyAI, turretScript);
     }
 
-    public static void DespawnAllTurrets()
+    public static void DespawnAllTurretsOnServer()
     {
         if (!Plugin.IsHostOrServer) return;
 
@@ -66,7 +66,7 @@ internal class EnemyAIPatch
 
         EnemyTurretPairs.Clear();
 
-        Plugin.logger.LogInfo($"Finished despawning all Turret-Head turrets.");
+        Plugin.Instance.LogInfoExtended($"Finished despawning all Turret-Head turrets.");
     }
 
     [HarmonyPatch("Start")]
@@ -227,7 +227,7 @@ internal class EnemyAIPatch
 
         if (enemyNetworkObject == null)
         {
-            Plugin.logger.LogInfo($"Error: Failed to despawn Turret-Head turret. Enemy NetworkObject is null.");
+            Plugin.logger.LogError($"Error: Failed to despawn Turret-Head turret. Enemy NetworkObject is null.");
             return;
         }
 
@@ -238,11 +238,11 @@ internal class EnemyAIPatch
                 DespawnTurret(turretScript);
                 EnemyTurretPairs.Remove(enemyAI);
 
-                Plugin.logger.LogInfo($"Despawned Turret-Head turret (NetworkObjectId: {enemyNetworkObject.NetworkObjectId}).");
+                Plugin.Instance.LogInfoExtended($"Despawned Turret-Head turret (NetworkObjectId: {enemyNetworkObject.NetworkObjectId}).");
             }
             catch (System.Exception e)
             {
-                Plugin.logger.LogInfo($"Error: Failed to despawn Turret-Head turret. (NetworkObjectId: {enemyNetworkObject.NetworkObjectId}).\n\n{e}");
+                Plugin.logger.LogError($"Error: Failed to despawn Turret-Head turret. (NetworkObjectId: {enemyNetworkObject.NetworkObjectId}).\n\n{e}");
             }
         }
     }
@@ -255,13 +255,13 @@ internal class EnemyAIPatch
 
         if (turretNetworkObject == null)
         {
-            Plugin.logger.LogInfo($"Error: Failed to despawn Turret-Head turret. ToilHeadTurretBehaviour NetworkObject is null.");
+            Plugin.logger.LogError($"Error: Failed to despawn Turret-Head turret. NetworkObject is null.");
             return;
         }
 
         if (!turretNetworkObject.IsSpawned)
         {
-            Plugin.logger.LogInfo($"Error: Failed to despawn Turret-Head turret. ToilHeadTurretBehaviour NetworkObject is not spawned.");
+            Plugin.logger.LogError($"Error: Failed to despawn Turret-Head turret. NetworkObject is not spawned.");
             return;
         }
 

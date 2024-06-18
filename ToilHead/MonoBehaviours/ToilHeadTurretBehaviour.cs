@@ -343,10 +343,10 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (_turretInterval >= chargingDuration)
         {
             _turretInterval = 0f;
-            Plugin.logger.LogInfo("Charging timer is up, setting to firing mode.");
+            Plugin.Instance.LogInfoExtended("Charging timer is up, setting to firing mode.");
             if (!_hasLineOfSight)
             {
-                Plugin.logger.LogInfo("hasLineOfSight is false");
+                Plugin.Instance.LogInfoExtended("hasLineOfSight is false");
                 targetPlayerWithRotation = null;
                 RemoveTargetedPlayerClientRpc();
             }
@@ -583,17 +583,17 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         if (_lostLOSTimer >= lostLOSDuration)
         {
             _lostLOSTimer = 0f;
-            Plugin.logger.LogInfo("LOS timer ended on server. checking for new player target.");
+            Plugin.Instance.LogInfoExtended("LOS timer ended on server. checking for new player target.");
             PlayerControllerB playerControllerB = CheckForPlayersInLineOfSight();
             if (playerControllerB != null)
             {
                 targetPlayerWithRotation = playerControllerB;
                 SwitchTargetedPlayerClientRpc((int)playerControllerB.playerClientId);
-                Plugin.logger.LogInfo("Got new player target.");
+                Plugin.Instance.LogInfoExtended("Got new player target.");
             }
             else
             {
-                Plugin.logger.LogInfo("No new player to target; returning to detection mode.");
+                Plugin.Instance.LogInfoExtended("No new player to target; returning to detection mode.");
                 targetPlayerWithRotation = null;
                 RemoveTargetedPlayerClientRpc();
             }
