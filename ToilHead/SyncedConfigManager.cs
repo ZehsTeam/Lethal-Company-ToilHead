@@ -99,8 +99,8 @@ public class SyncedConfigManager
         ToilationToilHeadSpawnSettings = new("Toilation Settings", "ToilHeadSpawnSettings", defaultValue: "6:75", GetDescriptionForMoonSpawnSettings("Toil-Head", "69-Toilation"));
         ToilationMantiToilSpawnSettings = new("Toilation Settings", "MantiToilSpawnSettings", defaultValue: "50:90", GetDescriptionForMoonSpawnSettings("Manti-Toil", "69-Toilation"));
         ToilationToilSlayerSpawnSettings = new("Toilation Settings", "ToilSlayerSpawnSettings", defaultValue: "2:10", GetDescriptionForMoonSpawnSettings("Toil-Slayer", "69-Toilation"));
-        ToilationMantiSlayerSpawnSettings = new("Toilation Settings", "MantiSlayerSpawnSettings", defaultValue: "2:10", GetDescriptionForMoonSpawnSettings("Manti-Slayer", "69-Toilation"));
-        ToilationToilPlayerSpawnSettings = new("Toilation Settings", "ToilPlayerSpawnSettings", defaultValue: "1:5", GetDescriptionForMoonSpawnSettings("Toil-Player", "69-Toilation"));
+        ToilationMantiSlayerSpawnSettings = new("Toilation Settings", "MantiSlayerSpawnSettings", defaultValue: "2:20", GetDescriptionForMoonSpawnSettings("Manti-Slayer", "69-Toilation"));
+        ToilationToilPlayerSpawnSettings = new("Toilation Settings", "ToilPlayerSpawnSettings", defaultValue: "1:7", GetDescriptionForMoonSpawnSettings("Toil-Player", "69-Toilation"));
         
         // Toil-Head Settings
         ToilHeadDefaultSpawnSettings = new("Toil-Head Settings", "ToilHeadDefaultSpawnSettings", defaultValue: "1:30", GetDescriptionForDefaultSpawnSettings("Toil-Head"));
@@ -123,8 +123,8 @@ public class SyncedConfigManager
         MantiSlayerSpawnSettingsMoonList = new("Manti-Slayer Settings", "MantiSlayerSpawnSettingsMoonList", defaultValue: mantiSlayerSpawnSettingsMoonListValue, GetDescriptionForMoonSpawnSettingsList("Manti-Slayer"));
 
         // Toil-Player Settings
-        ToilPlayerDefaultSpawnSettings = new("Toil-Player Settings", "ToilPlayerDefaultSpawnSettings", defaultValue: "1:2", GetDescriptionForDefaultSpawnSettings("Toil-Player"));
-        string toilPlayerSpawnSettingMoonListValue = "85 Rend:1:3, 7 Dine:1:3, 8 Titan:1:4, 68 Artifice:1:4, 57 Asteroid-13:1:3, 523 Ooblterra:1:4";
+        ToilPlayerDefaultSpawnSettings = new("Toil-Player Settings", "ToilPlayerDefaultSpawnSettings", defaultValue: "1:3", GetDescriptionForDefaultSpawnSettings("Toil-Player"));
+        string toilPlayerSpawnSettingMoonListValue = "85 Rend:1:4, 7 Dine:1:4, 8 Titan:1:5, 68 Artifice:1:5, 57 Asteroid-13:1:5, 523 Ooblterra:1:6";
         ToilPlayerSpawnSettingsMoonList = new("Toil-Player Settings", "ToilPlayerSpawnSettingsMoonList", defaultValue: toilPlayerSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-Player"));
 
         // Player Ragdoll Settings
@@ -144,8 +144,8 @@ public class SyncedConfigManager
         ToilSlayerPlushieSpawnAllMoons = new("Toil-Slayer Plushie Settings", "SpawnAllMoons", defaultValue: true, "If true, the Toil-Slayer plushie will spawn on all moons. If false, the Toil-Slayer plushie will only spawn on moons set in the moons list.");
         ToilSlayerPlushieMoonSpawnList = new("Toil-Slayer Plushie Settings", "MoonSpawnList", defaultValue: "Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion", "The list of moons the Toil-Slayer plushie will spawn on.\nCurrently only works for vanilla moons.\nOnly works if PlushieSpawnAllMoons is false.");
         ToilSlayerPlushieCarryWeight = new("Toil-Slayer Plushie Settings", "CarryWeight", defaultValue: 12, "Toil-Slayer plushie carry weight in pounds.");
-        ToilSlayerPlushieMinValue = new("Toil-Slayer Plushie Settings", "MinValue", defaultValue: 80, "Toil-Slayer plushie min scrap value.");
-        ToilSlayerPlushieMaxValue = new("Toil-Slayer Plushie Settings", "MaxValue", defaultValue: 250, "Toil-Slayer plushie max scrap value.");
+        ToilSlayerPlushieMinValue = new("Toil-Slayer Plushie Settings", "MinValue", defaultValue: 150, "Toil-Slayer plushie min scrap value.");
+        ToilSlayerPlushieMaxValue = new("Toil-Slayer Plushie Settings", "MaxValue", defaultValue: 380, "Toil-Slayer plushie max scrap value.");
 
         #region Turret Settings
         // Turret Settings
@@ -232,7 +232,8 @@ public class SyncedConfigManager
     private string GetDescriptionForMoonSpawnSettingsList(string enemyName)
     {
         string description = $"{enemyName} spawn settings list for moons.\n";
-        description += "PlanetName:MaxSpawnCount:SpawnChance,\n";
+        description += "Separate each entry with a comma.\n";
+        description += "PlanetName:MaxSpawnCount:SpawnChance\n";
         description += "<string>:<int>:<int>";
 
         return description;
@@ -241,7 +242,7 @@ public class SyncedConfigManager
     private string GetDescriptionForDefaultSpawnSettings(string enemyName)
     {
         string description = $"{enemyName} default spawn settings for all moons.\n";
-        description += "MaxSpawnCount:SpawnChance,\n";
+        description += "MaxSpawnCount:SpawnChance\n";
         description += "<int>:<int>";
 
         return description;

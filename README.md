@@ -38,8 +38,8 @@ Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company
 | `ToilHeadSpawnSettings` | `String` | `6:75` | Toil-Head spawn settings for 69-Toilation. |
 | `MantiToilSpawnSettings` | `String` | `50:90` | Manti-Toil spawn settings for 69-Toilation. |
 | `ToilSlayerSpawnSettings` | `String` | `2:10` | Toil-Slayer spawn settings for 69-Toilation. |
-| `MantiSlayerSpawnSettings` | `String` | `2:10` | Manti-Slayer spawn settings for 69-Toilation. |
-| `ToilPlayerSpawnSettings` | `String` | `1:5` | Toil-Player spawn settings for 69-Toilation. |
+| `MantiSlayerSpawnSettings` | `String` | `2:20` | Manti-Slayer spawn settings for 69-Toilation. |
+| `ToilPlayerSpawnSettings` | `String` | `1:7` | Toil-Player spawn settings for 69-Toilation. |
 
 | Toil-Head Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -72,9 +72,9 @@ Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company
 | Toil-Player Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
 |  |  | `<MaxSpawnCount>:<SpawnChance>` |  |
-| `ToilPlayerDefaultSpawnSettings` | `String` | `1:2` | Toil-Player default spawn settings for all moons. |
+| `ToilPlayerDefaultSpawnSettings` | `String` | `1:3` | Toil-Player default spawn settings for all moons. |
 |  |  | `<PlanetName>:<MaxSpawnCount>:<SpawnChance>` | Separate each entry with a comma. |
-| `ToilPlayerSpawnSettingsMoonList` | `String` | `85 Rend:1:3, 7 Dine:1:3, 8 Titan:1:4, 68 Artifice:1:4, 57 Asteroid-13:1:3, 523 Ooblterra:1:4` | Toil-Player spawn settings list for moons. |
+| `ToilPlayerSpawnSettingsMoonList` | `String` | `85 Rend:1:4, 7 Dine:1:4, 8 Titan:1:5, 68 Artifice:1:5, 57 Asteroid-13:1:5, 523 Ooblterra:1:6` | Toil-Player spawn settings list for moons. |
 
 | Player Ragdoll Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
@@ -96,8 +96,8 @@ Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company
 | `SpawnAllMoons` | `Boolean` | `true` | If true, the Toil-Slayer plushie will spawn on all moons. If false, the Toil-Slayer plushie will only spawn on moons set in the moons list. |
 | `MoonSpawnList` | `String` | `Experimentation, Assurance, Vow, Offense, March, Adamance, Rend, Dine, Titan, Artifice, Embrion` | The list of moons the Toil-Slayer plushie will spawn on. |
 | `CarryWeight` | `Int32` | `12` | Toil-Slayer plushie carry weight in pounds. |
-| `MinValue` | `Int32` | `80` | Toil-Slayer plushie min scrap value. |
-| `MaxValue` | `Int32` | `250` | Toil-Slayer plushie max scrap value. |
+| `MinValue` | `Int32` | `150` | Toil-Slayer plushie min scrap value. |
+| `MaxValue` | `Int32` | `380` | Toil-Slayer plushie max scrap value. |
 
 | Turret Settings | Setting type | Default value | Description |
 | ----------- | ----------- | ----------- | ----------- |
