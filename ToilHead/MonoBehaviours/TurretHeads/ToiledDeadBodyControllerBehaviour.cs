@@ -7,11 +7,14 @@ public class ToiledDeadBodyControllerBehaviour : TurretHeadControllerBehaviour
 {
     protected override Transform GetHeadTransform()
     {
-        return transform.parent.Find("spine.003").Find("spine.004").Find("SpringContainer").Find("SpringMetarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0);
+        return transform.parent.parent.Find("spine.003").Find("spine.004").Find("SpringContainer").Find("SpringMetarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0);
     }
 
     protected override void OnFinishedSetup()
     {
-        TurretHeadManager.AddDeadBodyTurretHeadControllerPair(GetDeadBodyPlayerScript(), this);
+        if (IsServer)
+        {
+            TurretHeadManager.AddDeadBodyTurretHeadControllerPair(GetDeadBodyPlayerScript(), this);
+        }
     }
 }

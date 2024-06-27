@@ -10,9 +10,10 @@ internal class PlayerControllerBPatch
     [HarmonyPrefix]
     static void KillPlayerServerRpcPatch(ref PlayerControllerB __instance)
     {
-        if (!TurretHeadManager.PlayerTurretHeadControllerPairs.ContainsKey(__instance)) return;
-
-        TurretHeadManager.DespawnControllerOnServer(__instance);
+        if (TurretHeadManager.IsPlayerTurretHead(__instance))
+        {
+            TurretHeadManager.DespawnPlayerControllerOnServer(__instance);
+        }
     }
 
     [HarmonyPatch("OnDestroy")]
@@ -20,8 +21,10 @@ internal class PlayerControllerBPatch
     static void OnDestroyPatch(ref PlayerControllerB __instance)
     {
         if (!Plugin.IsHostOrServer) return;
-        if (!TurretHeadManager.PlayerTurretHeadControllerPairs.ContainsKey(__instance)) return;
 
-        TurretHeadManager.DespawnControllerOnServer(__instance);
+        if (TurretHeadManager.IsPlayerTurretHead(__instance))
+        {
+            TurretHeadManager.DespawnPlayerControllerOnServer(__instance);
+        }
     }
 }

@@ -16,7 +16,18 @@ internal class GameNetworkManagerPatch
 
     private static void AddNetworkPrefabs()
     {
+        // Network Handler
         AddNetworkPrefab(Content.NetworkHandlerPrefab);
+
+        // Turret-Head Controllers
+        AddNetworkPrefab(Content.ToilHeadControllerPrefab);
+        AddNetworkPrefab(Content.ToilSlayerControllerPrefab);
+        AddNetworkPrefab(Content.MantiToilControllerPrefab);
+        AddNetworkPrefab(Content.MantiSlayerControllerPrefab);
+        AddNetworkPrefab(Content.ToilPlayerControllerPrefab);
+        AddNetworkPrefab(Content.SlayerPlayerControllerPrefab);
+        AddNetworkPrefab(Content.ToiledDeadBodyControllerPrefab);
+        AddNetworkPrefab(Content.SlayedDeadBodyControllerPrefab);
     }
 
     private static void AddNetworkPrefab(GameObject prefab)

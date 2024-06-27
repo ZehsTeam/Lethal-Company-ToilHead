@@ -48,12 +48,12 @@ public class TurretHeadManager
     }
 
     #region Try Set Turret-Head
-    public static bool TrySetTurretHeadOnServer(EnemyAI enemyScript, bool isSlayer)
+    public static bool TrySetEnemyTurretHeadOnServer(EnemyAI enemyScript, bool isSlayer)
     {
         if (!Plugin.IsHostOrServer) return false;
 
         string enemyName = enemyScript.enemyType.enemyName;
-        TurretHeadData turretHeadData = GetTurretHeadData(enemyName, isSlayer);
+        TurretHeadData turretHeadData = GetEnemyTurretHeadData(enemyName, isSlayer);
 
         if (turretHeadData == null)
         {
@@ -75,31 +75,30 @@ public class TurretHeadManager
             if (!Utils.RandomPercent(spawnData.SpawnChance)) return false;
         }
 
-        return SetTurretHeadOnServer(enemyScript, isSlayer);
+        return SetEnemyTurretHeadOnServer(enemyScript, isSlayer);
     }
 
-    public static void TrySetTurretHeadPlayersOnServer()
+    public static void TrySetPlayerTurretHeadsOnServer()
     {
         if (!Plugin.IsHostOrServer) return;
 
         List<PlayerControllerB> playerScripts = StartOfRound.Instance.allPlayerScripts.ToList();
 
-        int amount = playerScripts.Count;
-
-        for (int i = 0; i < amount; i++)
+        for (int i = playerScripts.Count - 1; i >= 0; i--)
         {
-            int index = Random.Range(0, playerScripts.Count);
+            int index = Random.Range(0, i);
+            bool isSlayer = Utils.RandomPercent(10);
 
             PlayerControllerB playerScript = playerScripts[index];
-            if (playerScript == null) continue;
+            if (!playerScript.isPlayerControlled) return;
 
-            bool isSlayer = Utils.RandomPercent(10);
-            TrySetTurretHeadOnServer(playerScript, isSlayer);
+            TrySetPlayerTurretHeadOnServer(playerScript, isSlayer);
+
             playerScripts.RemoveAt(index);
         }
     }
 
-    public static bool TrySetTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
+    public static bool TrySetPlayerTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
     {
         if (!Plugin.IsHostOrServer) return false;
 
@@ -119,12 +118,12 @@ public class TurretHeadManager
             if (!Utils.RandomPercent(spawnData.SpawnChance)) return false;
         }
 
-        return SetTurretHeadOnServer(playerScript, isSlayer);
+        return SetPlayerTurretHeadOnServer(playerScript, isSlayer);
     }
     #endregion
 
     #region Set Turret-Head
-    public static bool SetTurretHeadOnServer(EnemyAI enemyScript, bool isSlayer)
+    public static bool SetEnemyTurretHeadOnServer(EnemyAI enemyScript, bool isSlayer)
     {
         if (!Plugin.IsHostOrServer) return false;
 
@@ -148,7 +147,7 @@ public class TurretHeadManager
             return false;
         }
 
-        TurretHeadData turretHeadData = GetTurretHeadData(enemyName, isSlayer);
+        TurretHeadData turretHeadData = GetEnemyTurretHeadData(enemyName, isSlayer);
 
         if (turretHeadData == null)
         {
@@ -163,7 +162,7 @@ public class TurretHeadManager
         return true;
     }
 
-    public static bool SetTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
+    public static bool SetPlayerTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
     {
         if (!Plugin.IsHostOrServer) return false;
 
@@ -287,6 +286,7 @@ public class TurretHeadManager
         GameObject controllerObject = Object.Instantiate(controllerPrefab, parentTransform);
         controllerObject.GetComponent<NetworkObject>().Spawn();
         controllerObject.transform.SetParent(parentTransform);
+        controllerObject.GetComponent<TurretHeadControllerBehaviour>().SetupTurret();
     }
     #endregion
 
@@ -308,10 +308,10 @@ public class TurretHeadManager
     #endregion
 
     #region Add SpawnCount
-    public static void AddToSpawnCount(EnemyAI enemyScript, bool isSlayer)
+    public static void AddToEnemySpawnCount(EnemyAI enemyScript, bool isSlayer)
     {
         string enemyName = enemyScript.enemyType.enemyName;
-        TurretHeadData turretHeadData = GetTurretHeadData(enemyName, isSlayer);
+        TurretHeadData turretHeadData = GetEnemyTurretHeadData(enemyName, isSlayer);
 
         if (turretHeadData == null)
         {
@@ -319,9 +319,9 @@ public class TurretHeadManager
             return;
         }
 
-        // Does the program sometimes spawn more than it should?!?!??!?!
-
         turretHeadData.AddToSpawnCount();
+
+        Plugin.Instance.LogInfoExtended($"AddToEnemySpawnCount(); Enemy \"{enemyName}\" SpawnCount: {turretHeadData.SpawnCount}, MaxSpawnCount: {turretHeadData.GetSpawnDataForCurrentMoon().MaxSpawnCount}, SpawnChance: {turretHeadData.GetSpawnDataForCurrentMoon().SpawnChance}");
     }
 
     public static void AddToPlayerSpawnCount()
@@ -332,12 +332,12 @@ public class TurretHeadManager
     }
     #endregion
 
-    public static TurretHeadData GetTurretHeadData(string enemyName, bool isSlayer)
+    public static TurretHeadData GetEnemyTurretHeadData(string enemyName, bool isSlayer)
     {
         foreach (var turretHeadData in TurretHeadDataList)
         {
             if (!turretHeadData.EnemyName.Equals(enemyName, System.StringComparison.OrdinalIgnoreCase)) continue;
-            if (turretHeadData.IsSlayer && !isSlayer) continue;
+            if (turretHeadData.IsSlayer != isSlayer) continue;
 
             return turretHeadData;
         }
@@ -345,7 +345,7 @@ public class TurretHeadManager
         return null;
     }
 
-    public static void DespawnControllerOnServer(EnemyAI enemyScript)
+    public static void DespawnEnemyControllerOnServer(EnemyAI enemyScript)
     {
         if (!Plugin.IsHostOrServer) return;
 
@@ -372,7 +372,7 @@ public class TurretHeadManager
         }
     }
 
-    public static void DespawnControllerOnServer(PlayerControllerB playerScript)
+    public static void DespawnPlayerControllerOnServer(PlayerControllerB playerScript)
     {
         if (!Plugin.IsHostOrServer) return;
 
@@ -396,6 +396,33 @@ public class TurretHeadManager
         else
         {
             Plugin.logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" Turret-Head controller. Could not find value from key.");
+        }
+    }
+
+    public static void DespawnDeadBodyControllerOnServer(PlayerControllerB playerScript)
+    {
+        if (!Plugin.IsHostOrServer) return;
+
+        string playerUsername = playerScript.playerUsername;
+
+        if (DeadBodyTurretHeadControllerPairs.TryGetValue(playerScript, out TurretHeadControllerBehaviour behaviour))
+        {
+            if (behaviour.TryGetComponent(out NetworkObject networkObject))
+            {
+                networkObject.Despawn();
+
+                Plugin.Instance.LogInfoExtended($"Despawned player \"{playerUsername}\" ragdoll Turret-Head controller.");
+            }
+            else
+            {
+                Plugin.logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" ragdoll Turret-Head controller. NetworkObject is null.");
+            }
+
+            DeadBodyTurretHeadControllerPairs.Remove(playerScript);
+        }
+        else
+        {
+            Plugin.logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" ragdoll Turret-Head controller. Could not find value from key.");
         }
     }
 
@@ -424,13 +451,18 @@ public class TurretHeadManager
         }
     }
 
-    public static bool IsTurretHead(EnemyAI enemyScript)
+    public static bool IsEnemyTurretHead(EnemyAI enemyScript)
     {
         return EnemyTurretHeadControllerPairs.ContainsKey(enemyScript);
     }
 
-    public static bool IsTurretHead(PlayerControllerB playerScript)
+    public static bool IsPlayerTurretHead(PlayerControllerB playerScript)
     {
         return PlayerTurretHeadControllerPairs.ContainsKey(playerScript);
+    }
+
+    public static bool IsDeadBodyTurretHead(PlayerControllerB playerScript)
+    {
+        return DeadBodyTurretHeadControllerPairs.ContainsKey(playerScript);
     }
 }

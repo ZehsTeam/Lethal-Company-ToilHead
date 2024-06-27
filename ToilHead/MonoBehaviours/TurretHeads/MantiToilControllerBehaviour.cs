@@ -14,8 +14,11 @@ public class MantiToilControllerBehaviour : TurretHeadControllerBehaviour
     {
         TurretBehaviour.UseMantiToilSettings = true;
 
-        EnemyAI enemyScript = GetEnemyScript();
-        TurretHeadManager.AddEnemyTurretHeadControllerPair(enemyScript, this);
-        TurretHeadManager.AddToSpawnCount(enemyScript, TurretBehaviour.IsMinigun);
+        if (IsServer)
+        {
+            EnemyAI enemyScript = GetEnemyScript();
+            TurretHeadManager.AddEnemyTurretHeadControllerPair(enemyScript, this);
+            TurretHeadManager.AddToEnemySpawnCount(enemyScript, TurretBehaviour.IsMinigun);
+        }
     }
 }

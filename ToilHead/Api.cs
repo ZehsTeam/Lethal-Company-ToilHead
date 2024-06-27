@@ -30,17 +30,17 @@ public class Api
     /// <summary>
     /// Toil-Head max spawn count.
     /// </summary>
-    public static int ToilHeadMaxSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int ToilHeadMaxSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Toil-Head spawn chance.
     /// </summary>
-    public static int ToilHeadSpawnChance => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
+    public static int ToilHeadSpawnChance => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Toil-Head spawn count.
     /// </summary>
-    public static int ToilHeadSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).SpawnCount;
+    public static int ToilHeadSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).SpawnCount;
 
     /// <summary>
     /// If enabled, will force any spawned Coil-Heads to become Toil-Heads.
@@ -48,8 +48,8 @@ public class Api
     /// </summary>
     public static bool ForceToilHeadSpawns
     {
-        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceSpawns; }
-        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceSpawns = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceSpawns; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceSpawns = value; }
     }
 
     /// <summary>
@@ -58,8 +58,8 @@ public class Api
     /// </summary>
     public static int ForceToilHeadMaxSpawnCount
     {
-        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class Api
     /// <returns>True if successful.</returns>
     public static bool SetToilHeadOnServer(EnemyAI enemyScript)
     {
-        return TurretHeadManager.SetTurretHeadOnServer(enemyScript, isSlayer: false);
+        return TurretHeadManager.SetEnemyTurretHeadOnServer(enemyScript, isSlayer: false);
     }
     #endregion
 
@@ -78,17 +78,17 @@ public class Api
     /// <summary>
     /// Manti-Toil max spawn count.
     /// </summary>
-    public static int MantiToilMaxSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int MantiToilMaxSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Manti-Toil spawn chance.
     /// </summary>
-    public static int MantiToilSpawnChance => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
+    public static int MantiToilSpawnChance => TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Manti-Toil spawn count.
     /// </summary>
-    public static int MantiToilSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).SpawnCount;
+    public static int MantiToilSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).SpawnCount;
 
     /// <summary>
     /// If enabled, will force any spawned Manticoils to become Manti-Toils.
@@ -96,8 +96,8 @@ public class Api
     /// </summary>
     public static bool ForceMantiToilSpawns
     {
-        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceSpawns; }
-        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceSpawns = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceSpawns; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceSpawns = value; }
     }
 
     /// <summary>
@@ -106,8 +106,8 @@ public class Api
     /// </summary>
     public static int ForceMantiToilMaxSpawnCount
     {
-        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public class Api
     /// <returns>True if successful.</returns>
     public static bool SetMantiToilOnServer(EnemyAI enemyScript)
     {
-        return TurretHeadManager.SetTurretHeadOnServer(enemyScript, isSlayer: false);
+        return TurretHeadManager.SetEnemyTurretHeadOnServer(enemyScript, isSlayer: false);
     }
     #endregion
 
@@ -126,17 +126,17 @@ public class Api
     /// <summary>
     /// Toil-Slayer max spawn count.
     /// </summary>
-    public static int ToilSlayerMaxSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).GetSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int ToilSlayerMaxSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Toil-Slayer spawn chance.
     /// </summary>
-    public static int ToilSlayerSpawnChance => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).GetSpawnDataForCurrentMoon().SpawnChance;
+    public static int ToilSlayerSpawnChance => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Toil-Slayer spawn count.
     /// </summary>
-    public static int ToilSlayerSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).SpawnCount;
+    public static int ToilSlayerSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).SpawnCount;
 
     /// <summary>
     /// If enabled, will force any spawned Coil-Heads to become Toil-Slayers.
@@ -144,8 +144,8 @@ public class Api
     /// </summary>
     public static bool ForceToilSlayerSpawns
     {
-        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceSpawns; }
-        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceSpawns = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceSpawns; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceSpawns = value; }
     }
 
     /// <summary>
@@ -154,8 +154,8 @@ public class Api
     /// </summary>
     public static int ForceToilSlayerMaxSpawnCount
     {
-        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -166,7 +166,7 @@ public class Api
     /// <returns>True if successful.</returns>
     public static bool SetToilSlayerOnServer(EnemyAI enemyScript)
     {
-        return TurretHeadManager.SetTurretHeadOnServer(enemyScript, isSlayer: true);
+        return TurretHeadManager.SetEnemyTurretHeadOnServer(enemyScript, isSlayer: true);
     }
     #endregion
 
@@ -174,17 +174,17 @@ public class Api
     /// <summary>
     /// Manti-Slayer max spawn count.
     /// </summary>
-    public static int MantiSlayerMaxSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).GetSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int MantiSlayerMaxSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Manti-Slayer spawn chance.
     /// </summary>
-    public static int MantiSlayerSpawnChance => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).GetSpawnDataForCurrentMoon().SpawnChance;
+    public static int MantiSlayerSpawnChance => TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Manti-Slayer spawn count.
     /// </summary>
-    public static int MantiSlayerSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).SpawnCount;
+    public static int MantiSlayerSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).SpawnCount;
 
     /// <summary>
     /// If enabled, will force any spawned Manticoils to become Manti-Slayers.
@@ -192,8 +192,8 @@ public class Api
     /// </summary>
     public static bool ForceMantiSlayerSpawns
     {
-        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).ForceSpawns; }
-        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).ForceSpawns = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).ForceSpawns; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).ForceSpawns = value; }
     }
 
     /// <summary>
@@ -202,8 +202,8 @@ public class Api
     /// </summary>
     public static int ForceMantiSlayerMaxSpawnCount
     {
-        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).ForceMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -214,7 +214,7 @@ public class Api
     /// <returns>True if successful.</returns>
     public static bool SetMantiSlayerOnServer(EnemyAI enemyScript)
     {
-        return TurretHeadManager.SetTurretHeadOnServer(enemyScript, isSlayer: true);
+        return TurretHeadManager.SetEnemyTurretHeadOnServer(enemyScript, isSlayer: true);
     }
     #endregion
 
@@ -260,7 +260,7 @@ public class Api
     /// <returns>True if successful.</returns>
     public static bool SetToilPlayerOnServer(PlayerControllerB playerScript, bool isSlayer = false)
     {
-        return TurretHeadManager.SetTurretHeadOnServer(playerScript, isSlayer);
+        return TurretHeadManager.SetPlayerTurretHeadOnServer(playerScript, isSlayer);
     }
     #endregion
 
@@ -278,64 +278,64 @@ public class Api
 
     #region Toil-Head
     [Obsolete("MaxSpawnCount is deprecated, please use ToilHeadMaxSpawnCount instead.", true)]
-    public static int MaxSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int MaxSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     [Obsolete("SpawnChance is deprecated, please use ToilHeadSpawnChance instead.", true)]
-    public static int SpawnChance => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
+    public static int SpawnChance => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
 
     [Obsolete("spawnCount is deprecated, please use ToilHeadSpawnCount instead.", true)]
-    public static int spawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).SpawnCount;
+    public static int spawnCount => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).SpawnCount;
 
     [Obsolete("forceSpawns is deprecated, please use ForceToilHeadSpawns instead.", true)]
     public static bool forceSpawns
     {
-        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceSpawns; }
-        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceSpawns = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceSpawns; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceSpawns = value; }
     }
 
     [Obsolete("forceMaxSpawnCount is deprecated, please use ForceToilHeadMaxSpawnCount instead.", true)]
     public static int forceMaxSpawnCount
     {
-        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount = value; }
     }
     #endregion
 
     #region Manti-Toil
     [Obsolete("mantiToilSpawnCount is deprecated, please use MantiToilSpawnCount instead.", true)]
-    public static int mantiToilSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).SpawnCount;
+    public static int mantiToilSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).SpawnCount;
 
     [Obsolete("forceMantiToilSpawns is deprecated, please use ForceMantiToilSpawns instead.", true)]
     public static bool forceMantiToilSpawns
     {
-        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceSpawns; }
-        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceSpawns = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceSpawns; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceSpawns = value; }
     }
 
     [Obsolete("forceMantiToilMaxSpawnCount is deprecated, please use ForceMantiToilMaxSpawnCount instead.", true)]
     public static int forceMantiToilMaxSpawnCount
     {
-        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount = value; }
     }
     #endregion
 
     #region Toil-Slayer
     [Obsolete("toilSlayerSpawnCount is deprecated, please use ToilSlayerSpawnCount instead.", true)]
-    public static int toilSlayerSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).SpawnCount;
+    public static int toilSlayerSpawnCount => TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).SpawnCount;
 
     [Obsolete("forceToilSlayerSpawns is deprecated, please use ForceToilSlayerSpawns instead.", true)]
     public static bool forceToilSlayerSpawns
     {
-        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceSpawns; }
-        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceSpawns = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceSpawns; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceSpawns = value; }
     }
 
     [Obsolete("forceToilSlayerMaxSpawnCount is deprecated, please use ForceToilSlayerMaxSpawnCount instead.", true)]
     public static int forceToilSlayerMaxSpawnCount
     {
-        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount = value; }
     }
     #endregion
     #endregion

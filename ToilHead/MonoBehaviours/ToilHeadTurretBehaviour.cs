@@ -659,7 +659,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 {
                     PlayerControllerB component = _hit.transform.GetComponent<PlayerControllerB>();
 
-                    if (TurretHeadManager.IsTurretHead(component)) return null;
+                    if (TurretHeadManager.IsPlayerTurretHead(component)) return null;
 
                     if (component is not null)
                     {

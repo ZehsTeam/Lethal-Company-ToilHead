@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GameNetcodeStuff;
+using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
 
@@ -17,12 +18,17 @@ public class ToilPlayerControllerBehaviour : TurretHeadControllerBehaviour
             TurretBehaviour.SetCanTargetPlayersClientRpc(false);
         }
 
-        if (PlayerUtils.IsLocalPlayer(GetPlayerScript()))
+        PlayerControllerB playerScript = GetPlayerScript();
+
+        if (PlayerUtils.IsLocalPlayer(playerScript))
         {
             Utils.DisableRenderers(TurretBehaviour.gameObject);
         }
 
-        TurretHeadManager.AddPlayerTurretHeadControllerPair(GetPlayerScript(), this);
-        TurretHeadManager.AddToPlayerSpawnCount();
+        if (IsServer)
+        {
+            TurretHeadManager.AddPlayerTurretHeadControllerPair(playerScript, this);
+            TurretHeadManager.AddToPlayerSpawnCount();
+        }
     }
 }

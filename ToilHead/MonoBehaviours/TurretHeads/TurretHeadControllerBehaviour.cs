@@ -22,13 +22,16 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
 
     protected virtual void Start()
     {
-        transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-
-        SetupTurret();
+        if (!IsServer)
+        {
+            SetupTurret();
+        }
     }
 
-    protected virtual void SetupTurret()
+    public virtual void SetupTurret()
     {
+        transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+
         if (HasScanNode)
         {
             ScanNodeProperties scanNodeProperties = transform.parent.GetComponentInChildren<ScanNodeProperties>();
@@ -60,7 +63,7 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
     {
 
     }
-
+    
     protected EnemyAI GetEnemyScript()
     {
         return transform.parent.GetComponent<EnemyAI>();

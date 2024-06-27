@@ -15,9 +15,9 @@ internal class EnemyAIPatch
             return;
         }
 
-        if (!TurretHeadManager.TrySetTurretHeadOnServer(__instance, isSlayer: true))
+        if (!TurretHeadManager.TrySetEnemyTurretHeadOnServer(__instance, isSlayer: true))
         {
-            TurretHeadManager.TrySetTurretHeadOnServer(__instance, isSlayer: false);
+            TurretHeadManager.TrySetEnemyTurretHeadOnServer(__instance, isSlayer: false);
         }
     }
 
@@ -40,9 +40,11 @@ internal class EnemyAIPatch
     static void KillEnemyPatch(ref EnemyAI __instance, bool destroy)
     {
         if (!Plugin.IsHostOrServer) return;
-        if (!Utils.IsTurretHead(__instance)) return;
         if (!destroy) return;
 
-        TurretHeadManager.DespawnControllerOnServer(__instance);
+        if (TurretHeadManager.IsEnemyTurretHead(__instance))
+        {
+            TurretHeadManager.DespawnEnemyControllerOnServer(__instance);
+        }
     }
 }

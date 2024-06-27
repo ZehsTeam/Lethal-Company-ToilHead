@@ -12,8 +12,11 @@ public class ToilHeadControllerBehaviour : TurretHeadControllerBehaviour
 
     protected override void OnFinishedSetup()
     {
-        EnemyAI enemyScript = GetEnemyScript();
-        TurretHeadManager.AddEnemyTurretHeadControllerPair(enemyScript, this);
-        TurretHeadManager.AddToSpawnCount(enemyScript, TurretBehaviour.IsMinigun);
+        if (IsServer)
+        {
+            EnemyAI enemyScript = GetEnemyScript();
+            TurretHeadManager.AddEnemyTurretHeadControllerPair(enemyScript, this);
+            TurretHeadManager.AddToEnemySpawnCount(enemyScript, TurretBehaviour.IsMinigun);
+        }
     }
 }

@@ -37,6 +37,7 @@ internal class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(EnemyAIPatch));
         harmony.PatchAll(typeof(SpringManAIPatch));
         harmony.PatchAll(typeof(PlayerControllerBPatch));
+        harmony.PatchAll(typeof(RagdollGrabbableObjectPatch));
         harmony.PatchAll(typeof(TurretPatch));
 
         ConfigManager = new SyncedConfigManager();
@@ -85,7 +86,7 @@ internal class Plugin : BaseUnityPlugin
 
     public void OnNewLevelFinishedLoading()
     {
-        TurretHeadManager.TrySetTurretHeadPlayersOnServer();
+        TurretHeadManager.TrySetPlayerTurretHeadsOnServer();
     }
 
     public void OnShipHasLeft()

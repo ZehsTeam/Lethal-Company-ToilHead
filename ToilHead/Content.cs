@@ -12,7 +12,7 @@ internal class Content
     public static GameObject TurretPropPrefab;
     public static GameObject MinigunPropPrefab;
 
-    // TurretHead Controllers
+    // Turret-Head Controllers
     public static GameObject ToilHeadControllerPrefab;
     public static GameObject ToilSlayerControllerPrefab;
     public static GameObject MantiToilControllerPrefab;
@@ -47,7 +47,7 @@ internal class Content
             TurretPropPrefab = assetBundle.LoadAsset<GameObject>("TurretHeadTurretProp");
             MinigunPropPrefab = assetBundle.LoadAsset<GameObject>("MinigunTurretHeadTurretProp");
 
-            // TurretHead Controllers
+            // Turret-Head Controllers
             ToilHeadControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadController");
             ToilSlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilSlayerController");
             MantiToilControllerPrefab = assetBundle.LoadAsset<GameObject>("MantiToilController");
