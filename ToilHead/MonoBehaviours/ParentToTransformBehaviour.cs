@@ -5,38 +5,35 @@ namespace com.github.zehsteam.ToilHead.MonoBehaviours;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class ParentToTransformBehaviour : MonoBehaviour
 {
-    private Transform targetTransform;
-    private Transform parentTransform;
+    private Transform _targetTransform;
+    private Transform _parentTransform;
 
-    private Vector3 positionOffset;
-    private Vector3 rotationOffset;
+    private Vector3 _positionOffset;
+    private Vector3 _rotationOffset;
 
     private void Update()
     {
-        if (targetTransform == null || parentTransform == null) return;
+        if (_targetTransform == null || _parentTransform == null) return;
+        if (!_parentTransform.gameObject.activeSelf) return;
 
-        targetTransform.rotation = parentTransform.rotation;
-        targetTransform.Rotate(rotationOffset, Space.Self);
+        _targetTransform.rotation = _parentTransform.rotation;
+        _targetTransform.Rotate(_rotationOffset, Space.Self);
 
-        Vector3 position = parentTransform.position;
-        position += targetTransform.right * positionOffset.x + targetTransform.up * positionOffset.y + targetTransform.forward * positionOffset.z;
+        Vector3 position = _parentTransform.position;
+        position += _targetTransform.right * _positionOffset.x + _targetTransform.up * _positionOffset.y + _targetTransform.forward * _positionOffset.z;
 
-        targetTransform.position = position;
+        _targetTransform.position = position;
     }
 
-    public void SetTargetAndParent(Transform target, Transform parent)
+    public void SetTargetAndParentTransform(Transform targetTransform, Transform parentTransform)
     {
-        targetTransform = target;
-        parentTransform = parent;
+        _targetTransform = targetTransform;
+        _parentTransform = parentTransform;
     }
 
-    public void SetPositionOffset(Vector3 offset)
+    public void SetPositionAndRotationOffset(Vector3 positionOffset, Vector3 rotationOffset)
     {
-        positionOffset = offset;
-    }
-
-    public void SetRotationOffset(Vector3 offset)
-    {
-        rotationOffset = offset;
+        _positionOffset = positionOffset;
+        _rotationOffset = rotationOffset;
     }
 }

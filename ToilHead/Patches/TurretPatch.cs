@@ -10,7 +10,7 @@ internal class TurretPatch
     [HarmonyPostfix]
     static void CheckForPlayersInLineOfSightPatch(ref PlayerControllerB __result)
     {
-        if (__result != null && PlayerControllerBPatch.IsToilPlayer(__result))
+        if (__result != null && TurretHeadManager.IsTurretHead(__result))
         {
             __result = null;
         }

@@ -1,4 +1,5 @@
 ﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
+using com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
 using com.github.zehsteam.ToilHead.Patches;
 using GameNetcodeStuff;
 using System;
@@ -13,28 +14,33 @@ public class Api
     /// <summary>
     /// This is for all enemy turret pairs.
     /// </summary>
-    public static Dictionary<EnemyAI, ToilHeadTurretBehaviour> EnemyTurretPairs => EnemyAIPatch.EnemyTurretPairs;
+    public static Dictionary<EnemyAI, TurretHeadControllerBehaviour> EnemyTurretHeadControllerPairs => TurretHeadManager.EnemyTurretHeadControllerPairs;
 
     /// <summary>
     /// This is for all player turret pairs.
     /// </summary>
-    public static Dictionary<PlayerControllerB, ToilHeadTurretBehaviour> PlayerTurretPairs => PlayerControllerBPatch.PlayerTurretPairs;
+    public static Dictionary<PlayerControllerB, TurretHeadControllerBehaviour> PlayerTurretHeadControllerPairs => TurretHeadManager.PlayerTurretHeadControllerPairs;
+
+    /// <summary>
+    /// This is for all player ragdoll turret pairs.
+    /// </summary>
+    public static Dictionary<PlayerControllerB, TurretHeadControllerBehaviour> DeadBodyTurretHeadControllerPairs => TurretHeadManager.DeadBodyTurretHeadControllerPairs;
 
     #region Toil-Head
     /// <summary>
     /// Toil-Head max spawn count.
     /// </summary>
-    public static int ToilHeadMaxSpawnCount => SpawnDataManager.GetToilHeadSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int ToilHeadMaxSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Toil-Head spawn chance.
     /// </summary>
-    public static int ToilHeadSpawnChance => SpawnDataManager.GetToilHeadSpawnDataForCurrentMoon().SpawnChance;
+    public static int ToilHeadSpawnChance => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Toil-Head spawn count.
     /// </summary>
-    public static int ToilHeadSpawnCount => EnemyAIPatch.ToilHeadSpawnCount;
+    public static int ToilHeadSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).SpawnCount;
 
     /// <summary>
     /// If enabled, will force any spawned Coil-Heads to become Toil-Heads.
@@ -42,8 +48,8 @@ public class Api
     /// </summary>
     public static bool ForceToilHeadSpawns
     {
-        get { return EnemyAIPatch.ForceToilHeadSpawns; }
-        set { EnemyAIPatch.ForceToilHeadSpawns = value; }
+        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceSpawns; }
+        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceSpawns = value; }
     }
 
     /// <summary>
@@ -52,19 +58,19 @@ public class Api
     /// </summary>
     public static int ForceToilHeadMaxSpawnCount
     {
-        get { return EnemyAIPatch.ForceToilHeadMaxSpawnCount; }
-        set { EnemyAIPatch.ForceToilHeadMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
     /// This must only be called on the Host/Server.
     /// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".
     /// </summary>
-    /// <param name="enemyAI">Coil-Head "Spring" EnemyAI instance.</param>
+    /// <param name="enemyScript">Coil-Head "Spring" EnemyAI instance.</param>
     /// <returns>True if successful.</returns>
-    public static bool SetToilHeadOnServer(EnemyAI enemyAI)
+    public static bool SetToilHeadOnServer(EnemyAI enemyScript)
     {
-        return Plugin.Instance.SetToilHeadOnServer(enemyAI);
+        return TurretHeadManager.SetTurretHeadOnServer(enemyScript, isSlayer: false);
     }
     #endregion
 
@@ -72,17 +78,17 @@ public class Api
     /// <summary>
     /// Manti-Toil max spawn count.
     /// </summary>
-    public static int MantiToilMaxSpawnCount => SpawnDataManager.GetMantiToilSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int MantiToilMaxSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Manti-Toil spawn chance.
     /// </summary>
-    public static int MantiToilSpawnChance => SpawnDataManager.GetMantiToilSpawnDataForCurrentMoon().SpawnChance;
+    public static int MantiToilSpawnChance => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Manti-Toil spawn count.
     /// </summary>
-    public static int MantiToilSpawnCount => EnemyAIPatch.MantiToilSpawnCount;
+    public static int MantiToilSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).SpawnCount;
 
     /// <summary>
     /// If enabled, will force any spawned Manticoils to become Manti-Toils.
@@ -90,8 +96,8 @@ public class Api
     /// </summary>
     public static bool ForceMantiToilSpawns
     {
-        get { return EnemyAIPatch.ForceMantiToilSpawns; }
-        set { EnemyAIPatch.ForceMantiToilSpawns = value; }
+        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceSpawns; }
+        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceSpawns = value; }
     }
 
     /// <summary>
@@ -100,19 +106,19 @@ public class Api
     /// </summary>
     public static int ForceMantiToilMaxSpawnCount
     {
-        get { return EnemyAIPatch.ForceMantiToilMaxSpawnCount; }
-        set { EnemyAIPatch.ForceMantiToilMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
     /// This must only be called on the Host/Server.
     /// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Manticoil".
     /// </summary>
-    /// <param name="enemyAI">Manticoil "Manticoil" EnemyAI instance.</param>
+    /// <param name="enemyScript">Manticoil "Manticoil" EnemyAI instance.</param>
     /// <returns>True if successful.</returns>
-    public static bool SetMantiToilOnServer(EnemyAI enemyAI)
+    public static bool SetMantiToilOnServer(EnemyAI enemyScript)
     {
-        return Plugin.Instance.SetMantiToilOnServer(enemyAI);
+        return TurretHeadManager.SetTurretHeadOnServer(enemyScript, isSlayer: false);
     }
     #endregion
 
@@ -120,17 +126,17 @@ public class Api
     /// <summary>
     /// Toil-Slayer max spawn count.
     /// </summary>
-    public static int ToilSlayerMaxSpawnCount => SpawnDataManager.GetToilSlayerSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int ToilSlayerMaxSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Toil-Slayer spawn chance.
     /// </summary>
-    public static int ToilSlayerSpawnChance => SpawnDataManager.GetToilSlayerSpawnDataForCurrentMoon().SpawnChance;
+    public static int ToilSlayerSpawnChance => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Toil-Slayer spawn count.
     /// </summary>
-    public static int ToilSlayerSpawnCount => EnemyAIPatch.ToilSlayerSpawnCount;
+    public static int ToilSlayerSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).SpawnCount;
 
     /// <summary>
     /// If enabled, will force any spawned Coil-Heads to become Toil-Slayers.
@@ -138,8 +144,8 @@ public class Api
     /// </summary>
     public static bool ForceToilSlayerSpawns
     {
-        get { return EnemyAIPatch.ForceToilSlayerSpawns; }
-        set { EnemyAIPatch.ForceToilSlayerSpawns = value; }
+        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceSpawns; }
+        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceSpawns = value; }
     }
 
     /// <summary>
@@ -148,19 +154,19 @@ public class Api
     /// </summary>
     public static int ForceToilSlayerMaxSpawnCount
     {
-        get { return EnemyAIPatch.ForceToilSlayerMaxSpawnCount; }
-        set { EnemyAIPatch.ForceToilSlayerMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
     /// This must only be called on the Host/Server.
     /// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Spring".
     /// </summary>
-    /// <param name="enemyAI">Coil-Head "Spring" EnemyAI instance.</param>
+    /// <param name="enemyScript">Coil-Head "Spring" EnemyAI instance.</param>
     /// <returns>True if successful.</returns>
-    public static bool SetToilSlayerOnServer(EnemyAI enemyAI)
+    public static bool SetToilSlayerOnServer(EnemyAI enemyScript)
     {
-        return Plugin.Instance.SetToilHeadOnServer(enemyAI, isSlayer: true);
+        return TurretHeadManager.SetTurretHeadOnServer(enemyScript, isSlayer: true);
     }
     #endregion
 
@@ -168,17 +174,17 @@ public class Api
     /// <summary>
     /// Manti-Slayer max spawn count.
     /// </summary>
-    public static int MantiSlayerMaxSpawnCount => SpawnDataManager.GetMantiSlayerSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int MantiSlayerMaxSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Manti-Slayer spawn chance.
     /// </summary>
-    public static int MantiSlayerSpawnChance => SpawnDataManager.GetMantiSlayerSpawnDataForCurrentMoon().SpawnChance;
+    public static int MantiSlayerSpawnChance => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Manti-Slayer spawn count.
     /// </summary>
-    public static int MantiSlayerSpawnCount => EnemyAIPatch.MantiSlayerSpawnCount;
+    public static int MantiSlayerSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).SpawnCount;
 
     /// <summary>
     /// If enabled, will force any spawned Manticoils to become Manti-Slayers.
@@ -186,8 +192,8 @@ public class Api
     /// </summary>
     public static bool ForceMantiSlayerSpawns
     {
-        get { return EnemyAIPatch.ForceMantiSlayerSpawns; }
-        set { EnemyAIPatch.ForceMantiSlayerSpawns = value; }
+        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).ForceSpawns; }
+        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).ForceSpawns = value; }
     }
 
     /// <summary>
@@ -196,19 +202,19 @@ public class Api
     /// </summary>
     public static int ForceMantiSlayerMaxSpawnCount
     {
-        get { return EnemyAIPatch.ForceMantiSlayerMaxSpawnCount; }
-        set { EnemyAIPatch.ForceMantiSlayerMaxSpawnCount = value; }
+        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: true).ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
     /// This must only be called on the Host/Server.
     /// Only accepts an EnemyAI instance where the EnemyType.enemyName is "Manticoil".
     /// </summary>
-    /// <param name="enemyAI">Manticoil "Manticoil" EnemyAI instance.</param>
+    /// <param name="enemyScript">Manticoil "Manticoil" EnemyAI instance.</param>
     /// <returns>True if successful.</returns>
-    public static bool SetMantiSlayerOnServer(EnemyAI enemyAI)
+    public static bool SetMantiSlayerOnServer(EnemyAI enemyScript)
     {
-        return Plugin.Instance.SetMantiToilOnServer(enemyAI, isSlayer: true);
+        return TurretHeadManager.SetTurretHeadOnServer(enemyScript, isSlayer: true);
     }
     #endregion
 
@@ -216,17 +222,17 @@ public class Api
     /// <summary>
     /// Toil-Player max spawn count.
     /// </summary>
-    public static int ToilPlayerMaxSpawnCount => SpawnDataManager.GetToilPlayerSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int ToilPlayerMaxSpawnCount => TurretHeadManager.PlayerTurretHeadData.GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     /// <summary>
     /// Toil-Player spawn chance.
     /// </summary>
-    public static int ToilPlayerdSpawnChance => SpawnDataManager.GetToilPlayerSpawnDataForCurrentMoon().SpawnChance;
+    public static int ToilPlayerdSpawnChance => TurretHeadManager.PlayerTurretHeadData.GetSpawnDataForCurrentMoon().SpawnChance;
 
     /// <summary>
     /// Toil-Player spawn count.
     /// </summary>
-    public static int ToilPlayerSpawnCount => PlayerControllerBPatch.ToilPlayerSpawnCount;
+    public static int ToilPlayerSpawnCount => TurretHeadManager.PlayerTurretHeadData.SpawnCount;
 
     /// <summary>
     /// If enabled, will force all Players to become Toil-Players when the round starts.
@@ -234,8 +240,8 @@ public class Api
     /// </summary>
     public static bool ForceToilPlayerSpawns
     {
-        get { return PlayerControllerBPatch.ForceToilPlayerSpawns; }
-        set { PlayerControllerBPatch.ForceToilPlayerSpawns = value; }
+        get { return TurretHeadManager.PlayerTurretHeadData.ForceSpawns; }
+        set { TurretHeadManager.PlayerTurretHeadData.ForceSpawns = value; }
     }
 
     /// <summary>
@@ -244,8 +250,8 @@ public class Api
     /// </summary>
     public static int ForceToilPlayerMaxSpawnCount
     {
-        get { return PlayerControllerBPatch.ForceToilPlayerMaxSpawnCount; }
-        set { PlayerControllerBPatch.ForceToilPlayerMaxSpawnCount = value; }
+        get { return TurretHeadManager.PlayerTurretHeadData.ForceMaxSpawnCount; }
+        set { TurretHeadManager.PlayerTurretHeadData.ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -254,53 +260,83 @@ public class Api
     /// <returns>True if successful.</returns>
     public static bool SetToilPlayerOnServer(PlayerControllerB playerScript, bool isSlayer = false)
     {
-        return Plugin.Instance.SetToilPlayerOnServer(playerScript, isSlayer);
+        return TurretHeadManager.SetTurretHeadOnServer(playerScript, isSlayer);
     }
     #endregion
 
 
 
     #region Deprecated
-    [Obsolete("enemyTurretPairs is deprecated, please use EnemyTurretPairs instead.", true)]
+    [Obsolete("EnemyTurretPairs is deprecated, please use EnemyTurretHeadControllerPairs instead.", true)]
+    public static Dictionary<EnemyAI, ToilHeadTurretBehaviour> EnemyTurretPairs => [];
+
+    [Obsolete("PlayerTurretPairs is deprecated, please use PlayerTurretHeadControllerPairs instead.", true)]
+    public static Dictionary<PlayerControllerB, ToilHeadTurretBehaviour> PlayerTurretPairs => [];
+
+    [Obsolete("enemyTurretPairs is deprecated, please use EnemyTurretHeadControllerPairs instead.", true)]
     public static Dictionary<NetworkObject, NetworkObject> enemyTurretPairs => [];
 
     #region Toil-Head
     [Obsolete("MaxSpawnCount is deprecated, please use ToilHeadMaxSpawnCount instead.", true)]
-    public static int MaxSpawnCount => SpawnDataManager.GetToilHeadSpawnDataForCurrentMoon().MaxSpawnCount;
+    public static int MaxSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().MaxSpawnCount;
 
     [Obsolete("SpawnChance is deprecated, please use ToilHeadSpawnChance instead.", true)]
-    public static int SpawnChance => SpawnDataManager.GetToilHeadSpawnDataForCurrentMoon().SpawnChance;
+    public static int SpawnChance => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).GetSpawnDataForCurrentMoon().SpawnChance;
 
     [Obsolete("spawnCount is deprecated, please use ToilHeadSpawnCount instead.", true)]
-    public static int spawnCount => EnemyAIPatch.ToilHeadSpawnCount;
+    public static int spawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).SpawnCount;
 
     [Obsolete("forceSpawns is deprecated, please use ForceToilHeadSpawns instead.", true)]
-    public static bool forceSpawns { get { return EnemyAIPatch.ForceToilHeadSpawns; } set { EnemyAIPatch.ForceToilHeadSpawns = value; } }
+    public static bool forceSpawns
+    {
+        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceSpawns; }
+        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceSpawns = value; }
+    }
 
     [Obsolete("forceMaxSpawnCount is deprecated, please use ForceToilHeadMaxSpawnCount instead.", true)]
-    public static int forceMaxSpawnCount { get { return EnemyAIPatch.ForceToilHeadMaxSpawnCount; } set { EnemyAIPatch.ForceToilHeadMaxSpawnCount = value; } }
+    public static int forceMaxSpawnCount
+    {
+        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount = value; }
+    }
     #endregion
 
     #region Manti-Toil
     [Obsolete("mantiToilSpawnCount is deprecated, please use MantiToilSpawnCount instead.", true)]
-    public static int mantiToilSpawnCount => EnemyAIPatch.MantiToilSpawnCount;
+    public static int mantiToilSpawnCount => TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).SpawnCount;
 
     [Obsolete("forceMantiToilSpawns is deprecated, please use ForceMantiToilSpawns instead.", true)]
-    public static bool forceMantiToilSpawns { get { return EnemyAIPatch.ForceMantiToilSpawns; } set { EnemyAIPatch.ForceMantiToilSpawns = value; } }
+    public static bool forceMantiToilSpawns
+    {
+        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceSpawns; }
+        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceSpawns = value; }
+    }
 
     [Obsolete("forceMantiToilMaxSpawnCount is deprecated, please use ForceMantiToilMaxSpawnCount instead.", true)]
-    public static int forceMantiToilMaxSpawnCount { get { return EnemyAIPatch.ForceMantiToilMaxSpawnCount; } set { EnemyAIPatch.ForceMantiToilMaxSpawnCount = value; } }
+    public static int forceMantiToilMaxSpawnCount
+    {
+        get { return TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount = value; }
+    }
     #endregion
 
     #region Toil-Slayer
     [Obsolete("toilSlayerSpawnCount is deprecated, please use ToilSlayerSpawnCount instead.", true)]
-    public static int toilSlayerSpawnCount => EnemyAIPatch.ToilSlayerSpawnCount;
+    public static int toilSlayerSpawnCount => TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).SpawnCount;
 
     [Obsolete("forceToilSlayerSpawns is deprecated, please use ForceToilSlayerSpawns instead.", true)]
-    public static bool forceToilSlayerSpawns { get { return EnemyAIPatch.ForceToilSlayerSpawns; } set { EnemyAIPatch.ForceToilSlayerSpawns = value; } }
+    public static bool forceToilSlayerSpawns
+    {
+        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceSpawns; }
+        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceSpawns = value; }
+    }
 
     [Obsolete("forceToilSlayerMaxSpawnCount is deprecated, please use ForceToilSlayerMaxSpawnCount instead.", true)]
-    public static int forceToilSlayerMaxSpawnCount { get { return EnemyAIPatch.ForceToilSlayerMaxSpawnCount; } set { EnemyAIPatch.ForceToilSlayerMaxSpawnCount = value; } }
+    public static int forceToilSlayerMaxSpawnCount
+    {
+        get { return TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount; }
+        set { TurretHeadManager.GetTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount = value; }
+    }
     #endregion
     #endregion
 }

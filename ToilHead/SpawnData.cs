@@ -78,7 +78,7 @@ public class MoonSpawnDataList
 {
     public List<MoonSpawnData> List = [];
     public SpawnData DefaultSpawnData;
-    
+
     public MoonSpawnDataList(string value)
     {
         ParseValue(value);

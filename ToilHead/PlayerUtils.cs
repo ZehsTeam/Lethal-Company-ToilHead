@@ -9,6 +9,11 @@ internal class PlayerUtils
         return playerScript == GetLocalPlayerScript();
     }
 
+    public static int GetPlayerId(PlayerControllerB playerScript)
+    {
+        return (int)playerScript.playerClientId;
+    }
+
     public static int GetLocalPlayerId()
     {
         return (int)GetLocalPlayerScript().playerClientId;

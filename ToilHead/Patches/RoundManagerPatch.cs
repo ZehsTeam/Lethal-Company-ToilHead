@@ -22,4 +22,11 @@ internal class RoundManagerPatch
         // Call on Client
         Plugin.Instance.OnNewLevelLoaded();
     }
+
+    [HarmonyPatch("FinishGeneratingNewLevelClientRpc")]
+    [HarmonyPostfix]
+    static void FinishGeneratingNewLevelClientRpcPatch()
+    {
+        Plugin.Instance.OnNewLevelFinishedLoading();
+    }
 }

@@ -1,4 +1,4 @@
-﻿using BepInEx.Bootstrap;
+﻿using com.github.zehsteam.ToilHead.Compatibility;
 using System.Collections.Generic;
 using System.Linq;
 using static LethalLib.Modules.Levels;
@@ -7,22 +7,9 @@ namespace com.github.zehsteam.ToilHead;
 
 internal class ScrapHelper
 {
-    public const string MonsterPlushiesGUID = "scin.monsterplushies";
-
-    public static bool HasLethalLib()
-    {
-        return Chainloader.PluginInfos.ContainsKey(LethalLib.Plugin.ModGUID);
-    }
-
-    public static bool HasMonsterPlushieMod()
-    {
-        return Chainloader.PluginInfos.ContainsKey(MonsterPlushiesGUID);
-    }
-
     public static void RegisterScrap(Item item, int iRarity, bool spawnAllMoons, string moonSpawnList, bool twoHanded, int carryWeight, int minValue, int maxValue)
     {
-        if (!HasLethalLib()) return;
-        if (!HasMonsterPlushieMod()) return;
+        if (!LethalLibCompat.HasMod) return;
 
         try
         {

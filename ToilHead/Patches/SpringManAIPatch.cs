@@ -1,4 +1,5 @@
-﻿using GameNetcodeStuff;
+﻿using com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
+using GameNetcodeStuff;
 using HarmonyLib;
 using UnityEngine;
 
@@ -11,19 +12,19 @@ internal class SpringManAIPatch
     [HarmonyPostfix]
     static void OnCollideWithPlayerPatch(ref SpringManAI __instance, ref Collider other)
     {
-        if (!Utils.IsToilHead(__instance)) return;
-
-        if (other.gameObject.TryGetComponent(out PlayerControllerB playerScript))
+        if (!TurretHeadManager.EnemyTurretHeadControllerPairs.TryGetValue(__instance, out TurretHeadControllerBehaviour behaviour))
         {
-            if (playerScript != PlayerUtils.GetLocalPlayerScript()) return;
-            if (!playerScript.isPlayerDead) return;
-
-            Plugin.Instance.SetToilHeadPlayerRagdoll(playerScript, IsToilSlayer(__instance));
+            return;
         }
-    }
 
-    private static bool IsToilSlayer(SpringManAI springManAI)
-    {
-        return Utils.GetTurretHeadTurretBehaviour(springManAI).isMinigun;
+        if (!other.gameObject.TryGetComponent(out PlayerControllerB playerScript))
+        {
+            return;
+        }
+
+        if (playerScript != PlayerUtils.GetLocalPlayerScript()) return;
+        if (!playerScript.AllowPlayerDeath()) return;
+
+        TurretHeadManager.SetDeadBodyTurretHead(playerScript, isSlayer: behaviour.TurretBehaviour.IsMinigun);
     }
 }

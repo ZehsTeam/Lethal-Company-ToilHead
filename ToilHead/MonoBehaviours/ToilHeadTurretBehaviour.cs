@@ -1,5 +1,4 @@
-﻿using com.github.zehsteam.ToilHead.Patches;
-using GameNetcodeStuff;
+﻿using GameNetcodeStuff;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,14 +9,14 @@ namespace com.github.zehsteam.ToilHead.MonoBehaviours;
 public class ToilHeadTurretBehaviour : NetworkBehaviour
 {
     [Header("Audio Sources")]
-    [Space(3f)]
+    [Space(5f)]
     public AudioSource mainAudio = null;
     public AudioSource farAudio = null;
     public AudioSource bulletCollisionAudio = null;
     public AudioSource berserkAudio = null;
 
     [Header("Audio Clips")]
-    [Space(3f)]
+    [Space(5f)]
     public AudioClip firingSFX = null;
     public AudioClip chargingSFX = null;
     public AudioClip detectPlayerSFX = null;
@@ -26,21 +25,8 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     public AudioClip turretActivate = null;
     public AudioClip turretDeactivate = null;
 
-    [Header("Other")]
-    [Space(3f)]
-    public bool isMinigun = false;
-    public ParticleSystem bulletParticles = null;
-    public Animator turretAnimator = null;
-    public float rotationRange = 75f;
-    public float chargingDelay = 0.5f;
-    [HideInInspector] public bool turretActive = true;
-    [HideInInspector] public TurretMode turretMode = TurretMode.Detection;
-    [HideInInspector] public PlayerControllerB targetPlayerWithRotation;
-    [HideInInspector] public float targetRotation;
-    [HideInInspector] public float rotationSpeed = 28f;
-
     [Header("Transforms")]
-    [Space(3f)]
+    [Space(5f)]
     public Transform turretRod = null;
     public Transform turnTowardsObjectCompass = null;
     public Transform forwardFacingPos = null;
@@ -50,13 +36,31 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     public Transform tempTransform = null;
     [HideInInspector] public Transform targetTransform;
 
+    [Header("Turret Properties")]
+    [Space(5f)]
+    public Animator turretAnimator = null;
+    public ParticleSystem bulletParticles = null;
+    public float rotationRange = 75f;
+    public float chargingDelay = 0.5f;
+    [HideInInspector] public TurretMode turretMode = TurretMode.Detection;
+    [HideInInspector] public bool turretActive = true;
+    [HideInInspector] public float targetRotation;
+    [HideInInspector] public float rotationSpeed = 28f;
+    [HideInInspector] public PlayerControllerB targetPlayerWithRotation;
+
     [Header("Line Of Sight")]
+    [Space(5f)]
     public float LOSRange = 30f;
     public float LOSDistance = 30f;
     public int LOSVerticalRays = 3;
     public int LOSHorizontalRays = 7;
     public float LOSXRotationOffsetStart = -5;
     public float LOSXRotationOffsetAmountPerRay = 5f;
+
+    [Header("Turrer Head Properties")]
+    [Space(5f)]
+    public bool IsMinigun = false;
+    public Transform SyncToHeadTransform = null;
 
     #region Private Variables
     private TurretMode _turretModeLastFrame;
@@ -81,25 +85,26 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     #endregion
 
     #region Custom Variables
-    [HideInInspector] public bool useMantiToilSettings = false;
+    [HideInInspector] public bool CanTargetPlayers = true;
+    [HideInInspector] public bool UseMantiToilSettings = false;
 
     // Turret Settings
-    [HideInInspector] public float lostLOSDuration = 0.75f;
+    [HideInInspector] public float LostLOSDuration = 0.75f;
 
     // Turret Detection Settings
-    [HideInInspector] public bool detectionRotation = false;
-    [HideInInspector] public float detectionRotationSpeed = 28f;
+    [HideInInspector] public bool DetectionRotation = false;
+    [HideInInspector] public float DetectionRotationSpeed = 28f;
 
     // Turret Charging Settings
-    [HideInInspector] public float chargingDuration = 2f;
-    [HideInInspector] public float chargingRotationSpeed = 95f;
+    [HideInInspector] public float ChargingDuration = 2f;
+    [HideInInspector] public float ChargingRotationSpeed = 95f;
 
     // Turret Firing Settings
-    [HideInInspector] public float firingRotationSpeed = 95f;
+    [HideInInspector] public float FiringRotationSpeed = 95f;
 
     // Turret Berserk Settings
-    [HideInInspector] public float berserkDuration = 9f;
-    [HideInInspector] public float berserkRotationSpeed = 77f;
+    [HideInInspector] public float BerserkDuration = 9f;
+    [HideInInspector] public float BerserkRotationSpeed = 77f;
     #endregion
 
     private void Start()
@@ -117,62 +122,62 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         SyncedConfigManager configManager = Plugin.ConfigManager;
 
         // Turret Settings
-        lostLOSDuration = configManager.TurretLostLOSDuration.Value;
+        LostLOSDuration = configManager.TurretLostLOSDuration.Value;
         rotationRange = Mathf.Abs(configManager.TurretRotationRange.Value);
 
-        if (useMantiToilSettings)
+        if (UseMantiToilSettings)
         {
-            lostLOSDuration = 5f;
+            LostLOSDuration = 5f;
         }
 
-        if (isMinigun && !useMantiToilSettings)
+        if (IsMinigun && !UseMantiToilSettings)
         {
-            lostLOSDuration = 3f;
+            LostLOSDuration = 3f;
         }
 
         // Turret Detection Settings
-        detectionRotation = configManager.TurretDetectionRotation.Value;
-        detectionRotationSpeed = configManager.TurretDetectionRotationSpeed.Value;
+        DetectionRotation = configManager.TurretDetectionRotation.Value;
+        DetectionRotationSpeed = configManager.TurretDetectionRotationSpeed.Value;
 
         // Turret Charging Settings
-        chargingDuration = configManager.TurretChargingDuration.Value;
-        chargingRotationSpeed = configManager.TurretChargingRotationSpeed.Value;
+        ChargingDuration = configManager.TurretChargingDuration.Value;
+        ChargingRotationSpeed = configManager.TurretChargingRotationSpeed.Value;
 
-        if (isMinigun)
+        if (IsMinigun)
         {
-            chargingDuration = detectPlayerSFX.length + chargingDelay + chargingSFX.length;
-            chargingRotationSpeed *= 0.5f;
+            ChargingDuration = detectPlayerSFX.length + chargingDelay + chargingSFX.length;
+            ChargingRotationSpeed *= 0.5f;
         }
 
         // Turret Firing Settings
-        firingRotationSpeed = configManager.TurretFiringRotationSpeed.Value;
+        FiringRotationSpeed = configManager.TurretFiringRotationSpeed.Value;
 
-        if (isMinigun)
+        if (IsMinigun)
         {
-            firingRotationSpeed *= 0.5f;
+            FiringRotationSpeed *= 0.5f;
         }
 
-        _damage = isMinigun ? 15 : 25;
-        _damageRate = isMinigun ? 0.105f : 0.21f;
+        _damage = IsMinigun ? 15 : 25;
+        _damageRate = IsMinigun ? 0.105f : 0.21f;
 
         // Turret Berserk Settings
-        berserkDuration = configManager.TurretBerserkDuration.Value;
-        berserkRotationSpeed = configManager.TurretBerserkRotationSpeed.Value;
+        BerserkDuration = configManager.TurretBerserkDuration.Value;
+        BerserkRotationSpeed = configManager.TurretBerserkRotationSpeed.Value;
 
-        if (isMinigun)
+        if (IsMinigun)
         {
-            berserkDuration *= 2f;
-            berserkRotationSpeed *= 0.5f;
+            BerserkDuration *= 2f;
+            BerserkRotationSpeed *= 0.5f;
         }
 
-        rotationSpeed = detectionRotationSpeed;
+        rotationSpeed = DetectionRotationSpeed;
 
-        if (useMantiToilSettings && !isMinigun)
+        if (UseMantiToilSettings && !IsMinigun)
         {
             LOSVerticalRays = 6;
         }
 
-        if (isMinigun && !IsOnEnemy())
+        if (IsMinigun && !IsOnEnemy())
         {
             LOSRange = 30f;
             LOSVerticalRays = 3;
@@ -201,7 +206,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     private bool OtherUpdateStuff()
     {
-        if (!turretActive)
+        if (!turretActive || !CanTargetPlayers)
         {
             _wasTargetingPlayerLastFrame = false;
             turretMode = TurretMode.Detection;
@@ -268,7 +273,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             }
             _fadeBulletAudioCoroutine = StartCoroutine(FadeBulletAudio());
             bulletParticles.Stop(withChildren: true, ParticleSystemStopBehavior.StopEmitting);
-            rotationSpeed = detectionRotationSpeed;
+            rotationSpeed = DetectionRotationSpeed;
             _rotatingSmoothly = true;
             if (turretAnimator != null)
             {
@@ -316,7 +321,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             mainAudio.PlayOneShot(detectPlayerSFX);
             berserkAudio.Stop();
             WalkieTalkie.TransmitOneShotAudio(mainAudio, detectPlayerSFX);
-            rotationSpeed = chargingRotationSpeed;
+            rotationSpeed = ChargingRotationSpeed;
             _rotatingSmoothly = false;
             _lostLOSTimer = 0f;
             if (turretAnimator != null)
@@ -327,7 +332,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             _playedChargingSFX = false;
         }
 
-        if (isMinigun && _chargingTimer > detectPlayerSFX.length && !_playedChargingSFX)
+        if (IsMinigun && _chargingTimer > detectPlayerSFX.length && !_playedChargingSFX)
         {
             mainAudio.PlayOneShot(chargingSFX);
             WalkieTalkie.TransmitOneShotAudio(mainAudio, chargingSFX);
@@ -340,7 +345,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         {
             return;
         }
-        if (_turretInterval >= chargingDuration)
+        if (_turretInterval >= ChargingDuration)
         {
             _turretInterval = 0f;
             Plugin.Instance.LogInfoExtended("Charging timer is up, setting to firing mode.");
@@ -379,7 +384,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 StopCoroutine(_fadeBulletAudioCoroutine);
             }
             bulletCollisionAudio.volume = 1f;
-            rotationSpeed = firingRotationSpeed;
+            rotationSpeed = FiringRotationSpeed;
             _rotatingSmoothly = false;
             _lostLOSTimer = 0f;
             if (turretAnimator != null)
@@ -403,7 +408,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 {
                     localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots, 2);
 
-                    Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript, isMinigun);
+                    TurretHeadManager.SetDeadBodyTurretHead(localPlayerScript, IsMinigun);
                 }
             }
             _shootRay = new Ray(aimPoint.position, aimPoint.forward);
@@ -429,7 +434,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             }
             _berserkTimer = 1.3f;
             berserkAudio.Play();
-            rotationSpeed = berserkRotationSpeed;
+            rotationSpeed = BerserkRotationSpeed;
             _enteringBerserkMode = true;
             _rotatingSmoothly = true;
             _lostLOSTimer = 0f;
@@ -443,7 +448,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             {
                 _enteringBerserkMode = false;
                 _rotatingClockwise = true;
-                _berserkTimer = berserkDuration;
+                _berserkTimer = BerserkDuration;
                 if (turretAnimator != null)
                 {
                     turretAnimator.SetInteger("TurretMode", 2);
@@ -477,7 +482,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 {
                     localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots, 2);
 
-                    Plugin.Instance.SetToilHeadPlayerRagdoll(localPlayerScript, isMinigun);
+                    TurretHeadManager.SetDeadBodyTurretHead(localPlayerScript, IsMinigun);
                 }
             }
             _shootRay = new Ray(aimPoint.position, aimPoint.forward);
@@ -513,7 +518,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         if (_rotatingSmoothly)
         {
-            if (detectionRotation)
+            if (DetectionRotation)
             {
                 turnTowardsObjectCompass.localEulerAngles = new Vector3(0f, Mathf.Clamp(targetRotation, 0f - rotationRange, rotationRange), 0f);
             }
@@ -580,7 +585,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
         _lostLOSTimer += Time.deltaTime;
 
-        if (_lostLOSTimer >= lostLOSDuration)
+        if (_lostLOSTimer >= LostLOSDuration)
         {
             _lostLOSTimer = 0f;
             Plugin.Instance.LogInfoExtended("LOS timer ended on server. checking for new player target.");
@@ -654,7 +659,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
                 {
                     PlayerControllerB component = _hit.transform.GetComponent<PlayerControllerB>();
 
-                    if (PlayerControllerBPatch.IsToilPlayer(component)) return null;
+                    if (TurretHeadManager.IsTurretHead(component)) return null;
 
                     if (component is not null)
                     {
@@ -777,6 +782,8 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void EnterBerserkModeServerRpc()
     {
+        if (!CanTargetPlayers) return;
+
         EnterBerserkModeClientRpc();
     }
 
@@ -803,6 +810,12 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
         behaviour.InitializeValues();
         behaviour.SetCodeTo(codeIndex);
     }
+
+    [ClientRpc]
+    public void SetCanTargetPlayersClientRpc(bool value)
+    {
+        CanTargetPlayers = value;
+    }
     #endregion
 
     private bool IsOnEnemy()
@@ -818,7 +831,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     private void DrawLineOfSightLines()
     {
-        if (aimPoint is null || aimTurretCenterPoint is null) return;
+        if (aimPoint == null || aimTurretCenterPoint == null) return;
 
         DrawLineOfSightLinesVertical();
     }

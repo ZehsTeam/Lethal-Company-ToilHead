@@ -1,4 +1,4 @@
-﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
+﻿using com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
 using GameNetcodeStuff;
 using System.Collections;
 using UnityEngine;
@@ -30,57 +30,17 @@ public class Utils
         }
     }
 
-    public static bool IsSpring(EnemyAI enemyAI)
+    public static void DisableRenderers(GameObject gameObject)
     {
-        return enemyAI.enemyType.enemyName == "Spring";
-    }
+        foreach (var renderer in gameObject.GetComponentsInChildren<MeshRenderer>())
+        {
+            renderer.enabled = false;
+        }
 
-    public static bool IsToilHead(EnemyAI enemyAI)
-    {
-        if (!IsSpring(enemyAI)) return false;
-
-        return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
-    }
-
-    public static bool IsManticoil(EnemyAI enemyAI)
-    {
-        return enemyAI.enemyType.enemyName == "Manticoil";
-    }
-
-    public static bool IsMantiToil(EnemyAI enemyAI)
-    {
-        if (!IsManticoil(enemyAI)) return false;
-
-        return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
-    }
-
-    public static bool IsTurretHead(EnemyAI enemyAI)
-    {
-        if (IsToilHead(enemyAI)) return true;
-        if (IsMantiToil(enemyAI)) return true;
-
-        return false;
-    }
-
-    public static bool IsToilHeadPlayerRagdoll(GameObject gameObject)
-    {
-        return gameObject.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
-    }
-
-    public static bool IsToilPlayer(PlayerControllerB playerScript)
-    {
-        return playerScript.GetComponentInChildren<ToilHeadTurretBehaviour>() != null;
-    }
-
-    public static ToilHeadTurretBehaviour GetTurretHeadTurretBehaviour(EnemyAI enemyAI)
-    {
-        return enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>();
-    }
-
-    public static bool TryGetTurretHeadTurretBehaviour(EnemyAI enemyAI, out ToilHeadTurretBehaviour toilHeadTurretBehaviour)
-    {
-        toilHeadTurretBehaviour = enemyAI.GetComponentInChildren<ToilHeadTurretBehaviour>();
-        return toilHeadTurretBehaviour != null;
+        foreach (var renderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            renderer.enabled = false;
+        }
     }
 
     public static IEnumerator WaitUntil(System.Func<bool> predicate, float maxDuration = 5f, int iterationsPerSecond = 10)
@@ -101,6 +61,45 @@ public class Utils
         }
     }
 
+    public static bool IsSpring(EnemyAI enemyScript)
+    {
+        return enemyScript.enemyType.enemyName == "Spring";
+    }
+
+    public static bool IsSpringTurretHead(EnemyAI enemyScript)
+    {
+        if (!IsSpring(enemyScript)) return false;
+
+        return IsTurretHead(enemyScript);
+    }
+
+    public static bool IsManticoil(EnemyAI enemyScript)
+    {
+        return enemyScript.enemyType.enemyName == "Manticoil";
+    }
+
+    public static bool IsManticoilTurretHead(EnemyAI enemyScript)
+    {
+        if (!IsManticoil(enemyScript)) return false;
+
+        return IsTurretHead(enemyScript);
+    }
+
+    public static bool IsTurretHead(EnemyAI enemyScript)
+    {
+        return enemyScript.GetComponentInChildren<TurretHeadControllerBehaviour>() != null;
+    }
+
+    public static bool IsTurretHead(PlayerControllerB playerScript)
+    {
+        return playerScript.GetComponentInChildren<TurretHeadControllerBehaviour>() != null;
+    }
+
+    public static bool IsTurretHead(DeadBodyInfo deadBodyScript)
+    {
+        return deadBodyScript.GetComponentInChildren<TurretHeadControllerBehaviour>() != null;
+    }
+
     public static bool IsCurrentMoonToilation()
     {
         if (StartOfRound.Instance == null) return false;
@@ -118,18 +117,5 @@ public class Utils
         }
 
         return false;
-    }
-
-    public static void DisableRenderers(GameObject obj)
-    {
-        foreach (var renderer in obj.GetComponentsInChildren<MeshRenderer>())
-        {
-            renderer.enabled = false;
-        }
-
-        foreach (var renderer in obj.GetComponentsInChildren<SkinnedMeshRenderer>())
-        {
-            renderer.enabled = false;
-        }
     }
 }

@@ -5,14 +5,22 @@ namespace com.github.zehsteam.ToilHead;
 
 internal class Content
 {
-    // NetworkHandler
+    // Network Handler
     public static GameObject NetworkHandlerPrefab;
 
     // Turrets
-    public static GameObject TurretPrefab;
     public static GameObject TurretPropPrefab;
-    public static GameObject MinigunTurretPrefab;
-    public static GameObject MinigunTurretPropPrefab;
+    public static GameObject MinigunPropPrefab;
+
+    // TurretHead Controllers
+    public static GameObject ToilHeadControllerPrefab;
+    public static GameObject ToilSlayerControllerPrefab;
+    public static GameObject MantiToilControllerPrefab;
+    public static GameObject MantiSlayerControllerPrefab;
+    public static GameObject ToilPlayerControllerPrefab;
+    public static GameObject SlayerPlayerControllerPrefab;
+    public static GameObject ToiledDeadBodyControllerPrefab;
+    public static GameObject SlayedDeadBodyControllerPrefab;
 
     // Plushies
     public static Item ToilHeadPlush;
@@ -31,15 +39,23 @@ internal class Content
             var assetBundleFilePath = System.IO.Path.Combine(dllFolderPath, "toilhead_assets");
             AssetBundle assetBundle = AssetBundle.LoadFromFile(assetBundleFilePath);
 
-            // NetworkHandler
+            // Network Handler
             NetworkHandlerPrefab = assetBundle.LoadAsset<GameObject>("NetworkHandler");
             NetworkHandlerPrefab.AddComponent<PluginNetworkBehaviour>();
 
             // Turrets
-            TurretPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretContainer");
-            TurretPropPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadTurretProp");
-            MinigunTurretPrefab = assetBundle.LoadAsset<GameObject>("MinigunTurretContainer");
-            MinigunTurretPropPrefab = assetBundle.LoadAsset<GameObject>("MinigunTurretProp");
+            TurretPropPrefab = assetBundle.LoadAsset<GameObject>("TurretHeadTurretProp");
+            MinigunPropPrefab = assetBundle.LoadAsset<GameObject>("MinigunTurretHeadTurretProp");
+
+            // TurretHead Controllers
+            ToilHeadControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadController");
+            ToilSlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilSlayerController");
+            MantiToilControllerPrefab = assetBundle.LoadAsset<GameObject>("MantiToilController");
+            MantiSlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("MantiSlayerController");
+            ToilPlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilPlayerController");
+            SlayerPlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("SlayerPlayerController");
+            ToiledDeadBodyControllerPrefab = assetBundle.LoadAsset<GameObject>("ToiledDeadBodyController");
+            SlayedDeadBodyControllerPrefab = assetBundle.LoadAsset<GameObject>("SlayedDeadBodyController");
 
             // Plushies
             ToilHeadPlush = assetBundle.LoadAsset<Item>("ToilHeadPlush");

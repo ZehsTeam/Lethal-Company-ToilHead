@@ -76,7 +76,7 @@
 		<Reference Include="Unity.TextMeshPro">             <HintPath>$(AssembliesPath)\Unity.TextMeshPro.dll</HintPath>             </Reference>
 		<Reference Include="UnityEngine.UI">                <HintPath>$(AssembliesPath)\UnityEngine.UI.dll</HintPath>                </Reference>
     
-    <Reference Include="LethalLib">               <HintPath>$(PluginsFolder)\_OtherMods\Evaisa-LethalLib\LethalLib.dll</HintPath></Reference>
+    <Reference Include="LethalLib">                     <HintPath>$(PluginsFolder)\Evaisa-LethalLib\LethalLib.dll</HintPath>     </Reference>
 	</ItemGroup>
   
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
