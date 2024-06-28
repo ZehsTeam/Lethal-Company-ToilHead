@@ -21,7 +21,7 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
     public Vector3 RotationOffset = Vector3.zero;
     public Vector3 LocalScale = Vector3.one;
 
-    private ParentToTransformBehaviour parentToTransformBehaviour;
+    protected ParentToTransformBehaviour _parentToTransformBehaviour;
 
     protected virtual void Start()
     {
@@ -33,10 +33,14 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
         StartCoroutine(LateStartCO());
     }
 
-    protected virtual IEnumerator LateStartCO()
+    protected IEnumerator LateStartCO()
     {
         yield return null;
+        LateStart();
+    }
 
+    protected virtual void LateStart()
+    {
         SetPTTBOffsetValues();
     }
 
@@ -60,8 +64,8 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
         Transform PTTBContainerTransform = GetPTTBContainerTransform();
         if (PTTBContainerTransform == null) PTTBContainerTransform = headTransform;
 
-        parentToTransformBehaviour = PTTBContainerTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
-        parentToTransformBehaviour.SetTargetAndParentTransform(TurretBehaviour.SyncToHeadTransform, headTransform);
+        _parentToTransformBehaviour = PTTBContainerTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+        _parentToTransformBehaviour.SetTargetAndParentTransform(TurretBehaviour.SyncToHeadTransform, headTransform);
         SetPTTBOffsetValues();
 
         Plugin.Instance.LogInfoExtended($"Setup {EnemyName}");
@@ -88,7 +92,7 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
         positionOffset.y *= parentLocalScale.y;
         positionOffset.z *= parentLocalScale.z;
 
-        parentToTransformBehaviour.SetPositionAndRotationOffset(positionOffset, RotationOffset);
+        _parentToTransformBehaviour.SetPositionAndRotationOffset(positionOffset, RotationOffset);
     }
 
     protected virtual void OnFinishedSetup()
