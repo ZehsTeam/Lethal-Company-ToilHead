@@ -8,10 +8,10 @@ namespace com.github.zehsteam.ToilHead;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class Utils
 {
-    public static bool RandomPercent(int percent)
+    public static bool RandomPercent(float percent)
     {
-        if (percent <= 0) return false;
-        if (percent >= 100) return true;
+        if (percent <= 0f) return false;
+        if (percent >= 100f) return true;
         return Random.value <= percent * 0.01f;
     }
 
@@ -61,16 +61,18 @@ public class Utils
         }
     }
 
+    public static bool IsValidEnemy(EnemyAI enemyScript)
+    {
+        if (IsSpring(enemyScript)) return true;
+        if (IsManticoil(enemyScript)) return true;
+        if (IsMasked(enemyScript)) return true;
+
+        return false;
+    }
+
     public static bool IsSpring(EnemyAI enemyScript)
     {
         return enemyScript.enemyType.enemyName == "Spring";
-    }
-
-    public static bool IsSpringTurretHead(EnemyAI enemyScript)
-    {
-        if (!IsSpring(enemyScript)) return false;
-
-        return IsTurretHead(enemyScript);
     }
 
     public static bool IsManticoil(EnemyAI enemyScript)
@@ -78,11 +80,9 @@ public class Utils
         return enemyScript.enemyType.enemyName == "Manticoil";
     }
 
-    public static bool IsManticoilTurretHead(EnemyAI enemyScript)
+    public static bool IsMasked(EnemyAI enemyScript)
     {
-        if (!IsManticoil(enemyScript)) return false;
-
-        return IsTurretHead(enemyScript);
+        return enemyScript.enemyType.enemyName == "Masked";
     }
 
     public static bool IsTurretHead(EnemyAI enemyScript)

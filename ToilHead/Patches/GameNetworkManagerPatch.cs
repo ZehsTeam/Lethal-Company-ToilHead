@@ -28,6 +28,8 @@ internal class GameNetworkManagerPatch
         AddNetworkPrefab(Content.SlayerPlayerControllerPrefab);
         AddNetworkPrefab(Content.ToiledDeadBodyControllerPrefab);
         AddNetworkPrefab(Content.SlayedDeadBodyControllerPrefab);
+        AddNetworkPrefab(Content.ToilMaskedControllerPrefab);
+        AddNetworkPrefab(Content.SlayerMaskedControllerPrefab);
     }
 
     private static void AddNetworkPrefab(GameObject prefab)

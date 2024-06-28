@@ -8,7 +8,7 @@ namespace com.github.zehsteam.ToilHead;
 public class SpawnData
 {
     public int MaxSpawnCount;
-    public int SpawnChance;
+    public float SpawnChance;
 
     public SpawnData(string value)
     {
@@ -27,13 +27,13 @@ public class SpawnData
             return;
         }
 
-        TryParseItem(items[0], out MaxSpawnCount);
-        TryParseItem(items[1], out SpawnChance);
+        TryParseInt(items[0], out MaxSpawnCount);
+        TryParseFloat(items[1], out SpawnChance);
 
         Plugin.Instance.LogInfoExtended($"Parsed SpawnData value string. MaxSpawnCount: {MaxSpawnCount}, SpawnChance: {SpawnChance}");
     }
 
-    protected bool TryParseItem(string value, out int parsedInt)
+    protected bool TryParseInt(string value, out int parsedInt)
     {
         if (int.TryParse(value, out parsedInt))
         {
@@ -42,6 +42,20 @@ public class SpawnData
         else
         {
             Plugin.logger.LogError($"TryParseItem Error: Failed to parse int from string \"{value}\".");
+        }
+
+        return false;
+    }
+
+    protected bool TryParseFloat(string value, out float parsedFloat)
+    {
+        if (float.TryParse(value, out parsedFloat))
+        {
+            return true;
+        }
+        else
+        {
+            Plugin.logger.LogError($"TryParseItem Error: Failed to parse float from string \"{value}\".");
         }
 
         return false;
@@ -67,8 +81,8 @@ public class MoonSpawnData : SpawnData
         }
 
         PlanetName = items[0];
-        TryParseItem(items[1], out MaxSpawnCount);
-        TryParseItem(items[2], out SpawnChance);
+        TryParseInt(items[1], out MaxSpawnCount);
+        TryParseFloat(items[2], out SpawnChance);
 
         Plugin.Instance.LogInfoExtended($"Parsed MoonSpawnData value string. PlanetName: \"{PlanetName}\", MaxSpawnCount: {MaxSpawnCount}, SpawnChance: {SpawnChance}");
     }
@@ -92,6 +106,14 @@ public class MoonSpawnDataList
 
     private void ParseValue(string value)
     {
+        if (value == string.Empty) return;
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            Plugin.logger.LogError($"ParseValue Error: MoonSpawnDataList value is null or whitespace.");
+            return;
+        }
+
         string[] items = value.Split(',').Select(_ => _.Trim()).ToArray();
 
         List = [];

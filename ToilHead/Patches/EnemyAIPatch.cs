@@ -10,10 +10,7 @@ internal class EnemyAIPatch
     [HarmonyPostfix]
     static void StartPatch(ref EnemyAI __instance)
     {
-        if (!Utils.IsSpring(__instance) && !Utils.IsManticoil(__instance))
-        {
-            return;
-        }
+        if (!Utils.IsValidEnemy(__instance)) return;
 
         if (!TurretHeadManager.TrySetEnemyTurretHeadOnServer(__instance, isSlayer: true))
         {
@@ -25,7 +22,7 @@ internal class EnemyAIPatch
     [HarmonyPostfix]
     static void HitEnemyServerRpcPatch(ref EnemyAI __instance, int playerWhoHit)
     {
-        if (playerWhoHit == -1) return;
+        if (__instance.isEnemyDead) return;
 
         if (TurretHeadManager.EnemyTurretHeadControllerPairs.TryGetValue(__instance, out TurretHeadControllerBehaviour behaviour))
         {

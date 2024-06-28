@@ -13,14 +13,16 @@ internal class Content
     public static GameObject MinigunPropPrefab;
 
     // Turret-Head Controllers
-    public static GameObject ToilHeadControllerPrefab;
-    public static GameObject ToilSlayerControllerPrefab;
-    public static GameObject MantiToilControllerPrefab;
-    public static GameObject MantiSlayerControllerPrefab;
     public static GameObject ToilPlayerControllerPrefab;
     public static GameObject SlayerPlayerControllerPrefab;
     public static GameObject ToiledDeadBodyControllerPrefab;
     public static GameObject SlayedDeadBodyControllerPrefab;
+    public static GameObject ToilHeadControllerPrefab;
+    public static GameObject ToilSlayerControllerPrefab;
+    public static GameObject MantiToilControllerPrefab;
+    public static GameObject MantiSlayerControllerPrefab;
+    public static GameObject ToilMaskedControllerPrefab;
+    public static GameObject SlayerMaskedControllerPrefab;
 
     // Plushies
     public static Item ToilHeadPlush;
@@ -48,14 +50,16 @@ internal class Content
             MinigunPropPrefab = assetBundle.LoadAsset<GameObject>("MinigunTurretHeadTurretProp");
 
             // Turret-Head Controllers
-            ToilHeadControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadController");
-            ToilSlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilSlayerController");
-            MantiToilControllerPrefab = assetBundle.LoadAsset<GameObject>("MantiToilController");
-            MantiSlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("MantiSlayerController");
             ToilPlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilPlayerController");
             SlayerPlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("SlayerPlayerController");
             ToiledDeadBodyControllerPrefab = assetBundle.LoadAsset<GameObject>("ToiledDeadBodyController");
             SlayedDeadBodyControllerPrefab = assetBundle.LoadAsset<GameObject>("SlayedDeadBodyController");
+            ToilHeadControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilHeadController");
+            ToilSlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilSlayerController");
+            MantiToilControllerPrefab = assetBundle.LoadAsset<GameObject>("MantiToilController");
+            MantiSlayerControllerPrefab = assetBundle.LoadAsset<GameObject>("MantiSlayerController");
+            ToilMaskedControllerPrefab = assetBundle.LoadAsset<GameObject>("ToilMaskedController");
+            SlayerMaskedControllerPrefab = assetBundle.LoadAsset<GameObject>("SlayerMaskedController");
 
             // Plushies
             ToilHeadPlush = assetBundle.LoadAsset<Item>("ToilHeadPlush");

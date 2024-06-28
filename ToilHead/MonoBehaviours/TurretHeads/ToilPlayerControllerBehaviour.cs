@@ -8,7 +8,7 @@ public class ToilPlayerControllerBehaviour : TurretHeadControllerBehaviour
 {
     protected override Transform GetHeadTransform()
     {
-        return transform.parent.Find("ScavengerModel").Find("metarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0).Find("spine.004").Find("HeadPoint");
+        return transform.parent.Find("ScavengerModel").Find("metarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0).Find("spine.004");
     }
 
     protected override void OnFinishedSetup()

@@ -1,4 +1,5 @@
 ﻿using GameNetcodeStuff;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -20,12 +21,23 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
     public Vector3 RotationOffset = Vector3.zero;
     public Vector3 LocalScale = Vector3.one;
 
+    private ParentToTransformBehaviour parentToTransformBehaviour;
+
     protected virtual void Start()
     {
         if (!IsServer)
         {
             SetupTurret();
         }
+
+        StartCoroutine(LateStartCO());
+    }
+
+    protected virtual IEnumerator LateStartCO()
+    {
+        yield return null;
+
+        SetPTTBOffsetValues();
     }
 
     public virtual void SetupTurret()
@@ -45,9 +57,12 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
 
         Transform headTransform = GetHeadTransform();
 
-        ParentToTransformBehaviour behaviour = headTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
-        behaviour.SetTargetAndParentTransform(TurretBehaviour.SyncToHeadTransform, headTransform);
-        behaviour.SetPositionAndRotationOffset(PositionOffset, RotationOffset);
+        Transform PTTBContainerTransform = GetPTTBContainerTransform();
+        if (PTTBContainerTransform == null) PTTBContainerTransform = headTransform;
+
+        parentToTransformBehaviour = PTTBContainerTransform.gameObject.AddComponent<ParentToTransformBehaviour>();
+        parentToTransformBehaviour.SetTargetAndParentTransform(TurretBehaviour.SyncToHeadTransform, headTransform);
+        SetPTTBOffsetValues();
 
         Plugin.Instance.LogInfoExtended($"Setup {EnemyName}");
 
@@ -57,6 +72,23 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
     protected virtual Transform GetHeadTransform()
     {
         return null;
+    }
+
+    protected virtual Transform GetPTTBContainerTransform()
+    {
+        return null;
+    }
+
+    protected virtual void SetPTTBOffsetValues()
+    {
+        Vector3 parentLocalScale = transform.parent.localScale;
+
+        Vector3 positionOffset = PositionOffset;
+        positionOffset.x *= parentLocalScale.x;
+        positionOffset.y *= parentLocalScale.y;
+        positionOffset.z *= parentLocalScale.z;
+
+        parentToTransformBehaviour.SetPositionAndRotationOffset(positionOffset, RotationOffset);
     }
 
     protected virtual void OnFinishedSetup()

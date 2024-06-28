@@ -19,13 +19,15 @@ public class TurretHeadManager
     public static Dictionary<PlayerControllerB, TurretHeadControllerBehaviour> PlayerTurretHeadControllerPairs { get; private set; } = [];
     public static Dictionary<PlayerControllerB, TurretHeadControllerBehaviour> DeadBodyTurretHeadControllerPairs { get; private set; } = [];
 
-    public static void Initialize()
+    internal static void Initialize()
     {
         TurretHeadDataList = [
-            new TurretHeadData(enemyName: "Spring",    isSlayer: false, controllerPrefab: Content.ToilHeadControllerPrefab,    new MoonSpawnDataList(Plugin.ConfigManager.ToilHeadSpawnSettingsMoonList.Value,    defaultSpawnData: new SpawnData(Plugin.ConfigManager.ToilHeadDefaultSpawnSettings.Value)),    toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationToilHeadSpawnSettings.Value)),
-            new TurretHeadData(enemyName: "Spring",    isSlayer: true,  controllerPrefab: Content.ToilSlayerControllerPrefab,  new MoonSpawnDataList(Plugin.ConfigManager.ToilSlayerSpawnSettingsMoonList.Value,  defaultSpawnData: new SpawnData(Plugin.ConfigManager.ToilSlayerDefaultSpawnSettings.Value)),  toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationToilSlayerSpawnSettings.Value)),
-            new TurretHeadData(enemyName: "Manticoil", isSlayer: false, controllerPrefab: Content.MantiToilControllerPrefab,   new MoonSpawnDataList(Plugin.ConfigManager.MantiToilSpawnSettingsMoonList.Value,   defaultSpawnData: new SpawnData(Plugin.ConfigManager.MantiToilDefaultSpawnSettings.Value)),   toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationMantiToilSpawnSettings.Value)),
-            new TurretHeadData(enemyName: "Manticoil", isSlayer: true,  controllerPrefab: Content.MantiSlayerControllerPrefab, new MoonSpawnDataList(Plugin.ConfigManager.MantiSlayerSpawnSettingsMoonList.Value, defaultSpawnData: new SpawnData(Plugin.ConfigManager.MantiSlayerDefaultSpawnSettings.Value)), toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationMantiSlayerSpawnSettings.Value)),
+            new TurretHeadData(enemyName: "Spring",    isSlayer: false, controllerPrefab: Content.ToilHeadControllerPrefab,     new MoonSpawnDataList(Plugin.ConfigManager.ToilHeadSpawnSettingsMoonList.Value,     defaultSpawnData: new SpawnData(Plugin.ConfigManager.ToilHeadDefaultSpawnSettings.Value)),     toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationToilHeadSpawnSettings.Value)),
+            new TurretHeadData(enemyName: "Spring",    isSlayer: true,  controllerPrefab: Content.ToilSlayerControllerPrefab,   new MoonSpawnDataList(Plugin.ConfigManager.ToilSlayerSpawnSettingsMoonList.Value,   defaultSpawnData: new SpawnData(Plugin.ConfigManager.ToilSlayerDefaultSpawnSettings.Value)),   toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationToilSlayerSpawnSettings.Value)),
+            new TurretHeadData(enemyName: "Manticoil", isSlayer: false, controllerPrefab: Content.MantiToilControllerPrefab,    new MoonSpawnDataList(Plugin.ConfigManager.MantiToilSpawnSettingsMoonList.Value,    defaultSpawnData: new SpawnData(Plugin.ConfigManager.MantiToilDefaultSpawnSettings.Value)),    toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationMantiToilSpawnSettings.Value)),
+            new TurretHeadData(enemyName: "Manticoil", isSlayer: true,  controllerPrefab: Content.MantiSlayerControllerPrefab,  new MoonSpawnDataList(Plugin.ConfigManager.MantiSlayerSpawnSettingsMoonList.Value,  defaultSpawnData: new SpawnData(Plugin.ConfigManager.MantiSlayerDefaultSpawnSettings.Value)),  toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationMantiSlayerSpawnSettings.Value)),
+            new TurretHeadData(enemyName: "Masked",    isSlayer: false, controllerPrefab: Content.ToilMaskedControllerPrefab,   new MoonSpawnDataList(Plugin.ConfigManager.ToilMaskedSpawnSettingsMoonList.Value,   defaultSpawnData: new SpawnData(Plugin.ConfigManager.ToilMaskedDefaultSpawnSettings.Value)),   toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationToilMaskedSpawnSettings.Value)),
+            new TurretHeadData(enemyName: "Masked",    isSlayer: true,  controllerPrefab: Content.SlayerMaskedControllerPrefab, new MoonSpawnDataList(Plugin.ConfigManager.SlayerMaskedSpawnSettingsMoonList.Value, defaultSpawnData: new SpawnData(Plugin.ConfigManager.SlayerMaskedDefaultSpawnSettings.Value)), toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationSlayerMaskedSpawnSettings.Value)),
         ];
 
         PlayerTurretHeadData = new TurretHeadData(string.Empty, false, null, new MoonSpawnDataList(Plugin.ConfigManager.ToilPlayerSpawnSettingsMoonList.Value, defaultSpawnData: new SpawnData(Plugin.ConfigManager.ToilPlayerDefaultSpawnSettings.Value)), toilationSpawnData: new SpawnData(Plugin.ConfigManager.ToilationToilPlayerSpawnSettings.Value));
@@ -35,7 +37,7 @@ public class TurretHeadManager
         DeadBodyTurretHeadControllerPairs = [];
     }
 
-    public static void Reset()
+    internal static void Reset()
     {
         TurretHeadDataList.ForEach(_ => _.Reset());
         PlayerTurretHeadData.Reset();
@@ -48,7 +50,7 @@ public class TurretHeadManager
     }
 
     #region Try Set Turret-Head
-    public static bool TrySetEnemyTurretHeadOnServer(EnemyAI enemyScript, bool isSlayer)
+    internal static bool TrySetEnemyTurretHeadOnServer(EnemyAI enemyScript, bool isSlayer)
     {
         if (!Plugin.IsHostOrServer) return false;
 
@@ -78,7 +80,7 @@ public class TurretHeadManager
         return SetEnemyTurretHeadOnServer(enemyScript, isSlayer);
     }
 
-    public static void TrySetPlayerTurretHeadsOnServer()
+    internal static void TrySetPlayerTurretHeadsOnServer()
     {
         if (!Plugin.IsHostOrServer) return;
 
@@ -87,10 +89,11 @@ public class TurretHeadManager
         for (int i = playerScripts.Count - 1; i >= 0; i--)
         {
             int index = Random.Range(0, i);
-            bool isSlayer = Utils.RandomPercent(10);
+            bool isSlayer = Utils.RandomPercent(Plugin.ConfigManager.ToilPlayerSlayerChance.Value);
 
             PlayerControllerB playerScript = playerScripts[index];
-            if (!playerScript.isPlayerControlled) return;
+            if (!playerScript.gameObject.activeSelf) continue;
+            if (!playerScript.isPlayerControlled) continue;
 
             TrySetPlayerTurretHeadOnServer(playerScript, isSlayer);
 
@@ -98,7 +101,7 @@ public class TurretHeadManager
         }
     }
 
-    public static bool TrySetPlayerTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
+    internal static bool TrySetPlayerTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
     {
         if (!Plugin.IsHostOrServer) return false;
 
@@ -308,7 +311,7 @@ public class TurretHeadManager
     #endregion
 
     #region Add SpawnCount
-    public static void AddToEnemySpawnCount(EnemyAI enemyScript, bool isSlayer)
+    internal static void AddToEnemySpawnCount(EnemyAI enemyScript, bool isSlayer)
     {
         string enemyName = enemyScript.enemyType.enemyName;
         TurretHeadData turretHeadData = GetEnemyTurretHeadData(enemyName, isSlayer);
@@ -324,7 +327,7 @@ public class TurretHeadManager
         Plugin.Instance.LogInfoExtended($"AddToEnemySpawnCount(); Enemy \"{enemyName}\" SpawnCount: {turretHeadData.SpawnCount}, MaxSpawnCount: {turretHeadData.GetSpawnDataForCurrentMoon().MaxSpawnCount}, SpawnChance: {turretHeadData.GetSpawnDataForCurrentMoon().SpawnChance}");
     }
 
-    public static void AddToPlayerSpawnCount()
+    internal static void AddToPlayerSpawnCount()
     {
         TurretHeadData turretHeadData = PlayerTurretHeadData;
 

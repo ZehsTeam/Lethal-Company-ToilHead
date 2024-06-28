@@ -8,18 +8,30 @@ namespace com.github.zehsteam.ToilHead;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class SyncedConfigManager
 {
-    public SyncedConfigData HostConfigData;
+    public SyncedConfigData HostConfigData { get; private set; }
 
     // General Settings
     public ExtendedConfigEntry<bool> EnableConfiguration { get; private set; }
     public ExtendedConfigEntry<bool> ExtendedLogging { get; private set; }
 
     // Toilation Settings
-    public ExtendedConfigEntry<string> ToilationToilHeadSpawnSettings { get; private set; }
-    public ExtendedConfigEntry<string> ToilationMantiToilSpawnSettings { get; private set; }
-    public ExtendedConfigEntry<string> ToilationToilSlayerSpawnSettings { get; private set; }
-    public ExtendedConfigEntry<string> ToilationMantiSlayerSpawnSettings { get; private set; }
     public ExtendedConfigEntry<string> ToilationToilPlayerSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<float> ToilationToilPlayerSlayerChance { get; private set; }
+    public ExtendedConfigEntry<string> ToilationToilHeadSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilationToilSlayerSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilationMantiToilSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilationMantiSlayerSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilationToilMaskedSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilationSlayerMaskedSpawnSettings { get; private set; }
+
+    // Toil-Player Settings
+    public ExtendedConfigEntry<string> ToilPlayerDefaultSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilPlayerSpawnSettingsMoonList { get; private set; }
+    public ExtendedConfigEntry<float> ToilPlayerSlayerChance { get; private set; }
+
+    // Player Ragdoll Settings
+    public ExtendedConfigEntry<bool> SpawnToiledPlayerRagdolls { get; private set; }
+    public ExtendedConfigEntry<bool> SpawnRealToiledPlayerRagdolls { get; private set; }
 
     // Toil-Head Settings
     public ExtendedConfigEntry<string> ToilHeadDefaultSpawnSettings { get; private set; }
@@ -37,13 +49,13 @@ public class SyncedConfigManager
     public ExtendedConfigEntry<string> MantiSlayerDefaultSpawnSettings { get; private set; }
     public ExtendedConfigEntry<string> MantiSlayerSpawnSettingsMoonList { get; private set; }
 
-    // Toil-Player Settings
-    public ExtendedConfigEntry<string> ToilPlayerDefaultSpawnSettings { get; private set; }
-    public ExtendedConfigEntry<string> ToilPlayerSpawnSettingsMoonList { get; private set; }
+    // Toil-Masked Settings
+    public ExtendedConfigEntry<string> ToilMaskedDefaultSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> ToilMaskedSpawnSettingsMoonList { get; private set; }
 
-    // Player Ragdoll Settings
-    public ExtendedConfigEntry<bool> SpawnToiledPlayerRagdolls { get; private set; }
-    public ExtendedConfigEntry<bool> SpawnRealToiledPlayerRagdolls { get; private set; }
+    // Slayer-Masked Settings
+    public ExtendedConfigEntry<string> SlayerMaskedDefaultSpawnSettings { get; private set; }
+    public ExtendedConfigEntry<string> SlayerMaskedSpawnSettingsMoonList { get; private set; }
 
     // Toil-Head Plushie Settings
     public ExtendedConfigEntry<int> ToilHeadPlushieSpawnWeight { get; private set; }
@@ -96,12 +108,25 @@ public class SyncedConfigManager
         ExtendedLogging = new("General Settings", "ExtendedLogging", defaultValue: false, "Enable extended logging.", useEnableConfiguration: false);
 
         // Toilation Settings
+        ToilationToilPlayerSpawnSettings = new("Toilation Settings", "ToilPlayerSpawnSettings", defaultValue: "1:7", GetDescriptionForMoonSpawnSettings("Toil-Player", "69-Toilation"));
+        ToilationToilPlayerSlayerChance = new("Toilation Settings", "ToilPlayerSlayerChance", defaultValue: 20, "The percent chance a Toil-Player will become a Slayer-Player for 69-Toilation.");
         ToilationToilHeadSpawnSettings = new("Toilation Settings", "ToilHeadSpawnSettings", defaultValue: "6:75", GetDescriptionForMoonSpawnSettings("Toil-Head", "69-Toilation"));
         ToilationMantiToilSpawnSettings = new("Toilation Settings", "MantiToilSpawnSettings", defaultValue: "50:90", GetDescriptionForMoonSpawnSettings("Manti-Toil", "69-Toilation"));
         ToilationToilSlayerSpawnSettings = new("Toilation Settings", "ToilSlayerSpawnSettings", defaultValue: "2:10", GetDescriptionForMoonSpawnSettings("Toil-Slayer", "69-Toilation"));
         ToilationMantiSlayerSpawnSettings = new("Toilation Settings", "MantiSlayerSpawnSettings", defaultValue: "2:20", GetDescriptionForMoonSpawnSettings("Manti-Slayer", "69-Toilation"));
-        ToilationToilPlayerSpawnSettings = new("Toilation Settings", "ToilPlayerSpawnSettings", defaultValue: "1:7", GetDescriptionForMoonSpawnSettings("Toil-Player", "69-Toilation"));
-        
+        ToilationToilMaskedSpawnSettings = new("Toilation Settings", "ToilUwUSpawnSettings", defaultValue: "2:15", GetDescriptionForMoonSpawnSettings("Toil-UwU", "69-Toilation"));
+        ToilationSlayerMaskedSpawnSettings = new("Toilation Settings", "SlayerUwUSpawnSettings", defaultValue: "1:5", GetDescriptionForMoonSpawnSettings("Slayer-UwU", "69-Toilation"));
+
+        // Toil-Player Settings
+        ToilPlayerDefaultSpawnSettings = new("Toil-Player Settings", "ToilPlayerDefaultSpawnSettings", defaultValue: "1:3", GetDescriptionForDefaultSpawnSettings("Toil-Player"));
+        string toilPlayerSpawnSettingMoonListValue = "85 Rend:1:4, 7 Dine:1:4, 8 Titan:1:5, 68 Artifice:1:5, 57 Asteroid-13:1:5, 523 Ooblterra:1:6";
+        ToilPlayerSpawnSettingsMoonList = new("Toil-Player Settings", "ToilPlayerSpawnSettingsMoonList", defaultValue: toilPlayerSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-Player"));
+        ToilPlayerSlayerChance = new("Toil-Player Settings", "ToilPlayerSlayerChance", defaultValue: 10, "The percent chance a Toil-Player will become a Slayer-Player.");
+
+        // Player Ragdoll Settings
+        SpawnToiledPlayerRagdolls = new("Player Ragdoll Settings", "SpawnToiledPlayerRagdolls", defaultValue: true, "If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way.");
+        SpawnRealToiledPlayerRagdolls = new("Player Ragdoll Settings", "SpawnRealToiledPlayerRagdolls", defaultValue: true, "If enabled, will spawn a real turret on the Toiled player ragdoll.");
+
         // Toil-Head Settings
         ToilHeadDefaultSpawnSettings = new("Toil-Head Settings", "ToilHeadDefaultSpawnSettings", defaultValue: "1:30", GetDescriptionForDefaultSpawnSettings("Toil-Head"));
         string toilHeadSpawnSettingMoonListValue = "41 Experimentation:1:10, 220 Assurance:1:20, 56 Vow:1:20, 21 Offense:1:20, 61 March:1:20, 20 Adamance:1:30, 85 Rend:1:40, 7 Dine:1:45, 8 Titan:1:50, 68 Artifice:2:70, 5 Embrion:1:30, 57 Asteroid-13:2:30, 523 Ooblterra:2:70";
@@ -122,14 +147,15 @@ public class SyncedConfigManager
         string mantiSlayerSpawnSettingsMoonListValue = "20 Adamance:1:15, 85 Rend:1:15, 7 Dine:1:15, 8 Titan:1:20, 68 Artifice:1:20, 57 Asteroid-13:1:15, 523 Ooblterra:1:25";
         MantiSlayerSpawnSettingsMoonList = new("Manti-Slayer Settings", "MantiSlayerSpawnSettingsMoonList", defaultValue: mantiSlayerSpawnSettingsMoonListValue, GetDescriptionForMoonSpawnSettingsList("Manti-Slayer"));
 
-        // Toil-Player Settings
-        ToilPlayerDefaultSpawnSettings = new("Toil-Player Settings", "ToilPlayerDefaultSpawnSettings", defaultValue: "1:3", GetDescriptionForDefaultSpawnSettings("Toil-Player"));
-        string toilPlayerSpawnSettingMoonListValue = "85 Rend:1:4, 7 Dine:1:4, 8 Titan:1:5, 68 Artifice:1:5, 57 Asteroid-13:1:5, 523 Ooblterra:1:6";
-        ToilPlayerSpawnSettingsMoonList = new("Toil-Player Settings", "ToilPlayerSpawnSettingsMoonList", defaultValue: toilPlayerSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-Player"));
+        // Toil-Masked Settings
+        ToilMaskedDefaultSpawnSettings = new("Toil-UwU Settings", "ToilUwUDefaultSpawnSettings", defaultValue: "1:10", GetDescriptionForDefaultSpawnSettings("Toil-UwU"));
+        string toilMaskedSpawnSettingMoonListValue = "";
+        ToilMaskedSpawnSettingsMoonList = new("Toil-UwU Settings", "ToilUwUSpawnSettingsMoonList", defaultValue: toilMaskedSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-UwU"));
 
-        // Player Ragdoll Settings
-        SpawnToiledPlayerRagdolls = new("Player Ragdoll Settings", "SpawnToiledPlayerRagdolls", defaultValue: true, "If enabled, will spawn a Toiled player ragdoll when a player dies to a Turret-Head in any way.");
-        SpawnRealToiledPlayerRagdolls = new("Player Ragdoll Settings", "SpawnRealToiledPlayerRagdolls", defaultValue: true, "If enabled, will spawn a real turret on the Toiled player ragdoll.");
+        // Slayer-Masked Settings
+        SlayerMaskedDefaultSpawnSettings = new("Slayer-UwU Settings", "SlayerUwUDefaultSpawnSettings", defaultValue: "1:5", GetDescriptionForDefaultSpawnSettings("Slayer-UwU"));
+        string slayerMaskedSpawnSettingMoonListValue = "";
+        SlayerMaskedSpawnSettingsMoonList = new("Slayer-UwU Settings", "SlayerUwUSpawnSettingsMoonList", defaultValue: slayerMaskedSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Slayer-UwU"));
 
         // Toil-Head Plushie Settings
         ToilHeadPlushieSpawnWeight = new("Toil-Head Plushie Settings", "SpawnWeight", defaultValue: 10, "Toil-Head plushie spawn chance weight.");
@@ -215,7 +241,7 @@ public class SyncedConfigManager
     {
         string description = $"{enemyName} spawn settings.\n";
         description += "MaxSpawnCount,SpawnChance\n";
-        description += "<int>,<int>";
+        description += "<int>,<float>";
 
         return description;
     }
@@ -224,7 +250,7 @@ public class SyncedConfigManager
     {
         string description = $"{enemyName} spawn settings for {planetName}.\n";
         description += "MaxSpawnCount,SpawnChance\n";
-        description += "<int>,<int>";
+        description += "<int>,<float>";
 
         return description;
     }
@@ -234,7 +260,7 @@ public class SyncedConfigManager
         string description = $"{enemyName} spawn settings list for moons.\n";
         description += "Separate each entry with a comma.\n";
         description += "PlanetName:MaxSpawnCount:SpawnChance\n";
-        description += "<string>:<int>:<int>";
+        description += "<string>:<int>:<float>";
 
         return description;
     }
@@ -243,7 +269,7 @@ public class SyncedConfigManager
     {
         string description = $"{enemyName} default spawn settings for all moons.\n";
         description += "MaxSpawnCount:SpawnChance\n";
-        description += "<int>:<int>";
+        description += "<int>:<float>";
 
         return description;
     }

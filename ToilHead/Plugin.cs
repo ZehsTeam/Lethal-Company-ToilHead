@@ -34,14 +34,15 @@ internal class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(StartOfRoundPatch));
         harmony.PatchAll(typeof(RoundManagerPatch));
         harmony.PatchAll(typeof(TerminalPatch));
-        harmony.PatchAll(typeof(EnemyAIPatch));
-        harmony.PatchAll(typeof(SpringManAIPatch));
         harmony.PatchAll(typeof(PlayerControllerBPatch));
         harmony.PatchAll(typeof(RagdollGrabbableObjectPatch));
+        harmony.PatchAll(typeof(EnemyAIPatch));
+        harmony.PatchAll(typeof(SpringManAIPatch));
+        harmony.PatchAll(typeof(MaskedPlayerEnemyPatch));
         harmony.PatchAll(typeof(TurretPatch));
 
         ConfigManager = new SyncedConfigManager();
-
+        
         LethalLibCompat.Initialize();
         MonsterPlushiesCompat.Initialize();
 
