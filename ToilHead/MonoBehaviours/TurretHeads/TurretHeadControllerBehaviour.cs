@@ -36,6 +36,7 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
     protected IEnumerator LateStartCO()
     {
         yield return null;
+
         LateStart();
     }
 
@@ -99,7 +100,7 @@ public class TurretHeadControllerBehaviour : NetworkBehaviour
     {
 
     }
-    
+
     protected EnemyAI GetEnemyScript()
     {
         return transform.parent.GetComponent<EnemyAI>();

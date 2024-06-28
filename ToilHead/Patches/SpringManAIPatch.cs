@@ -12,19 +12,19 @@ internal class SpringManAIPatch
     [HarmonyPostfix]
     static void OnCollideWithPlayerPatch(ref SpringManAI __instance, ref Collider other)
     {
-        if (!TurretHeadManager.EnemyTurretHeadControllerPairs.TryGetValue(__instance, out TurretHeadControllerBehaviour behaviour))
-        {
-            return;
-        }
+        TurretHeadControllerBehaviour controllerBehaviour = __instance.GetComponentInChildren<TurretHeadControllerBehaviour>();
+        if (controllerBehaviour == null) return;
 
-        if (!other.gameObject.TryGetComponent(out PlayerControllerB playerScript))
-        {
-            return;
-        }
+        PlayerControllerB playerScript = other.gameObject.GetComponent<PlayerControllerB>();
+        if (playerScript == null) return;
 
-        if (playerScript != PlayerUtils.GetLocalPlayerScript()) return;
+        if (!PlayerUtils.IsLocalPlayer(playerScript)) return;
         if (!playerScript.AllowPlayerDeath()) return;
 
-        TurretHeadManager.SetDeadBodyTurretHead(playerScript, isSlayer: behaviour.TurretBehaviour.IsMinigun);
+        bool isSlayer = controllerBehaviour.TurretBehaviour.IsMinigun;
+
+        Plugin.Instance.LogInfoExtended($"SpringManAI OnCollideWithPlayer \"{playerScript.playerUsername}\" isSlayer? {isSlayer}");
+
+        TurretHeadManager.SetDeadBodyTurretHead(playerScript, isSlayer);
     }
 }

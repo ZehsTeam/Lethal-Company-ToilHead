@@ -19,6 +19,8 @@ public class TurretHeadManager
     public static Dictionary<PlayerControllerB, TurretHeadControllerBehaviour> PlayerTurretHeadControllerPairs { get; private set; } = [];
     public static Dictionary<PlayerControllerB, TurretHeadControllerBehaviour> DeadBodyTurretHeadControllerPairs { get; private set; } = [];
 
+    private static Coroutine _setDeadBodyTurretHeadOnServerCoroutine;
+
     internal static void Initialize()
     {
         TurretHeadDataList = [
@@ -35,6 +37,8 @@ public class TurretHeadManager
         EnemyTurretHeadControllerPairs = [];
         PlayerTurretHeadControllerPairs = [];
         DeadBodyTurretHeadControllerPairs = [];
+
+        _setDeadBodyTurretHeadOnServerCoroutine = null;
     }
 
     internal static void Reset()
@@ -45,6 +49,8 @@ public class TurretHeadManager
         EnemyTurretHeadControllerPairs.Clear();
         PlayerTurretHeadControllerPairs.Clear();
         DeadBodyTurretHeadControllerPairs.Clear();
+
+        _setDeadBodyTurretHeadOnServerCoroutine = null;
 
         DespawnAllControllersOnServer();
     }
@@ -226,8 +232,13 @@ public class TurretHeadManager
             Plugin.logger.LogError($"Error: Failed to set player ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. PlayerControllerB is null.");
             return;
         }
+        
+        if (_setDeadBodyTurretHeadOnServerCoroutine != null)
+        {
+            StartOfRound.Instance.StopCoroutine(_setDeadBodyTurretHeadOnServerCoroutine);
+        }
 
-        StartOfRound.Instance.StartCoroutine(SetDeadBodyTurretHeadOnServerCO(playerScript, isSlayer, isReal));
+        _setDeadBodyTurretHeadOnServerCoroutine = StartOfRound.Instance.StartCoroutine(SetDeadBodyTurretHeadOnServerCO(playerScript, isSlayer, isReal));
     }
 
     private static IEnumerator SetDeadBodyTurretHeadOnServerCO(PlayerControllerB playerScript, bool isSlayer, bool isReal)

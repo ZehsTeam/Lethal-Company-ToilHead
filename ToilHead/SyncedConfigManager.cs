@@ -10,6 +10,7 @@ public class SyncedConfigManager
 {
     public SyncedConfigData HostConfigData { get; private set; }
 
+    #region Config Settings
     // General Settings
     public ExtendedConfigEntry<bool> EnableConfiguration { get; private set; }
     public ExtendedConfigEntry<bool> ExtendedLogging { get; private set; }
@@ -93,6 +94,7 @@ public class SyncedConfigManager
     // Turret Berserk Settings
     public ExtendedConfigEntry<float> TurretBerserkDuration { get; private set; }
     public ExtendedConfigEntry<float> TurretBerserkRotationSpeed { get; private set; }
+    #endregion
     #endregion
 
     public SyncedConfigManager()

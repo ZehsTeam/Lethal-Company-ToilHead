@@ -13,16 +13,11 @@ public class ToilPlayerControllerBehaviour : TurretHeadControllerBehaviour
 
     protected override void OnFinishedSetup()
     {
-        if (IsServer && !Plugin.ConfigManager.SpawnRealToiledPlayerRagdolls.Value)
-        {
-            TurretBehaviour.SetCanTargetPlayersClientRpc(false);
-        }
-
         PlayerControllerB playerScript = GetPlayerScript();
 
         if (PlayerUtils.IsLocalPlayer(playerScript))
         {
-            Utils.DisableRenderers(TurretBehaviour.gameObject);
+            Utils.DisableRenderers(TurretBehaviour.SyncToHeadTransform.gameObject);
         }
 
         if (IsServer)
