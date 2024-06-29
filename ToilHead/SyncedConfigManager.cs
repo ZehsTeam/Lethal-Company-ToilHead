@@ -116,8 +116,8 @@ public class SyncedConfigManager
         ToilationMantiToilSpawnSettings = new("Toilation Settings", "MantiToilSpawnSettings", defaultValue: "50:90", GetDescriptionForMoonSpawnSettings("Manti-Toil", "69-Toilation"));
         ToilationToilSlayerSpawnSettings = new("Toilation Settings", "ToilSlayerSpawnSettings", defaultValue: "2:10", GetDescriptionForMoonSpawnSettings("Toil-Slayer", "69-Toilation"));
         ToilationMantiSlayerSpawnSettings = new("Toilation Settings", "MantiSlayerSpawnSettings", defaultValue: "2:20", GetDescriptionForMoonSpawnSettings("Manti-Slayer", "69-Toilation"));
-        ToilationToilMaskedSpawnSettings = new("Toilation Settings", "ToilUwUSpawnSettings", defaultValue: "2:15", GetDescriptionForMoonSpawnSettings("Toil-UwU", "69-Toilation"));
-        ToilationSlayerMaskedSpawnSettings = new("Toilation Settings", "SlayerUwUSpawnSettings", defaultValue: "1:5", GetDescriptionForMoonSpawnSettings("Slayer-UwU", "69-Toilation"));
+        ToilationToilMaskedSpawnSettings = new("Toilation Settings", "ToilMaskedSpawnSettings", defaultValue: "2:15", GetDescriptionForMoonSpawnSettings("Toil-Masked", "69-Toilation"));
+        ToilationSlayerMaskedSpawnSettings = new("Toilation Settings", "SlayerMaskedSpawnSettings", defaultValue: "1:5", GetDescriptionForMoonSpawnSettings("Slayer-Masked", "69-Toilation"));
 
         // Toil-Player Settings
         ToilPlayerDefaultSpawnSettings = new("Toil-Player Settings", "ToilPlayerDefaultSpawnSettings", defaultValue: "1:3", GetDescriptionForDefaultSpawnSettings("Toil-Player"));
@@ -150,14 +150,14 @@ public class SyncedConfigManager
         MantiSlayerSpawnSettingsMoonList = new("Manti-Slayer Settings", "MantiSlayerSpawnSettingsMoonList", defaultValue: mantiSlayerSpawnSettingsMoonListValue, GetDescriptionForMoonSpawnSettingsList("Manti-Slayer"));
 
         // Toil-Masked Settings
-        ToilMaskedDefaultSpawnSettings = new("Toil-UwU Settings", "ToilUwUDefaultSpawnSettings", defaultValue: "1:10", GetDescriptionForDefaultSpawnSettings("Toil-UwU"));
+        ToilMaskedDefaultSpawnSettings = new("Toil-Masked Settings", "ToilMaskedDefaultSpawnSettings", defaultValue: "1:10", GetDescriptionForDefaultSpawnSettings("Toil-Masked"));
         string toilMaskedSpawnSettingMoonListValue = "";
-        ToilMaskedSpawnSettingsMoonList = new("Toil-UwU Settings", "ToilUwUSpawnSettingsMoonList", defaultValue: toilMaskedSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-UwU"));
+        ToilMaskedSpawnSettingsMoonList = new("Toil-Masked Settings", "ToilMaskedSpawnSettingsMoonList", defaultValue: toilMaskedSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Toil-Masked"));
 
         // Slayer-Masked Settings
-        SlayerMaskedDefaultSpawnSettings = new("Slayer-UwU Settings", "SlayerUwUDefaultSpawnSettings", defaultValue: "1:5", GetDescriptionForDefaultSpawnSettings("Slayer-UwU"));
+        SlayerMaskedDefaultSpawnSettings = new("Slayer-Masked Settings", "SlayerMaskedDefaultSpawnSettings", defaultValue: "1:5", GetDescriptionForDefaultSpawnSettings("Slayer-Masked"));
         string slayerMaskedSpawnSettingMoonListValue = "";
-        SlayerMaskedSpawnSettingsMoonList = new("Slayer-UwU Settings", "SlayerUwUSpawnSettingsMoonList", defaultValue: slayerMaskedSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Slayer-UwU"));
+        SlayerMaskedSpawnSettingsMoonList = new("Slayer-Masked Settings", "SlayerMaskedSpawnSettingsMoonList", defaultValue: slayerMaskedSpawnSettingMoonListValue, GetDescriptionForMoonSpawnSettingsList("Slayer-Masked"));
 
         // Toil-Head Plushie Settings
         ToilHeadPlushieSpawnWeight = new("Toil-Head Plushie Settings", "SpawnWeight", defaultValue: 10, "Toil-Head plushie spawn chance weight.");

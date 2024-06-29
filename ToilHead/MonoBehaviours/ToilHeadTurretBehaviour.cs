@@ -402,11 +402,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             {
                 if (localPlayerScript.health > _damage)
                 {
-                    localPlayerScript.DamagePlayer(_damage, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots, 2);
+                    localPlayerScript.DamagePlayer(_damage, hasDamageSFX: true, callRPC: true, causeOfDeath: CauseOfDeath.Gunshots, deathAnimation: 2);
                 }
                 else
                 {
-                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots, 2);
+                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, causeOfDeath: CauseOfDeath.Gunshots, deathAnimation: 2);
 
                     TurretHeadManager.SetDeadBodyTurretHead(localPlayerScript, IsMinigun);
                 }
@@ -476,11 +476,11 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
             {
                 if (localPlayerScript.health > _damage)
                 {
-                    localPlayerScript.DamagePlayer(_damage, hasDamageSFX: true, callRPC: true, CauseOfDeath.Gunshots, 2);
+                    localPlayerScript.DamagePlayer(_damage, hasDamageSFX: true, callRPC: true, causeOfDeath: CauseOfDeath.Gunshots, deathAnimation: 2);
                 }
                 else
                 {
-                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, CauseOfDeath.Gunshots, 2);
+                    localPlayerScript.KillPlayer(aimPoint.forward * 40f, spawnBody: true, causeOfDeath: CauseOfDeath.Gunshots, deathAnimation: 2);
 
                     TurretHeadManager.SetDeadBodyTurretHead(localPlayerScript, IsMinigun);
                 }
