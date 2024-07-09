@@ -89,6 +89,8 @@ public class TurretHeadManager
     internal static void TrySetPlayerTurretHeadsOnServer()
     {
         if (!Plugin.IsHostOrServer) return;
+        if (!StartOfRound.Instance.currentLevel.spawnEnemiesAndScrap) return;
+        if (GameNetworkManager.Instance.connectedPlayers == 1) return;
 
         List<PlayerControllerB> playerScripts = StartOfRound.Instance.allPlayerScripts.ToList();
 

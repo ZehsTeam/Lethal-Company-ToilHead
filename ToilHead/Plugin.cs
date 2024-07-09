@@ -42,9 +42,6 @@ internal class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(TurretPatch));
 
         ConfigManager = new SyncedConfigManager();
-        
-        LethalLibCompat.Initialize();
-        MonsterPlushiesCompat.Initialize();
 
         Content.Load();
         TurretHeadManager.Initialize();

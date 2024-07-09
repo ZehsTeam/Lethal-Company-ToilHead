@@ -37,8 +37,8 @@ public class Api
     /// </summary>
     public static bool ForceToilHeadSpawns
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceSpawns; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceSpawns = value; }
+        get { return ToilHeadData.ForceSpawns; }
+        set { ToilHeadData.ForceSpawns = value; }
     }
 
     /// <summary>
@@ -47,8 +47,8 @@ public class Api
     /// </summary>
     public static int ForceToilHeadMaxSpawnCount
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: false).ForceMaxSpawnCount = value; }
+        get { return ToilHeadData.ForceMaxSpawnCount; }
+        set { ToilHeadData.ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -75,8 +75,8 @@ public class Api
     /// </summary>
     public static bool ForceMantiToilSpawns
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceSpawns; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceSpawns = value; }
+        get { return MantiToilData.ForceSpawns; }
+        set { MantiToilData.ForceSpawns = value; }
     }
 
     /// <summary>
@@ -85,8 +85,8 @@ public class Api
     /// </summary>
     public static int ForceMantiToilMaxSpawnCount
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: false).ForceMaxSpawnCount = value; }
+        get { return MantiToilData.ForceMaxSpawnCount; }
+        set { MantiToilData.ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -113,8 +113,8 @@ public class Api
     /// </summary>
     public static bool ForceToilSlayerSpawns
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceSpawns; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceSpawns = value; }
+        get { return ToilSlayerData.ForceSpawns; }
+        set { ToilSlayerData.ForceSpawns = value; }
     }
 
     /// <summary>
@@ -123,8 +123,8 @@ public class Api
     /// </summary>
     public static int ForceToilSlayerMaxSpawnCount
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Spring", isSlayer: true).ForceMaxSpawnCount = value; }
+        get { return ToilSlayerData.ForceMaxSpawnCount; }
+        set { ToilSlayerData.ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -151,8 +151,8 @@ public class Api
     /// </summary>
     public static bool ForceMantiSlayerSpawns
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).ForceSpawns; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).ForceSpawns = value; }
+        get { return MantiSlayerData.ForceSpawns; }
+        set { MantiSlayerData.ForceSpawns = value; }
     }
 
     /// <summary>
@@ -161,8 +161,8 @@ public class Api
     /// </summary>
     public static int ForceMantiSlayerMaxSpawnCount
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Manticoil", isSlayer: true).ForceMaxSpawnCount = value; }
+        get { return MantiSlayerData.ForceMaxSpawnCount; }
+        set { MantiSlayerData.ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -189,8 +189,8 @@ public class Api
     /// </summary>
     public static bool ForceToilPlayerSpawns
     {
-        get { return TurretHeadManager.PlayerTurretHeadData.ForceSpawns; }
-        set { TurretHeadManager.PlayerTurretHeadData.ForceSpawns = value; }
+        get { return ToilPlayerData.ForceSpawns; }
+        set { ToilPlayerData.ForceSpawns = value; }
     }
 
     /// <summary>
@@ -199,8 +199,8 @@ public class Api
     /// </summary>
     public static int ForceToilPlayerMaxSpawnCount
     {
-        get { return TurretHeadManager.PlayerTurretHeadData.ForceMaxSpawnCount; }
-        set { TurretHeadManager.PlayerTurretHeadData.ForceMaxSpawnCount = value; }
+        get { return ToilPlayerData.ForceMaxSpawnCount; }
+        set { ToilPlayerData.ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -225,8 +225,8 @@ public class Api
     /// </summary>
     public static bool ForceToilMaskedSpawns
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Masked", isSlayer: false).ForceSpawns; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Masked", isSlayer: false).ForceSpawns = value; }
+        get { return ToilMaskedData.ForceSpawns; }
+        set { ToilMaskedData.ForceSpawns = value; }
     }
 
     /// <summary>
@@ -235,8 +235,8 @@ public class Api
     /// </summary>
     public static int ForceToilMaskedMaxSpawnCount
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Masked", isSlayer: false).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Masked", isSlayer: false).ForceMaxSpawnCount = value; }
+        get { return ToilMaskedData.ForceMaxSpawnCount; }
+        set { ToilMaskedData.ForceMaxSpawnCount = value; }
     }
 
     /// <summary>
@@ -263,8 +263,8 @@ public class Api
     /// </summary>
     public static bool ForceSlayerMaskedSpawns
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Masked", isSlayer: true).ForceSpawns; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Masked", isSlayer: true).ForceSpawns = value; }
+        get { return SlayerMaskedData.ForceSpawns; }
+        set { SlayerMaskedData.ForceSpawns = value; }
     }
 
     /// <summary>
@@ -273,8 +273,8 @@ public class Api
     /// </summary>
     public static int ForceSlayerMaskedMaxSpawnCount
     {
-        get { return TurretHeadManager.GetEnemyTurretHeadData("Masked", isSlayer: true).ForceMaxSpawnCount; }
-        set { TurretHeadManager.GetEnemyTurretHeadData("Masked", isSlayer: true).ForceMaxSpawnCount = value; }
+        get { return SlayerMaskedData.ForceMaxSpawnCount; }
+        set { SlayerMaskedData.ForceMaxSpawnCount = value; }
     }
 
     /// <summary>

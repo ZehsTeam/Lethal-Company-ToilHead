@@ -7,8 +7,8 @@
     
     <AssemblyName>com.github.zehsteam.$(MSBuildProjectName)</AssemblyName> <!-- PLUGIN_GUID -->
     <Product>$(MSBuildProjectName)</Product>                               <!-- PLUGIN_NAME -->
-    <Version>1.7.1</Version>                                               <!-- PLUGIN_VERSION -->
-    <Description>CoilHeads and Manticoils can sometimes spawn with a turret on their head. Highly Configurable.</Description>
+    <Version>1.7.2</Version>                                               <!-- PLUGIN_VERSION -->
+    <Description>CoilHeads, Manticoils, and other entities can sometimes spawn with a turret on their head. Highly Configurable.</Description>
     
     <RootNamespace>com.github.zehsteam.$(MSBuildProjectName)</RootNamespace>
     

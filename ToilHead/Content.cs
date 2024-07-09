@@ -69,7 +69,7 @@ internal class Content
         }
         catch (System.Exception e)
         {
-            Plugin.logger.LogError($"Error: failed to load assets from AssetBundle.\n\n{e}");
+            Plugin.logger.LogError($"Error: Failed to load assets from AssetBundle.\n\n{e}");
         }
     }
 }

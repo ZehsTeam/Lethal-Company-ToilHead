@@ -6,10 +6,5 @@ internal class MonsterPlushiesCompat
 {
     public const string ModGUID = "scin.monsterplushies";
 
-    public static bool HasMod = false;
-
-    public static void Initialize()
-    {
-        HasMod = Chainloader.PluginInfos.ContainsKey(ModGUID);
-    }
+    public static bool HasMod => Chainloader.PluginInfos.ContainsKey(ModGUID);
 }

@@ -6,10 +6,5 @@ internal class LethalLibCompat
 {
     public const string ModGUID = LethalLib.Plugin.ModGUID;
 
-    public static bool HasMod = false;
-
-    public static void Initialize()
-    {
-        HasMod = Chainloader.PluginInfos.ContainsKey(ModGUID);
-    }
+    public static bool HasMod => Chainloader.PluginInfos.ContainsKey(ModGUID);
 }
