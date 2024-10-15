@@ -6,11 +6,11 @@ using UnityEngine;
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(SpringManAI))]
-internal class SpringManAIPatch
+internal static class SpringManAIPatch
 {
-    [HarmonyPatch("OnCollideWithPlayer")]
+    [HarmonyPatch(nameof(SpringManAI.OnCollideWithPlayer))]
     [HarmonyPostfix]
-    static void OnCollideWithPlayerPatch(ref SpringManAI __instance, ref Collider other)
+    private static void OnCollideWithPlayerPatch(ref SpringManAI __instance, ref Collider other)
     {
         TurretHeadControllerBehaviour controllerBehaviour = __instance.GetComponentInChildren<TurretHeadControllerBehaviour>();
         if (controllerBehaviour == null) return;

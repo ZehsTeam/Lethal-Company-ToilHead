@@ -295,7 +295,7 @@ public class SyncedConfigManager
 
     private void SyncedConfigsChanged()
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         PluginNetworkBehaviour.Instance.SendConfigToPlayerClientRpc(new SyncedConfigData(this));
     }

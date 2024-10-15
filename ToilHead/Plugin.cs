@@ -4,14 +4,13 @@ using com.github.zehsteam.ToilHead.Compatibility;
 using com.github.zehsteam.ToilHead.Patches;
 using HarmonyLib;
 using System.Reflection;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency(LethalLibCompat.ModGUID, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(MonsterPlushiesCompat.ModGUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(LethalLibProxy.ModGUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(MonsterPlushiesProxy.ModGUID, BepInDependency.DependencyFlags.SoftDependency)]
 internal class Plugin : BaseUnityPlugin
 {
     private readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
@@ -20,8 +19,6 @@ internal class Plugin : BaseUnityPlugin
     internal static ManualLogSource logger;
 
     internal static SyncedConfigManager ConfigManager;
-
-    public static bool IsHostOrServer => NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer;
 
     private void Awake()
     {
@@ -94,8 +91,8 @@ internal class Plugin : BaseUnityPlugin
 
     private void RegisterScrapItems()
     {
-        if (!LethalLibCompat.HasMod) return;
-        if (!MonsterPlushiesCompat.HasMod) return;
+        if (!LethalLibProxy.HasMod) return;
+        if (!MonsterPlushiesProxy.HasMod) return;
 
         try
         {

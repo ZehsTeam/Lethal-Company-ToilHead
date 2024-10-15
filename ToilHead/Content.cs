@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead;
 
-internal class Content
+internal static class Content
 {
     // Network Handler
     public static GameObject NetworkHandlerPrefab;

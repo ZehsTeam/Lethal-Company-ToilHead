@@ -3,11 +3,11 @@
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(MaskedPlayerEnemy))]
-internal class MaskedPlayerEnemyPatch
+internal static class MaskedPlayerEnemyPatch
 {
-    [HarmonyPatch("Start")]
+    [HarmonyPatch(nameof(MaskedPlayerEnemy.Start))]
     [HarmonyPostfix]
-    static void StartPatch(ref EnemyAI __instance)
+    private static void StartPatch(ref EnemyAI __instance)
     {
         if (!TurretHeadManager.TrySetEnemyTurretHeadOnServer(__instance, isSlayer: true))
         {

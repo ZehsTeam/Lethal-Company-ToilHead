@@ -2,9 +2,9 @@
 
 namespace com.github.zehsteam.ToilHead.Compatibility;
 
-internal class SCP173CoilheadSFXCompat
+internal static class ThiccCoilHeadProxy
 {
-    public const string ModGUID = "raydenoir.SCP_173";
+    public const string ModGUID = "ThiccCoilHead";
 
     public static bool HasMod => Chainloader.PluginInfos.ContainsKey(ModGUID);
 }

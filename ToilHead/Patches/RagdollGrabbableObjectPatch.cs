@@ -4,13 +4,18 @@ using HarmonyLib;
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(RagdollGrabbableObject))]
-internal class RagdollGrabbableObjectPatch
+internal static class RagdollGrabbableObjectPatch
 {
-    [HarmonyPatch("OnDestroy")]
+    [HarmonyPatch(nameof(RagdollGrabbableObject.OnDestroy))]
     [HarmonyPrefix]
-    static void OnDestroyPatch(ref RagdollGrabbableObject __instance)
+    private static void OnDestroyPatch(ref RagdollGrabbableObject __instance)
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
+
+        if (__instance.ragdoll == null || __instance.ragdoll.playerScript == null)
+        {
+            return;
+        }
 
         PlayerControllerB playerScript = __instance.ragdoll.playerScript;
 

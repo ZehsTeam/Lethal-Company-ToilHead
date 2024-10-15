@@ -6,9 +6,9 @@ namespace com.github.zehsteam.ToilHead.Patches;
 [HarmonyPatch(typeof(PlayerControllerB))]
 internal class PlayerControllerBPatch
 {
-    [HarmonyPatch("KillPlayerServerRpc")]
+    [HarmonyPatch(nameof(PlayerControllerB.KillPlayerServerRpc))]
     [HarmonyPrefix]
-    static void KillPlayerServerRpcPatch(ref PlayerControllerB __instance)
+    private static void KillPlayerServerRpcPatch(ref PlayerControllerB __instance)
     {
         if (TurretHeadManager.IsPlayerTurretHead(__instance))
         {
@@ -16,11 +16,11 @@ internal class PlayerControllerBPatch
         }
     }
 
-    [HarmonyPatch("OnDestroy")]
+    [HarmonyPatch(nameof(PlayerControllerB.OnDestroy))]
     [HarmonyPrefix]
-    static void OnDestroyPatch(ref PlayerControllerB __instance)
+    private static void OnDestroyPatch(ref PlayerControllerB __instance)
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         if (TurretHeadManager.IsPlayerTurretHead(__instance))
         {

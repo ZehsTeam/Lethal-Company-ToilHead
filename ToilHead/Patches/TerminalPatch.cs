@@ -5,11 +5,11 @@ using UnityEngine;
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(Terminal))]
-internal class TerminalPatch
+internal static class TerminalPatch
 {
-    [HarmonyPatch("CallFunctionInAccessibleTerminalObject")]
+    [HarmonyPatch(nameof(Terminal.CallFunctionInAccessibleTerminalObject))]
     [HarmonyPostfix]
-    static void CallFunctionInAccessibleTerminalObjectPatch(string word, ref bool ___broadcastedCodeThisFrame)
+    private static void CallFunctionInAccessibleTerminalObjectPatch(string word, ref bool ___broadcastedCodeThisFrame)
     {
         FollowTerminalAccessibleObjectBehaviour[] array = Object.FindObjectsByType<FollowTerminalAccessibleObjectBehaviour>(FindObjectsSortMode.None);
 

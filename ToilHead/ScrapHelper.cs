@@ -5,11 +5,11 @@ using static LethalLib.Modules.Levels;
 
 namespace com.github.zehsteam.ToilHead;
 
-internal class ScrapHelper
+internal static class ScrapHelper
 {
     public static void RegisterScrap(Item item, int iRarity, bool spawnAllMoons, string moonSpawnList, bool twoHanded, int carryWeight, int minValue, int maxValue)
     {
-        if (!LethalLibCompat.HasMod) return;
+        if (!LethalLibProxy.HasMod) return;
 
         try
         {

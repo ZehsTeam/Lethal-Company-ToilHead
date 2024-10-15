@@ -4,11 +4,11 @@ using HarmonyLib;
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(EnemyAI))]
-internal class EnemyAIPatch
+internal static class EnemyAIPatch
 {
-    [HarmonyPatch("Start")]
+    [HarmonyPatch(nameof(EnemyAI.Start))]
     [HarmonyPostfix]
-    static void StartPatch(ref EnemyAI __instance)
+    private static void StartPatch(ref EnemyAI __instance)
     {
         if (!Utils.IsValidEnemy(__instance)) return;
 
@@ -18,9 +18,9 @@ internal class EnemyAIPatch
         }
     }
 
-    [HarmonyPatch("HitEnemyServerRpc")]
+    [HarmonyPatch(nameof(EnemyAI.HitEnemyServerRpc))]
     [HarmonyPostfix]
-    static void HitEnemyServerRpcPatch(ref EnemyAI __instance, int playerWhoHit)
+    private static void HitEnemyServerRpcPatch(ref EnemyAI __instance, int playerWhoHit)
     {
         if (__instance.isEnemyDead) return;
 
@@ -32,11 +32,11 @@ internal class EnemyAIPatch
         }
     }
 
-    [HarmonyPatch("KillEnemy")]
+    [HarmonyPatch(nameof(EnemyAI.KillEnemy))]
     [HarmonyPrefix]
-    static void KillEnemyPatch(ref EnemyAI __instance, bool destroy)
+    private static void KillEnemyPatch(ref EnemyAI __instance, bool destroy)
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
         if (!destroy) return;
 
         if (TurretHeadManager.IsEnemyTurretHead(__instance))

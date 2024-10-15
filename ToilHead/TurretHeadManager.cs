@@ -10,7 +10,7 @@ using UnityEngine;
 namespace com.github.zehsteam.ToilHead;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-public class TurretHeadManager
+public static class TurretHeadManager
 {
     public static List<TurretHeadData> TurretHeadDataList { get; private set; } = [];
     public static TurretHeadData PlayerTurretHeadData { get; private set; }
@@ -58,7 +58,7 @@ public class TurretHeadManager
     #region Try Set Turret-Head
     internal static bool TrySetEnemyTurretHeadOnServer(EnemyAI enemyScript, bool isSlayer)
     {
-        if (!Plugin.IsHostOrServer) return false;
+        if (!NetworkUtils.IsServer) return false;
 
         string enemyName = enemyScript.enemyType.enemyName;
         TurretHeadData turretHeadData = GetEnemyTurretHeadData(enemyName, isSlayer);
@@ -88,7 +88,7 @@ public class TurretHeadManager
 
     internal static void TrySetPlayerTurretHeadsOnServer()
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
         if (!StartOfRound.Instance.currentLevel.spawnEnemiesAndScrap) return;
         if (GameNetworkManager.Instance.connectedPlayers == 1) return;
 
@@ -111,7 +111,7 @@ public class TurretHeadManager
 
     internal static bool TrySetPlayerTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
     {
-        if (!Plugin.IsHostOrServer) return false;
+        if (!NetworkUtils.IsServer) return false;
 
         TurretHeadData turretHeadData = PlayerTurretHeadData;
 
@@ -136,7 +136,7 @@ public class TurretHeadManager
     #region Set Turret-Head
     public static bool SetEnemyTurretHeadOnServer(EnemyAI enemyScript, bool isSlayer)
     {
-        if (!Plugin.IsHostOrServer) return false;
+        if (!NetworkUtils.IsServer) return false;
 
         if (enemyScript == null)
         {
@@ -175,7 +175,7 @@ public class TurretHeadManager
 
     public static bool SetPlayerTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
     {
-        if (!Plugin.IsHostOrServer) return false;
+        if (!NetworkUtils.IsServer) return false;
 
         string playerUsername = playerScript.playerUsername;
 
@@ -207,7 +207,7 @@ public class TurretHeadManager
 
     public static void SetDeadBodyTurretHead(PlayerControllerB playerScript, bool isSlayer)
     {
-        if (Plugin.IsHostOrServer)
+        if (NetworkUtils.IsServer)
         {
             SetDeadBodyTurretHeadOnServer(playerScript, isSlayer);
         }
@@ -219,7 +219,7 @@ public class TurretHeadManager
 
     public static void SetDeadBodyTurretHeadOnServer(PlayerControllerB playerScript, bool isSlayer)
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         bool isReal = Plugin.ConfigManager.SpawnRealToiledPlayerRagdolls.Value;
 
@@ -245,7 +245,7 @@ public class TurretHeadManager
 
     private static IEnumerator SetDeadBodyTurretHeadOnServerCO(PlayerControllerB playerScript, bool isSlayer, bool isReal)
     {
-        if (!Plugin.IsHostOrServer) yield break;
+        if (!NetworkUtils.IsServer) yield break;
 
         string playerUsername = playerScript.playerUsername;
 
@@ -297,7 +297,7 @@ public class TurretHeadManager
 
     private static void SpawnTurretHeadControllerOnServer(GameObject controllerPrefab, Transform parentTransform)
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         GameObject controllerObject = Object.Instantiate(controllerPrefab, parentTransform);
         controllerObject.GetComponent<NetworkObject>().Spawn();
@@ -363,7 +363,7 @@ public class TurretHeadManager
 
     public static void DespawnEnemyControllerOnServer(EnemyAI enemyScript)
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         string enemyName = enemyScript.enemyType.enemyName;
 
@@ -390,7 +390,7 @@ public class TurretHeadManager
 
     public static void DespawnPlayerControllerOnServer(PlayerControllerB playerScript)
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         string playerUsername = playerScript.playerUsername;
 
@@ -417,7 +417,7 @@ public class TurretHeadManager
 
     public static void DespawnDeadBodyControllerOnServer(PlayerControllerB playerScript)
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         string playerUsername = playerScript.playerUsername;
 
@@ -444,7 +444,7 @@ public class TurretHeadManager
 
     private static void DespawnAllControllersOnServer()
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         try
         {

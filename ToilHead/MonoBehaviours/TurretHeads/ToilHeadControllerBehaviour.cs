@@ -10,7 +10,7 @@ public class ToilHeadControllerBehaviour : TurretHeadControllerBehaviour
     {
         base.LateStart();
 
-        if (FNaFEndoCoilheadCompat.HasMod || ThiccCoilHeadCompat.HasMod)
+        if (FNaFEndoCoilheadProxy.HasMod || ThiccCoilHeadProxy.HasMod)
         {
             _parentToTransformBehaviour.SetTargetAndParentTransform(TurretBehaviour.SyncToHeadTransform, GetHeadTransform());
         }
@@ -18,31 +18,31 @@ public class ToilHeadControllerBehaviour : TurretHeadControllerBehaviour
 
     public override void SetupTurret()
     {
-        if (SCP173CoilheadSFXCompat.HasMod)
+        if (SCP173CoilheadSFXProxy.HasMod)
         {
             PositionOffset = new Vector3(0f, 4.35f, -0.075f);
             RotationOffset = Vector3.zero;
         }
 
-        if (WeepingAngelsCompat.HasMod)
+        if (WeepingAngelsProxy.HasMod)
         {
             PositionOffset = new Vector3(0f, 3.6f, -0.65f);
             RotationOffset = Vector3.zero;
         }
 
-        if (FNaFEndoCoilheadCompat.HasMod)
+        if (FNaFEndoCoilheadProxy.HasMod)
         {
             PositionOffset = new Vector3(-0.033f, 0.55f, 0.05f);
             RotationOffset = Vector3.zero;
         }
 
-        if (ThiccCoilHeadCompat.HasMod)
+        if (ThiccCoilHeadProxy.HasMod)
         {
             PositionOffset = new Vector3(-0.02f, 1.2f, -0.075f);
             RotationOffset = Vector3.zero;
         }
 
-        if (ARatherSillyCoilHeadCompat.HasMod)
+        if (ARatherSillyCoilHeadProxy.HasMod)
         {
             PositionOffset = new Vector3(0f, 0.25f, -0.07f);
         }
@@ -52,12 +52,12 @@ public class ToilHeadControllerBehaviour : TurretHeadControllerBehaviour
 
     protected override Transform GetHeadTransform()
     {
-        if (SCP173CoilheadSFXCompat.HasMod || WeepingAngelsCompat.HasMod)
+        if (SCP173CoilheadSFXProxy.HasMod || WeepingAngelsProxy.HasMod)
         {
             return transform.parent.Find("SpringManModel");
         }
 
-        if (FNaFEndoCoilheadCompat.HasMod || ThiccCoilHeadCompat.HasMod)
+        if (FNaFEndoCoilheadProxy.HasMod || ThiccCoilHeadProxy.HasMod)
         {
             return transform.parent.Find("SpringManModel").Find("AnimContainer").Find("metarig").GetChild(0).GetChild(0).GetChild(0).GetChild(0).Find("springBone");
         }

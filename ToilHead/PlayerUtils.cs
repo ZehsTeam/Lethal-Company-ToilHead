@@ -2,7 +2,7 @@
 
 namespace com.github.zehsteam.ToilHead;
 
-internal class PlayerUtils
+internal static class PlayerUtils
 {
     public static bool IsLocalPlayer(PlayerControllerB playerScript)
     {

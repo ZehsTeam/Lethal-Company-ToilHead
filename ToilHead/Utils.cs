@@ -6,13 +6,14 @@ using UnityEngine;
 namespace com.github.zehsteam.ToilHead;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-public class Utils
+public static class Utils
 {
     public static bool RandomPercent(float percent)
     {
         if (percent <= 0f) return false;
         if (percent >= 100f) return true;
-        return Random.value <= percent * 0.01f;
+
+        return Random.value * 100f <= percent;
     }
 
     public static void DisableColliders(GameObject gameObject, bool keepScanNodeEnabled = false)

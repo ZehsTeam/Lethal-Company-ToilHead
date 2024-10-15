@@ -3,29 +3,29 @@
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(RoundManager))]
-internal class RoundManagerPatch
+internal static class RoundManagerPatch
 {
-    [HarmonyPatch("LoadNewLevel")]
+    [HarmonyPatch(nameof(RoundManager.LoadNewLevel))]
     [HarmonyPostfix]
-    static void LoadNewLevelPatch()
+    private static void LoadNewLevelPatch()
     {
         // Call on Host/Server
         Plugin.Instance.OnNewLevelLoaded();
     }
 
-    [HarmonyPatch("GenerateNewLevelClientRpc")]
+    [HarmonyPatch(nameof(RoundManager.GenerateNewLevelClientRpc))]
     [HarmonyPrefix]
-    static void GenerateNewLevelClientRpcPatch()
+    private static void GenerateNewLevelClientRpcPatch()
     {
-        if (Plugin.IsHostOrServer) return;
+        if (NetworkUtils.IsServer) return;
 
         // Call on Client
         Plugin.Instance.OnNewLevelLoaded();
     }
 
-    [HarmonyPatch("FinishGeneratingNewLevelClientRpc")]
+    [HarmonyPatch(nameof(RoundManager.FinishGeneratingNewLevelClientRpc))]
     [HarmonyPostfix]
-    static void FinishGeneratingNewLevelClientRpcPatch()
+    private static void FinishGeneratingNewLevelClientRpcPatch()
     {
         Plugin.Instance.OnNewLevelFinishedLoading();
     }

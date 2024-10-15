@@ -111,7 +111,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
     {
         SetCustomVariables();
 
-        if (Plugin.IsHostOrServer)
+        if (NetworkUtils.IsServer)
         {
             SetObjectCodeOnServer();
         }
@@ -795,7 +795,7 @@ public class ToilHeadTurretBehaviour : NetworkBehaviour
 
     public void SetObjectCodeOnServer()
     {
-        if (!Plugin.IsHostOrServer) return;
+        if (!NetworkUtils.IsServer) return;
 
         int codeIndex = Random.Range(0, RoundManager.Instance.possibleCodesForBigDoors.Length);
         SetObjectCodeClientRpc(codeIndex);

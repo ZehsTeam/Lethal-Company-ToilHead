@@ -2,7 +2,7 @@
 
 namespace com.github.zehsteam.ToilHead;
 
-internal class Secret
+internal static class Secret
 {
     public static void SpawnSecrets()
     {

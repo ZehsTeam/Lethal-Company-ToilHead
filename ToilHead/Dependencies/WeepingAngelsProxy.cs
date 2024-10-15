@@ -2,9 +2,9 @@
 
 namespace com.github.zehsteam.ToilHead.Compatibility;
 
-internal class MonsterPlushiesCompat
+internal static class WeepingAngelsProxy
 {
-    public const string ModGUID = "scin.monsterplushies";
+    public const string ModGUID = "raydenoir.WeepingAngel";
 
     public static bool HasMod => Chainloader.PluginInfos.ContainsKey(ModGUID);
 }

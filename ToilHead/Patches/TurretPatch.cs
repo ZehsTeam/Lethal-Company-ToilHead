@@ -4,11 +4,11 @@ using HarmonyLib;
 namespace com.github.zehsteam.ToilHead.Patches;
 
 [HarmonyPatch(typeof(Turret))]
-internal class TurretPatch
+internal static class TurretPatch
 {
-    [HarmonyPatch("CheckForPlayersInLineOfSight")]
+    [HarmonyPatch(nameof(Turret.CheckForPlayersInLineOfSight))]
     [HarmonyPostfix]
-    static void CheckForPlayersInLineOfSightPatch(ref PlayerControllerB __result)
+    private static void CheckForPlayersInLineOfSightPatch(ref PlayerControllerB __result)
     {
         if (__result != null && TurretHeadManager.IsPlayerTurretHead(__result))
         {

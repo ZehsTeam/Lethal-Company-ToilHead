@@ -8,7 +8,7 @@ using Unity.Netcode;
 namespace com.github.zehsteam.ToilHead;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-public class Api
+public static class Api
 {
     /// <summary>
     /// This is for all enemy turret pairs.

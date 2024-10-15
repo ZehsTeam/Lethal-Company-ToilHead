@@ -2,9 +2,9 @@
 
 namespace com.github.zehsteam.ToilHead.Compatibility;
 
-internal class ThiccCoilHeadCompat
+internal static class FNaFEndoCoilheadProxy
 {
-    public const string ModGUID = "ThiccCoilHead";
+    public const string ModGUID = "FNaFEndoCoilhead";
 
     public static bool HasMod => Chainloader.PluginInfos.ContainsKey(ModGUID);
 }

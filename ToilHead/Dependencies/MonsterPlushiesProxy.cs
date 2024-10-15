@@ -2,9 +2,9 @@
 
 namespace com.github.zehsteam.ToilHead.Compatibility;
 
-internal class FNaFEndoCoilheadCompat
+internal static class MonsterPlushiesProxy
 {
-    public const string ModGUID = "FNaFEndoCoilhead";
+    public const string ModGUID = "scin.monsterplushies";
 
     public static bool HasMod => Chainloader.PluginInfos.ContainsKey(ModGUID);
 }
