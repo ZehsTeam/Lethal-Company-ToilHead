@@ -3,71 +3,98 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     
     <AssemblyName>com.github.zehsteam.$(MSBuildProjectName)</AssemblyName> <!-- PLUGIN_GUID -->
     <Product>$(MSBuildProjectName)</Product>                               <!-- PLUGIN_NAME -->
-    <Version>1.7.2</Version>                                               <!-- PLUGIN_VERSION -->
-    <Description>CoilHeads, Manticoils, and other entities can sometimes spawn with a turret on their head. Highly Configurable.</Description>
+    <Version>1.8.0</Version>                                               <!-- PLUGIN_VERSION -->
+    <Authors>Zehs</Authors>
+    <Description>[v73+] CoilHeads, Manticoils, and other entities can sometimes spawn with a turret on their head. Highly Configurable.</Description>
+    <Copyright>Copyright © 2025 Zehs</Copyright>
     
     <RootNamespace>com.github.zehsteam.$(MSBuildProjectName)</RootNamespace>
-    
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+
+    <!-- Trim the project path in debug symbols -->
+    <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
       https://nuget.bepinex.dev/v3/index.json;
       https://nuget.samboy.dev/v3/index.json;
     </RestoreAdditionalProjectSources>
   </PropertyGroup>
-  
+
   <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
     </ItemGroup>
   </Target>
-  
+
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <None Include="..\..\..\..\Lethal Company Modding\Unity Projects\LethalCompanyAssetBundles\AssetBundles\toilhead_assets" Link="toilhead_assets">
+    <None Include="..\..\..\..\Lethal Company Modding\Unity Projects\LethalCompanyAssetBundles\AssetBundles\$(AssetBundleFileName)" Link="$(AssetBundleFileName)">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.*" />
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
-    <PackageReference Include="Evaisa.LethalLib" Version="0.*" />
-    <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="62.0.1-ngd.0" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="73.0.0-ngd.0" PrivateAssets="all" />
   </ItemGroup>
   
+  <!-- Mod dependencies -->
+  <ItemGroup>
+    <PackageReference Include="Evaisa.LethalLib" Version="1.*" />
+    
+    <Reference Include="LethalConfig" HintPath="$(BepInExPluginsFolder)\AinaVT-LethalConfig\LethalConfig\LethalConfig.dll" />
+  </ItemGroup>
+  
+  <!-- Gale profile names -->
   <PropertyGroup>
-		<AssembliesPath>D:\SteamLibrary\steamapps\common\Lethal Company\Lethal Company_Data\Managed</AssembliesPath>
-    <BepInTools>D:\SteamLibrary\steamapps\common\Lethal Company\BepInEx\core</BepInTools>
-    <PluginsFolder>D:\SteamLibrary\steamapps\common\Lethal Company\BepInEx\plugins</PluginsFolder>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Optimize>False</Optimize>
-    <DebugType>embedded</DebugType>
+    <GaleProfileName>Mod Development</GaleProfileName>
+    <GaleProfileName2>v73 testing</GaleProfileName2>
   </PropertyGroup>
   
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>embedded</DebugType>
+  <!-- Settings -->
+  <PropertyGroup>
+    <Game>lethal-company</Game>
+    <AssetBundleFileName>toilhead_assets</AssetBundleFileName>
+    <GaleDataFolder>$(AppData)\com.kesomannen.gale</GaleDataFolder>
+    <GaleProfilesFolder>$(GaleDataFolder)\$(Game)\profiles</GaleProfilesFolder>
+    <BepInExPluginsFolder>$(GaleProfilesFolder)\$(GaleProfileName)\BepInEx\plugins</BepInExPluginsFolder>
+    <PluginFolder>$(BepInExPluginsFolder)\Zehs-$(MSBuildProjectName)</PluginFolder>
+    <PluginFolder2>$(GaleProfilesFolder)\$(GaleProfileName2)\BepInEx\plugins\Zehs-$(MSBuildProjectName)</PluginFolder2>
   </PropertyGroup>
   
+  <!-- NetcodePatch -->
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
-    <Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+    <Message Text="Running NetcodePatch" Importance="high" />
+    <Exec Command="netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
   </Target>
   
-  <Target Name="CopyToPluginsFolder" AfterTargets="PostBuildEvent" DependsOnTargets="NetcodePatch">
-    <Copy DestinationFolder="$(PluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
-    <Copy DestinationFolder="$(PluginsFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetDir)\toilhead_assets" />
+  <!-- Copy files to Gale plugin folder -->
+  <Target Name="CopyToGalePluginFolder" AfterTargets="NetcodePatch">
+    <Message Text="Copying to Gale plugin folders" Importance="high" />
+    
+    <!-- PluginFolder -->
+    <Copy Condition="Exists('$(PluginFolder)')" DestinationFolder="$(PluginFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
+    <Copy Condition="Exists('$(PluginFolder)')" DestinationFolder="$(PluginFolder)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetDir)\$(AssetBundleFileName)" />
+    
+    <!-- PluginFolder2 -->
+    <Copy Condition="Exists('$(PluginFolder2)')" DestinationFolder="$(PluginFolder2)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetPath)" />
+    <Copy Condition="Exists('$(PluginFolder2)')" DestinationFolder="$(PluginFolder2)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" SourceFiles="$(TargetDir)\$(AssetBundleFileName)" />
   </Target>
 </Project>

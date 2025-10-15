@@ -1,13 +1,14 @@
 # ToilHead
-#### CoilHeads, Manticoils, and other entities can sometimes spawn with a turret on their head. Highly Configurable.
 
-#### This mod does not add new enemies, it gives Coil-Heads, Manticoils, and other entities a chance to spawn with a turret on their head.
+[![GitHub](https://img.shields.io/badge/GitHub-ToilHead-brightgreen?style=for-the-badge&logo=GitHub)](https://github.com/ZehsTeam/Lethal-Company-ToilHead)
+[![Thunderstore Version](https://img.shields.io/thunderstore/v/Zehs/ToilHead?style=for-the-badge&logo=thunderstore&logoColor=white)](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead)
+[![Thunderstore Downloads](https://img.shields.io/thunderstore/dt/Zehs/ToilHead?style=for-the-badge&logo=thunderstore&logoColor=white)](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead)
 
-#### This mod is for all clients!
+**CoilHeads, Manticoils, and other entities can sometimes spawn with a turret on their head. Highly Configurable.**
 
-## <img src="https://i.imgur.com/TpnrFSH.png" width="20px"> Download
+**<ins>Who needs this mod installed for it to work?</ins> Everyone!**
 
-Download [ToilHead](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead/) on Thunderstore.
+**This mod does not add new enemies, it gives Coil-Heads, Manticoils, and other entities a chance to spawn with a turret on their head.**
 
 ## Toilation (moon)
 Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company/p/Zehs/Toilation/) themed around this mod.
@@ -35,18 +36,22 @@ Download my new moon called [Toilation](https://thunderstore.io/c/lethal-company
 https://github.com/ZehsTeam/Lethal-Company-ToilHead/blob/master/ToilHead/Api.cs
 
 ## Developer Contact
-#### Report bugs or give suggestions here:
-https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues
 
-| Discord server | Forum | Post |
+**Report bugs, suggest features, or provide feedback:**
+
+- **GitHub Issues Page:** [ToilHead](https://github.com/ZehsTeam/Lethal-Company-ToilHead/issues)
+
+| **Discord Server** | **Forum** | **Post** |  
 | ----------- | ----------- | ----------- |
 | [Lethal Company modding Discord](https://discord.gg/XeyYqRdRGC) | `#mod-releases` | [ToilHead](https://discord.com/channels/1168655651455639582/1207108508298911834) |
 | [Unofficial Lethal Company Community](https://discord.gg/nYcQFEpXfU) | `#mod-releases` | [ToilHead](https://discord.com/channels/1169792572382773318/1207108696589606932) |
 
-#### Twitch: [CritHaxXoG](https://www.twitch.tv/crithaxxog) - YouTube: [Zehs](https://www.youtube.com/channel/UCb4VEkc-_im0h8DKXlwmIAA)
+https://solo.to/crithaxxog
+
+[<img src="https://i.imgur.com/duJZQTS.png" width="200px">](https://ko-fi.com/zehsteam)
 
 ## Screenshots
 <div>
-    <img src="https://i.imgur.com/2wvuDcg.jpeg" width="412px">
-    <img src="https://i.imgur.com/dXMbu6m.jpeg" width="412px">
+    <img src="https://i.imgur.com/2wvuDcg.jpeg" width="49.7%">
+    <img src="https://i.imgur.com/dXMbu6m.jpeg" width="49.7%">
 </div>
