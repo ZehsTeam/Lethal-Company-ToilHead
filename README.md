@@ -3,6 +3,7 @@
 [![GitHub](https://img.shields.io/badge/GitHub-ToilHead-brightgreen?style=for-the-badge&logo=GitHub)](https://github.com/ZehsTeam/Lethal-Company-ToilHead)
 [![Thunderstore Version](https://img.shields.io/thunderstore/v/Zehs/ToilHead?style=for-the-badge&logo=thunderstore&logoColor=white)](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead)
 [![Thunderstore Downloads](https://img.shields.io/thunderstore/dt/Zehs/ToilHead?style=for-the-badge&logo=thunderstore&logoColor=white)](https://thunderstore.io/c/lethal-company/p/Zehs/ToilHead)
+[![Ko-fi](https://img.shields.io/badge/Donate-F16061.svg?style=for-the-badge&logo=ko-fi&logoColor=white&label=Ko-fi)](https://ko-fi.com/zehsteam)
 
 **CoilHeads, Manticoils, and other entities can sometimes spawn with a turret on their head. Highly Configurable.**
 
@@ -48,7 +49,9 @@ https://github.com/ZehsTeam/Lethal-Company-ToilHead/blob/master/ToilHead/Api.cs
 
 https://solo.to/crithaxxog
 
-[<img src="https://i.imgur.com/duJZQTS.png" width="200px">](https://ko-fi.com/zehsteam)
+<a href="https://ko-fi.com/zehsteam" target="_blank">
+<img src="https://storage.ko-fi.com/cdn/brandasset/v2/support_me_on_kofi_dark.png" alt="Ko-Fi" width="200px"/>
+</a>
 
 ## Screenshots
 <div>

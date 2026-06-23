@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using com.github.zehsteam.ToilHead.Managers;
+using Unity.Netcode;
 
 namespace com.github.zehsteam.ToilHead.MonoBehaviours;
 
@@ -17,7 +18,7 @@ public class PluginNetworkBehaviour : NetworkBehaviour
     {
         if (IsHost || IsServer) return;
 
-        Plugin.logger.LogInfo("Syncing config with host.");
+        Logger.LogInfo("Syncing config with host.");
         Plugin.ConfigManager.SetHostConfigData(syncedConfigData);
     }
 

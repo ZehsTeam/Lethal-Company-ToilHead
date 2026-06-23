@@ -1,0 +1,31 @@
+﻿using BepInEx.Logging;
+using com.github.zehsteam.ToilHead.Managers;
+
+namespace com.github.zehsteam.ToilHead;
+
+internal static class Logger
+{
+    public static ManualLogSource ManualLogSource { get; private set; }
+
+    public static bool IsExtendedLoggingEnabled => ConfigManager.Misc_ExtendedLogging?.Value ?? false;
+
+    public static void Initialize(ManualLogSource manualLogSource)
+    {
+        ManualLogSource = manualLogSource;
+    }
+
+    public static void LogDebug(object data) => Log(LogLevel.Debug, data);
+    public static void LogInfo(object data, bool extended = false) => Log(LogLevel.Info, data, extended);
+    public static void LogMessage(object data, bool extended = false) => Log(LogLevel.Message, data, extended);
+    public static void LogWarning(object data, bool extended = false) => Log(LogLevel.Warning, data, extended);
+    public static void LogError(object data, bool extended = false) => Log(LogLevel.Error, data, extended);
+    public static void LogFatal(object data, bool extended = false) => Log(LogLevel.Fatal, data, extended);
+
+    public static void Log(LogLevel logLevel, object data, bool extended = false)
+    {
+        if (extended && !IsExtendedLoggingEnabled)
+            return;
+
+        ManualLogSource?.Log(logLevel, data);
+    }
+}

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using com.github.zehsteam.ToilHead.Managers;
+using HarmonyLib;
 
 namespace com.github.zehsteam.ToilHead.Patches;
 

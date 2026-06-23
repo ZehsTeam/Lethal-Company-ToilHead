@@ -1,20 +1,59 @@
-﻿using com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
-using GameNetcodeStuff;
-using System.Collections;
+﻿using BepInEx;
+using BepInEx.Configuration;
+using System.IO;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using Object = UnityEngine.Object;
+using System.Collections;
+using System;
 
-namespace com.github.zehsteam.ToilHead;
+namespace com.github.zehsteam.ToilHead.Helpers;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-public static class Utils
+internal static class Utils
 {
-    public static bool RandomPercent(float percent)
+    public static string GetPluginDirectoryPath()
+    {
+        return Path.GetDirectoryName(Plugin.Instance.Info.Location);
+    }
+
+    public static string GetConfigDirectoryPath()
+    {
+        return Paths.ConfigPath;
+    }
+
+    public static string GetPluginPersistentDataPath()
+    {
+        return Path.Combine(Application.persistentDataPath, MyPluginInfo.PLUGIN_NAME);
+    }
+
+    public static ConfigFile CreateConfigFile(BaseUnityPlugin plugin, string path, string name = null, bool saveOnInit = false)
+    {
+        BepInPlugin metadata = MetadataHelper.GetMetadata(plugin);
+        name ??= metadata.GUID;
+        name += ".cfg";
+        return new ConfigFile(Path.Combine(path, name), saveOnInit, metadata);
+    }
+
+    public static ConfigFile CreateLocalConfigFile(BaseUnityPlugin plugin, string name = null, bool saveOnInit = false)
+    {
+        return CreateConfigFile(plugin, GetConfigDirectoryPath(), name, saveOnInit);
+    }
+
+    public static ConfigFile CreateGlobalConfigFile(BaseUnityPlugin plugin, string name = null, bool saveOnInit = false)
+    {
+        string path = GetPluginPersistentDataPath();
+        name ??= "global";
+        return CreateConfigFile(plugin, path, name, saveOnInit);
+    }
+
+    public static bool RollPercentChance(float percent)
     {
         if (percent <= 0f) return false;
         if (percent >= 100f) return true;
-
         return Random.value * 100f <= percent;
     }
+
+
 
     public static void DisableColliders(GameObject gameObject, bool keepScanNodeEnabled = false)
     {
@@ -44,7 +83,7 @@ public static class Utils
         }
     }
 
-    public static IEnumerator WaitUntil(System.Func<bool> predicate, float maxDuration = 5f, int iterationsPerSecond = 10)
+    public static IEnumerator WaitUntil(Func<bool> predicate, float maxDuration = 5f, int iterationsPerSecond = 10)
     {
         float timer = 0f;
 
@@ -60,45 +99,6 @@ public static class Utils
             yield return new WaitForSeconds(timePerIteration);
             timer += Time.deltaTime;
         }
-    }
-
-    public static bool IsValidEnemy(EnemyAI enemyScript)
-    {
-        if (IsSpring(enemyScript)) return true;
-        if (IsManticoil(enemyScript)) return true;
-        if (IsMasked(enemyScript)) return true;
-
-        return false;
-    }
-
-    public static bool IsSpring(EnemyAI enemyScript)
-    {
-        return enemyScript.enemyType.enemyName == "Spring";
-    }
-
-    public static bool IsManticoil(EnemyAI enemyScript)
-    {
-        return enemyScript.enemyType.enemyName == "Manticoil";
-    }
-
-    public static bool IsMasked(EnemyAI enemyScript)
-    {
-        return enemyScript.enemyType.enemyName == "Masked";
-    }
-
-    public static bool IsTurretHead(EnemyAI enemyScript)
-    {
-        return enemyScript.GetComponentInChildren<TurretHeadControllerBehaviour>() != null;
-    }
-
-    public static bool IsTurretHead(PlayerControllerB playerScript)
-    {
-        return playerScript.GetComponentInChildren<TurretHeadControllerBehaviour>() != null;
-    }
-
-    public static bool IsTurretHead(DeadBodyInfo deadBodyScript)
-    {
-        return deadBodyScript.GetComponentInChildren<TurretHeadControllerBehaviour>() != null;
     }
 
     public static bool IsCurrentMoonToilation()

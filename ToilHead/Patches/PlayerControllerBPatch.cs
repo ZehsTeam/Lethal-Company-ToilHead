@@ -1,4 +1,5 @@
-﻿using GameNetcodeStuff;
+﻿using com.github.zehsteam.ToilHead.Managers;
+using GameNetcodeStuff;
 using HarmonyLib;
 
 namespace com.github.zehsteam.ToilHead.Patches;

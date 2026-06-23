@@ -1,9 +1,10 @@
 ﻿using BepInEx.Configuration;
 using com.github.zehsteam.ToilHead.MonoBehaviours;
+using com.github.zehsteam.ToilHead.Objects;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace com.github.zehsteam.ToilHead;
+namespace com.github.zehsteam.ToilHead.Managers;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class SyncedConfigManager

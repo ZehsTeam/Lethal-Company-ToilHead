@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using com.github.zehsteam.ToilHead.Managers;
+using System.Collections;
 using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
@@ -29,7 +30,7 @@ public class ToiledDeadBodyControllerBehaviour : TurretHeadControllerBehaviour
 
         if (ragdollGrabbableObject.ragdoll == null)
         {
-            Plugin.logger.LogError("Error: Failed to late setup player ragdoll Turret-Head turret. DeadBodyInfo is null.");
+            Logger.LogError("Error: Failed to late setup player ragdoll Turret-Head turret. DeadBodyInfo is null.");
             yield break;
         }
 
@@ -44,13 +45,13 @@ public class ToiledDeadBodyControllerBehaviour : TurretHeadControllerBehaviour
 
         if (ragdollGrabbableObject == null)
         {
-            Plugin.logger.LogError("Error: Failed to setup player ragdoll Turret-Head turret. RagdollGrabbableObject is null.");
+            Logger.LogError("Error: Failed to setup player ragdoll Turret-Head turret. RagdollGrabbableObject is null.");
             return null;
         }
 
         if (ragdollGrabbableObject.ragdoll == null)
         {
-            Plugin.logger.LogError("Error: Failed to setup player ragdoll Turret-Head turret. DeadBodyInfo is null.");
+            Logger.LogError("Error: Failed to setup player ragdoll Turret-Head turret. DeadBodyInfo is null.");
             return null;
         }
 

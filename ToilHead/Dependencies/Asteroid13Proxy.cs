@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace com.github.zehsteam.ToilHead;
+namespace com.github.zehsteam.ToilHead.Dependencies;
 
-internal static class Secret
+internal static class Asteroid13Proxy
 {
     public static void SpawnSecrets()
     {

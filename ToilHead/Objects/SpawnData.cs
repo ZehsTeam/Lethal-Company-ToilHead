@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace com.github.zehsteam.ToilHead;
+namespace com.github.zehsteam.ToilHead.Objects;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
@@ -23,7 +23,7 @@ public class SpawnData
 
         if (items.Length != length)
         {
-            Plugin.logger.LogError($"ParseValue Error: Invalid item length for string \"{value}\". Length is {items.Length} but should have been {length}.");
+            Logger.LogError($"ParseValue Error: Invalid item length for string \"{value}\". Length is {items.Length} but should have been {length}.");
             return;
         }
 
@@ -41,7 +41,7 @@ public class SpawnData
         }
         else
         {
-            Plugin.logger.LogError($"TryParseItem Error: Failed to parse int from string \"{value}\".");
+            Logger.LogError($"TryParseItem Error: Failed to parse int from string \"{value}\".");
         }
 
         return false;
@@ -55,7 +55,7 @@ public class SpawnData
         }
         else
         {
-            Plugin.logger.LogError($"TryParseItem Error: Failed to parse float from string \"{value}\".");
+            Logger.LogError($"TryParseItem Error: Failed to parse float from string \"{value}\".");
         }
 
         return false;
@@ -76,7 +76,7 @@ public class MoonSpawnData : SpawnData
 
         if (items.Length != length)
         {
-            Plugin.logger.LogError($"ParseValue Error: Invalid item length for string \"{value}\". Length is {items.Length} but should have been {length}.");
+            Logger.LogError($"ParseValue Error: Invalid item length for string \"{value}\". Length is {items.Length} but should have been {length}.");
             return;
         }
 
@@ -110,7 +110,7 @@ public class MoonSpawnDataList
 
         if (string.IsNullOrWhiteSpace(value))
         {
-            Plugin.logger.LogError($"ParseValue Error: MoonSpawnDataList value is null or whitespace.");
+            Logger.LogError($"ParseValue Error: MoonSpawnDataList value is null or whitespace.");
             return;
         }
 

@@ -14,8 +14,8 @@
     
     <RootNamespace>com.github.zehsteam.$(MSBuildProjectName)</RootNamespace>
 
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
 
@@ -100,7 +100,7 @@
     <PropertyGroup>
       <NetcodePatcherDepsListFile>$(IntermediateOutputPath)ncp-deps.list</NetcodePatcherDepsListFile>
     </PropertyGroup>
-    <WriteLinesToFile File="$(NetcodePatcherDepsListFile)" Lines="@(ReferencePathWithRefAssemblies)" Overwrite="true"/>
+    <WriteLinesToFile File="$(NetcodePatcherDepsListFile)" Lines="@(ReferencePathWithRefAssemblies)" Overwrite="true" />
     <Exec Command="netcode-patch -uv 2022.3.62 -nv 1.12.2 -tv 1.0.0 &quot;$(TargetPath)&quot; --dependency-file &quot;$(NetcodePatcherDepsListFile)&quot;" />
   </Target>
   

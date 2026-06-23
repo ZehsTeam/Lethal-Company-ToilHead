@@ -1,15 +1,15 @@
-﻿using com.github.zehsteam.ToilHead.Compatibility;
+﻿using com.github.zehsteam.ToilHead.Dependencies;
 using System.Collections.Generic;
 using System.Linq;
 using static LethalLib.Modules.Levels;
 
-namespace com.github.zehsteam.ToilHead;
+namespace com.github.zehsteam.ToilHead.Helpers;
 
 internal static class ScrapHelper
 {
     public static void RegisterScrap(Item item, int iRarity, bool spawnAllMoons, string moonSpawnList, bool twoHanded, int carryWeight, int minValue, int maxValue)
     {
-        if (!LethalLibProxy.HasMod) return;
+        if (!LethalLibProxy.IsInstalled) return;
 
         try
         {
@@ -24,7 +24,7 @@ internal static class ScrapHelper
             if (spawnAllMoons)
             {
                 LethalLib.Modules.Items.RegisterScrap(item, iRarity, LevelTypes.All);
-                Plugin.logger.LogInfo($"Registered \"{item.itemName}\" scrap item with {iRarity} rarity.");
+                Logger.LogInfo($"Registered \"{item.itemName}\" scrap item with {iRarity} rarity.");
             }
             else
             {
@@ -33,7 +33,7 @@ internal static class ScrapHelper
         }
         catch (System.Exception e)
         {
-            Plugin.logger.LogError($"Error: Failed to register \"{item.itemName}\" scrap item.\n\n{e}");
+            Logger.LogError($"Error: Failed to register \"{item.itemName}\" scrap item.\n\n{e}");
         }
     }
     
@@ -57,7 +57,7 @@ internal static class ScrapHelper
             if (vanillaMoonLevelTypePair.TryGetValue(moon, out LevelTypes levelTypes))
             {
                 LethalLib.Modules.Items.RegisterScrap(item, iRarity, levelTypes);
-                Plugin.logger.LogInfo($"Registered \"{item.itemName}\" scrap item on moon \"{moon}\" with {iRarity} rarity.");
+                Logger.LogInfo($"Registered \"{item.itemName}\" scrap item on moon \"{moon}\" with {iRarity} rarity.");
                 continue;
             }
         }

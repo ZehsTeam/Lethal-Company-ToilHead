@@ -1,74 +1,55 @@
 ﻿using BepInEx;
-using BepInEx.Logging;
-using com.github.zehsteam.ToilHead.Compatibility;
+using com.github.zehsteam.ToilHead.Dependencies;
+using com.github.zehsteam.ToilHead.Dependencies.LethalConfigMod;
+using com.github.zehsteam.ToilHead.Helpers;
+using com.github.zehsteam.ToilHead.Managers;
 using com.github.zehsteam.ToilHead.Patches;
 using HarmonyLib;
-using System.Reflection;
-using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
-[BepInDependency(LethalLibProxy.ModGUID, BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency(MonsterPlushiesProxy.ModGUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(LethalConfigProxy.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(LethalLibProxy.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(MonsterPlushiesProxy.PLUGIN_GUID, BepInDependency.DependencyFlags.SoftDependency)]
 internal class Plugin : BaseUnityPlugin
 {
-    private readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
+    private readonly Harmony _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
 
-    internal static Plugin Instance;
-    internal static ManualLogSource logger;
-
-    internal static SyncedConfigManager ConfigManager;
+    internal static Plugin Instance { get; private set; }
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        Instance = this;
 
-        logger = BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID);
-        logger.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
+        ToilHead.Logger.Initialize(BepInEx.Logging.Logger.CreateLogSource(MyPluginInfo.PLUGIN_GUID));
+        ToilHead.Logger.LogInfo($"{MyPluginInfo.PLUGIN_NAME} has awoken!");
 
-        harmony.PatchAll(typeof(GameNetworkManagerPatch));
-        harmony.PatchAll(typeof(StartOfRoundPatch));
-        harmony.PatchAll(typeof(RoundManagerPatch));
-        harmony.PatchAll(typeof(TerminalPatch));
-        harmony.PatchAll(typeof(PlayerControllerBPatch));
-        harmony.PatchAll(typeof(RagdollGrabbableObjectPatch));
-        harmony.PatchAll(typeof(EnemyAIPatch));
-        harmony.PatchAll(typeof(SpringManAIPatch));
-        harmony.PatchAll(typeof(MaskedPlayerEnemyPatch));
-        harmony.PatchAll(typeof(TurretPatch));
+        ConfigManager.Initialize(Config);
 
-        ConfigManager = new SyncedConfigManager();
+        _harmony.PatchAll(typeof(GameNetworkManagerPatch));
+        _harmony.PatchAll(typeof(StartOfRoundPatch));
+        _harmony.PatchAll(typeof(RoundManagerPatch));
+        _harmony.PatchAll(typeof(TerminalPatch));
+        _harmony.PatchAll(typeof(PlayerControllerBPatch));
+        _harmony.PatchAll(typeof(RagdollGrabbableObjectPatch));
+        _harmony.PatchAll(typeof(EnemyAIPatch));
+        _harmony.PatchAll(typeof(SpringManAIPatch));
+        _harmony.PatchAll(typeof(MaskedPlayerEnemyPatch));
+        _harmony.PatchAll(typeof(TurretPatch));
 
-        Content.Load();
+        Assets.Load();
+
         TurretHeadManager.Initialize();
 
         RegisterScrapItems();
-        NetcodePatcherAwake();
-    }
 
-    private void NetcodePatcherAwake()
-    {
-        var types = Assembly.GetExecutingAssembly().GetTypes();
-
-        foreach (var type in types)
-        {
-            var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (var method in methods)
-            {
-                var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-
-                if (attributes.Length > 0)
-                {
-                    method.Invoke(null, null);
-                }
-            }
-        }
+        NetworkUtils.NetcodePatcherAwake();
     }
 
     public void OnLocalDisconnect()
     {
-        logger.LogInfo($"Local player disconnected. Removing hostConfigData.");
+        ToilHead.Logger.LogInfo($"Local player disconnected. Removing hostConfigData.");
         ConfigManager.SetHostConfigData(null);
 
         TurretHeadManager.Reset();
@@ -76,7 +57,7 @@ internal class Plugin : BaseUnityPlugin
 
     public void OnNewLevelLoaded()
     {
-        Secret.SpawnSecrets();
+        Asteroid13Proxy.SpawnSecrets();
     }
 
     public void OnNewLevelFinishedLoading()
@@ -91,8 +72,8 @@ internal class Plugin : BaseUnityPlugin
 
     private void RegisterScrapItems()
     {
-        if (!LethalLibProxy.HasMod) return;
-        if (!MonsterPlushiesProxy.HasMod) return;
+        if (!LethalLibProxy.IsInstalled) return;
+        if (!MonsterPlushiesProxy.IsInstalled) return;
 
         try
         {
@@ -101,31 +82,7 @@ internal class Plugin : BaseUnityPlugin
         }
         catch (System.Exception e)
         {
-            logger.LogWarning($"Warning: Failed to register scrap items.\n\n{e}");
-        }
-    }
-
-    public void LogInfoExtended(object data)
-    {
-        if (ConfigManager.ExtendedLogging.Value)
-        {
-            logger.LogInfo(data);
-        }
-    }
-
-    public void LogWarningExtended(object data)
-    {
-        if (ConfigManager.ExtendedLogging.Value)
-        {
-            logger.LogWarning(data);
-        }
-    }
-
-    public void LogErrorExtended(object data)
-    {
-        if (ConfigManager.ExtendedLogging.Value)
-        {
-            logger.LogError(data);
+            ToilHead.Logger.LogWarning($"Warning: Failed to register scrap items.\n\n{e}");
         }
     }
 }

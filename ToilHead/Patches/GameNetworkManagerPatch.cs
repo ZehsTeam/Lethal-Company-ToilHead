@@ -36,12 +36,12 @@ internal static class GameNetworkManagerPatch
     {
         if (prefab == null)
         {
-            Plugin.logger.LogError("Error: Failed to register network prefab. Prefab is null.");
+            Logger.LogError("Error: Failed to register network prefab. Prefab is null.");
             return;
         }
 
         NetworkManager.Singleton.AddNetworkPrefab(prefab);
 
-        Plugin.logger.LogInfo($"Registered \"{prefab.name}\" network prefab.");
+        Logger.LogInfo($"Registered \"{prefab.name}\" network prefab.");
     }
 }

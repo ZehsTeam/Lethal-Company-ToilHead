@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace com.github.zehsteam.ToilHead.MonoBehaviours;
+namespace com.github.zehsteam.ToilHead.MonoBehaviours.Utils;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class SyncYRotationBehaviour : MonoBehaviour

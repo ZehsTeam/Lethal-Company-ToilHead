@@ -132,7 +132,7 @@ public class FollowTerminalAccessibleObjectBehaviour : NetworkBehaviour
     {
         if (codeIndex > RoundManager.Instance.possibleCodesForBigDoors.Length)
         {
-            Plugin.logger.LogError("Attempted setting code to an index higher than the amount of possible codes in FollowTerminalAccessibleObjectBehaviour.");
+            Logger.LogError("Attempted setting code to an index higher than the amount of possible codes in FollowTerminalAccessibleObjectBehaviour.");
             return;
         }
         objectCode = RoundManager.Instance.possibleCodesForBigDoors[codeIndex];

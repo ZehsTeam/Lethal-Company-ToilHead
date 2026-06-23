@@ -1,0 +1,33 @@
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "Zehs"
+name = "ToilHead"
+description = "[v81] CoilHeads, Manticoils, and other entities can sometimes spawn with a turret on their head. Highly Configurable."
+websiteUrl = "https://github.com/ZehsTeam/LethalCompany-ToilHead"
+containsNsfwContent = false
+
+[package.dependencies]
+BepInEx-BepInExPack = "5.4.2305"
+
+[build]
+icon = "./icon.png"
+readme = "../../README.md"
+outdir = "./Packages"
+
+[[build.copy]]
+source = "./CHANGELOG.md"
+target = "/"
+
+[[build.copy]]
+source = "../../ToilHead/bin/Release/netstandard2.1/com.github.zehsteam.ToilHead.dll"
+target = "BepInEx/plugins/"
+
+[[build.copy]]
+source = "../../ToilHead/bin/Release/netstandard2.1/com.github.zehsteam.ToilHead.xml"
+target = "BepInEx/plugins/"
+
+[[build.copy]]
+source = "../../ToilHead/bin/Release/netstandard2.1/toilhead_assets"
+target = "BepInEx/plugins/"

@@ -1,4 +1,5 @@
 ﻿using com.github.zehsteam.ToilHead.Compatibility;
+using com.github.zehsteam.ToilHead.Managers;
 using UnityEngine;
 
 namespace com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;

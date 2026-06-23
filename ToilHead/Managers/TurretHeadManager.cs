@@ -1,5 +1,6 @@
 ﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
 using com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
+using com.github.zehsteam.ToilHead.Objects;
 using GameNetcodeStuff;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace com.github.zehsteam.ToilHead;
+namespace com.github.zehsteam.ToilHead.Managers;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public static class TurretHeadManager
@@ -65,7 +66,7 @@ public static class TurretHeadManager
 
         if (turretHeadData == null)
         {
-            Plugin.logger.LogError($"Error: Failed to try set \"{enemyName}\" Turret-Head on server. TurretHeadData is null.");
+            Logger.LogError($"Error: Failed to try set \"{enemyName}\" Turret-Head on server. TurretHeadData is null.");
             return false;
         }
 
@@ -140,7 +141,7 @@ public static class TurretHeadManager
 
         if (enemyScript == null)
         {
-            Plugin.logger.LogError($"Error: Failed to set enemy Turret-Head (isSlayer? {isSlayer}) on server. EnemyAI is null.");
+            Logger.LogError($"Error: Failed to set enemy Turret-Head (isSlayer? {isSlayer}) on server. EnemyAI is null.");
             return false;
         }
 
@@ -148,13 +149,13 @@ public static class TurretHeadManager
 
         if (enemyScript.isEnemyDead)
         {
-            Plugin.logger.LogError($"Error: Failed to set enemy \"{enemyName}\" Turret-Head (isSlayer? {isSlayer}) on server. Enemy is already dead.");
+            Logger.LogError($"Error: Failed to set enemy \"{enemyName}\" Turret-Head (isSlayer? {isSlayer}) on server. Enemy is already dead.");
             return false;
         }
 
         if (Utils.IsTurretHead(enemyScript))
         {
-            Plugin.logger.LogError($"Error: Failed to set enemy \"{enemyName}\" Turret-Head (isSlayer? {isSlayer}) on server. Enemy is already a Turret-Head.");
+            Logger.LogError($"Error: Failed to set enemy \"{enemyName}\" Turret-Head (isSlayer? {isSlayer}) on server. Enemy is already a Turret-Head.");
             return false;
         }
 
@@ -162,7 +163,7 @@ public static class TurretHeadManager
 
         if (turretHeadData == null)
         {
-            Plugin.logger.LogError($"Error: Failed to set enemy \"{enemyName}\" Turret-Head (isSlayer? {isSlayer}) on server. TurretHeadData is null.");
+            Logger.LogError($"Error: Failed to set enemy \"{enemyName}\" Turret-Head (isSlayer? {isSlayer}) on server. TurretHeadData is null.");
             return false;
         }
 
@@ -181,19 +182,19 @@ public static class TurretHeadManager
 
         if (playerScript == null)
         {
-            Plugin.logger.LogError($"Error: Failed to set player \"{playerUsername}\" Turret-Head (isSlayer? {isSlayer}) on server. PlayerControllerB is null.");
+            Logger.LogError($"Error: Failed to set player \"{playerUsername}\" Turret-Head (isSlayer? {isSlayer}) on server. PlayerControllerB is null.");
             return false;
         }
 
         if (playerScript.isPlayerDead)
         {
-            Plugin.logger.LogError($"Error: Failed to set player \"{playerUsername}\" Turret-Head (isSlayer? {isSlayer}) on server. Player is already dead.");
+            Logger.LogError($"Error: Failed to set player \"{playerUsername}\" Turret-Head (isSlayer? {isSlayer}) on server. Player is already dead.");
             return false;
         }
 
         if (Utils.IsTurretHead(playerScript))
         {
-            Plugin.logger.LogError($"Error: Failed to set player \"{playerUsername}\" Turret-Head (isSlayer? {isSlayer}) on server. Player is already a Turret-Head.");
+            Logger.LogError($"Error: Failed to set player \"{playerUsername}\" Turret-Head (isSlayer? {isSlayer}) on server. Player is already a Turret-Head.");
             return false;
         }
 
@@ -231,7 +232,7 @@ public static class TurretHeadManager
 
         if (playerScript == null)
         {
-            Plugin.logger.LogError($"Error: Failed to set player ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. PlayerControllerB is null.");
+            Logger.LogError($"Error: Failed to set player ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. PlayerControllerB is null.");
             return;
         }
         
@@ -258,7 +259,7 @@ public static class TurretHeadManager
 
         if (deadBodyScript == null)
         {
-            Plugin.logger.LogError($"Error: Failed to set player \"{playerUsername}\" ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. DeadBodyInfo is null.");
+            Logger.LogError($"Error: Failed to set player \"{playerUsername}\" ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. DeadBodyInfo is null.");
             yield break;
         }
 
@@ -266,7 +267,7 @@ public static class TurretHeadManager
 
         if (ragdollObject.name != "PlayerRagdollSpring Variant(Clone)")
         {
-            Plugin.logger.LogError($"Error: Failed to set player \"{playerUsername}\" ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. Player ragdoll is not of type \"PlayerRagdollSpring Variant\".");
+            Logger.LogError($"Error: Failed to set player \"{playerUsername}\" ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. Player ragdoll is not of type \"PlayerRagdollSpring Variant\".");
             yield break;
         }
 
@@ -279,13 +280,13 @@ public static class TurretHeadManager
 
         if (ragdollNetworkObject == null)
         {
-            Plugin.logger.LogError($"Error: Failed to set player \"{playerUsername}\" ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. NetworkObject is null.");
+            Logger.LogError($"Error: Failed to set player \"{playerUsername}\" ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. NetworkObject is null.");
             yield break;
         }
 
         if (Utils.IsTurretHead(deadBodyScript))
         {
-            Plugin.logger.LogError($"Error: Failed to set player \"{playerUsername}\" ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. Player is already a player ragdoll Turret-Head.");
+            Logger.LogError($"Error: Failed to set player \"{playerUsername}\" ragdoll Turret-Head (isSlayer? {isSlayer}, isReal? {isReal}) on server. Player is already a player ragdoll Turret-Head.");
             yield break;
         }
 
@@ -331,7 +332,7 @@ public static class TurretHeadManager
 
         if (turretHeadData == null)
         {
-            Plugin.logger.LogError($"Error: Failed to add to spawn count for enemy \"{enemyName}\". TurretHeadData is null.");
+            Logger.LogError($"Error: Failed to add to spawn count for enemy \"{enemyName}\". TurretHeadData is null.");
             return;
         }
 
@@ -377,14 +378,14 @@ public static class TurretHeadManager
             }
             else
             {
-                Plugin.logger.LogError($"Error: Failed to despawn enemy \"{enemyName}\" Turret-Head controller. NetworkObject is null.");
+                Logger.LogError($"Error: Failed to despawn enemy \"{enemyName}\" Turret-Head controller. NetworkObject is null.");
             }
 
             EnemyTurretHeadControllerPairs.Remove(enemyScript);
         }
         else
         {
-            Plugin.logger.LogError($"Error: Failed to despawn enemy \"{enemyName}\" Turret-Head controller. Could not find value from key.");
+            Logger.LogError($"Error: Failed to despawn enemy \"{enemyName}\" Turret-Head controller. Could not find value from key.");
         }
     }
 
@@ -404,14 +405,14 @@ public static class TurretHeadManager
             }
             else
             {
-                Plugin.logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" Turret-Head controller. NetworkObject is null.");
+                Logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" Turret-Head controller. NetworkObject is null.");
             }
 
             PlayerTurretHeadControllerPairs.Remove(playerScript);
         }
         else
         {
-            Plugin.logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" Turret-Head controller. Could not find value from key.");
+            Logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" Turret-Head controller. Could not find value from key.");
         }
     }
 
@@ -431,14 +432,14 @@ public static class TurretHeadManager
             }
             else
             {
-                Plugin.logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" ragdoll Turret-Head controller. NetworkObject is null.");
+                Logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" ragdoll Turret-Head controller. NetworkObject is null.");
             }
 
             DeadBodyTurretHeadControllerPairs.Remove(playerScript);
         }
         else
         {
-            Plugin.logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" ragdoll Turret-Head controller. Could not find value from key.");
+            Logger.LogError($"Error: Failed to despawn player \"{playerUsername}\" ragdoll Turret-Head controller. Could not find value from key.");
         }
     }
 
@@ -452,7 +453,7 @@ public static class TurretHeadManager
             {
                 if (!turretHeadBehaviour.TryGetComponent(out NetworkObject networkObject))
                 {
-                    Plugin.logger.LogError("Error: Failed to despawn TurretHeadBehaviour. NetworkObject is null.");
+                    Logger.LogError("Error: Failed to despawn TurretHeadBehaviour. NetworkObject is null.");
                     continue;
                 }
 
@@ -463,7 +464,7 @@ public static class TurretHeadManager
         }
         catch (System.Exception e)
         {
-            Plugin.logger.LogError($"Error: Failed to despawn all TurretHeadBehaviour(s).\n\n{e}");
+            Logger.LogError($"Error: Failed to despawn all TurretHeadBehaviour(s).\n\n{e}");
         }
     }
 

@@ -1,5 +1,7 @@
-﻿using com.github.zehsteam.ToilHead.MonoBehaviours;
+﻿using com.github.zehsteam.ToilHead.Managers;
+using com.github.zehsteam.ToilHead.MonoBehaviours;
 using com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
+using com.github.zehsteam.ToilHead.Objects;
 using GameNetcodeStuff;
 using System;
 using System.Collections.Generic;

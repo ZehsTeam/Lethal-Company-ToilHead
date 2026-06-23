@@ -1,4 +1,5 @@
-﻿using com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
+﻿using com.github.zehsteam.ToilHead.Managers;
+using com.github.zehsteam.ToilHead.MonoBehaviours.TurretHeads;
 using HarmonyLib;
 
 namespace com.github.zehsteam.ToilHead.Patches;
